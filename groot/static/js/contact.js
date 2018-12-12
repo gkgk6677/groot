@@ -14,7 +14,7 @@ $(document).ready(function(){
             rules: {
                 name: {
                     required: true,
-                    minlength: 2
+                    minlength: 8
                 },
                 subject: {
                     required: true,
@@ -35,8 +35,8 @@ $(document).ready(function(){
             },
             messages: {
                 name: {
-                    required: "come on, you have a name, don't you?",
-                    minlength: "your name must consist of at least 2 characters"
+                    required: "아이디를 입력해주세요",
+                    minlength: "your id must consist of at least 8 characters"
                 },
                 subject: {
                     required: "come on, you have a subject, don't you?",
@@ -47,7 +47,7 @@ $(document).ready(function(){
                     minlength: "your Number must consist of at least 5 characters"
                 },
                 email: {
-                    required: "no email, no message"
+                    required: "비밀번호를 입력해주세요"
                 },
                 message: {
                     required: "um...yea, you have to write something to send this form.",

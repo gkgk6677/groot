@@ -332,7 +332,7 @@ button:focus {
           margin-left: 0px; }
       .home_banner_area .home_right_box .home_item:nth-child(odd) {
         border-right: 1px solid rgba(255, 255, 255, 0.1); }
-      .home_banner_area .home_right_box .home_item:nth-child(5) {
+      .home_banner_area .home_right_box .home_item:nth-child(3) {
         border-bottom: 0px; }
       .home_banner_area .home_right_box .home_item:last-child {
         border-bottom: 0px; }
@@ -1748,18 +1748,27 @@ h6 {
   min-width: 800px; }
 
 .progress-table .serial {
-  width: 11.83%;
+  width: 10%;
   padding-left: 30px; }
 
-.progress-table .country {
-  width: 28.07%; }
+.progress-table .technology {
+  width: 30%; }
 
-.progress-table .visit {
-  width: 19.74%; }
+.progress-table .company {
+  width: 15%; }
 
-.progress-table .percentage {
-  width: 40.36%;
-  padding-right: 50px; }
+.progress-table .enroll_date {
+  width: 15%; }
+
+.progress-table .t_t {
+  width: 5%; }
+
+ .progress-table .expired_date {
+  width: 15%; }
+
+.progress-table .constant {
+  width: 20%;
+  padding-right: 20px; }
 
 .progress-table .table-head {
   display: flex; }
@@ -1774,6 +1783,19 @@ h6 {
   padding: 15px 0;
   border-top: 1px solid #edf3fd;
   display: flex; }
+
+.progress-table .table-row .constant a{
+
+    display: inline-block;
+    border: 1px solid #eee;
+    background: #fff;
+    padding: 0px 3px;
+    margin-bottom: 3px;
+    transition: all 0.3s ease 0s;
+    color: #222222;
+    font-size: 12px;
+}
+
 
 .progress-table .table-row .serial, .progress-table .table-row .country, .progress-table .table-row .visit, .progress-table .table-row .percentage {
   display: flex;
@@ -2430,8 +2452,8 @@ h6 {
   width: 100%;
   padding: 10px 0 10px 0px; }
 
-.mt-10 {
-  margin-top: 10px; }
+.mt-18 {
+  margin-top: 18px; }
 
 .form-select .nice-select .list .option {
   font-weight: 300;
@@ -2987,3 +3009,63 @@ h6 {
     padding-bottom: 20px;
     text-align: center;
 }
+
+.input-group .sub-btn {
+    border-radius: 0px;
+    background: #e4e6e885;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0px;
+    width: 20%;
+    cursor: pointer;
+    color: #343a40; }
+
+
+
+.join_form .form-group .form-control {
+  display: block;
+  width: 100%;
+  line-height: 40px;
+  border: none;
+  outline: none;
+  background: #f9f9ff;
+  padding: 0 20px;
+  font-size: inherit;
+ }
+
+.join_form .form-group .form-control-input {
+  display: block;
+  width: 80%;
+  line-height: 40px;
+  border: none;
+  outline: none;
+  background: #f9f9ff;
+  padding: 0 20px;
+ }
+.join_form {
+
+    margin: 0 auto;
+    max-width: 768px;
+    min-width: 460px;
+}
+
+.portfolio_details_inner .row .col-lg-9 .section-table{
+    padding-top: 100px;
+    padding-left: 50px;
+}
+
+.progress-table-wrap .progress-table .constant a{
+ {
+    display: inline-block;
+    border: 1px solid #eee;
+    background: #fff;
+    padding: 0px 13px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease 0s;
+    color: #222222;
+    font-size: 12px;
+}
+a {
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}}

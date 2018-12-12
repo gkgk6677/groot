@@ -22,6 +22,9 @@ urlpatterns = [
     path('', views.groot),
     path('login', views.login),
     path('join', views.join),
+    path('main', views.groot),
+    path('mypage', views.mypage),
+    path('list', views.list),
 
 
 ]
