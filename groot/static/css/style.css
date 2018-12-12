@@ -78,6 +78,13 @@ button:focus {
   padding-top: 120px;
   padding-bottom: 120px; }
 
+.p_200 {
+  padding-top: 200px;
+  padding-bottom: 120px;
+}
+
+
+
 .pad_top {
   padding-top: 120px; }
 
@@ -140,7 +147,7 @@ button:focus {
   z-index: 99;
   transition: background 0.4s, all 0.3s linear; }
   .header_area .navbar {
-    background: transparent;
+    background: #a57f7f3b;
     padding: 0px;
     border: 0px;
     border-radius: 0px; }
@@ -154,6 +161,14 @@ button:focus {
         color: #fff;
         padding: 0px;
         display: inline-block; }
+        .header_area .navbar .nav .nav-item .nav-link-other{
+        font: 500 13px/68px "Roboto", sans-serif;
+        text-transform: uppercase;
+        color: #222222;
+        padding: 0px;
+        font-weight: bold;
+        display: inline-block; }
+
         .header_area .navbar .nav .nav-item .nav-link:after {
           display: none; }
       .header_area .navbar .nav .nav-item.submenu {
@@ -247,35 +262,6 @@ button:focus {
     .header_area.navbar_fixed .main_menu .navbar .nav .nav-item .nav-link {
       line-height: 70px;
       color: #222222; }
-
-.top_menu {
-  overflow: hidden; }
-  .top_menu .top_inner {
-    background: rgba(255, 255, 255, 0.15);
-    overflow: hidden;
-    padding-left: 20px;
-    padding-right: 20px; }
-  .top_menu .float-left a {
-    line-height: 30px;
-    display: inline-block;
-    color: #fff;
-    font-family: "Roboto", sans-serif;
-    font-size: 12px;
-    margin-right: 50px;
-    transition: all 300ms linear 0s; }
-    .top_menu .float-left a:last-child {
-      margin-right: 0px; }
-    .top_menu .float-left a:hover {
-      color: #faba00; }
-  .top_menu .float-right .pur_btn {
-    background: #faba00;
-    color: #fff;
-    font-family: "Roboto", sans-serif;
-    line-height: 40px;
-    display: block;
-    padding: 0px 40px;
-    font-weight: 500;
-    font-size: 12px; }
 
 .header_socila li {
   display: inline-block;
@@ -393,58 +379,6 @@ button:focus {
         line-height: 42px;
         padding: 0px 45px; }
 
-.banner_box {
-  max-width: 1620px;
-  margin: auto; }
-
-.banner_area {
-  position: relative;
-  z-index: 1;
-  min-height: 430px; }
-  .banner_area .banner_inner {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    min-height: 430px;
-    background: #000;
-    z-index: 1; }
-    .banner_area .banner_inner .overlay {
-      background: url(../img/banner/banner.jpg) no-repeat scroll center center;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 125%;
-      bottom: 0;
-      z-index: -1;
-      opacity: .40; }
-    .banner_area .banner_inner .banner_content {
-      margin-top: 70px; }
-      .banner_area .banner_inner .banner_content h2 {
-        color: #fff;
-        font-size: 48px;
-        font-family: "Heebo", sans-serif;
-        margin-bottom: 0px;
-        text-transform: uppercase;
-        font-weight: bold; }
-      .banner_area .banner_inner .banner_content .page_link a {
-        font-size: 14px;
-        color: #fff;
-        font-family: "Roboto", sans-serif;
-        margin-right: 32px;
-        position: relative; }
-        .banner_area .banner_inner .banner_content .page_link a:before {
-          content: "\e87a";
-          font-family: 'Linearicons-Free';
-          font-size: 14px;
-          position: absolute;
-          right: -25px;
-          top: 54%;
-          transform: translateY(-50%); }
-        .banner_area .banner_inner .banner_content .page_link a:last-child {
-          margin-right: 0px; }
-          .banner_area .banner_inner .banner_content .page_link a:last-child:before {
-            display: none; }
 
 /* End Home Banner Area css
 ============================================================================================ */
@@ -1256,6 +1190,7 @@ button:focus {
     padding: 2px 0px; }
 
 .contact_form .form-group {
+  width:100%;
   margin-bottom: 10px; }
   .contact_form .form-group .form-control {
     font-size: 13px;
@@ -1283,6 +1218,16 @@ button:focus {
 .contact_form .submit_btn {
   margin-top: 20px;
   cursor: pointer; }
+ #contact_find_info {
+    width : 100%
+    font-size: 12px;
+    line-height: 14px;
+    margin : 20px;
+    padding-top: 30px;
+    text-align: center;
+    color: #8e8e8e;
+
+}
 
 /* Contact Success and error Area css
 ============================================================================================ */
@@ -1326,7 +1271,8 @@ button:focus {
   margin-bottom: 20px; }
 
 .mb-30 {
-  margin-bottom: 30px; }
+  margin-bottom: 30px;
+ }
 
 .sample-text-area {
   padding: 100px 0px; }
@@ -1526,8 +1472,9 @@ button:focus {
   background: #fff; }
 
 .section-top-border {
-  padding: 50px 0;
+  padding: 200px 0;
   border-top: 1px dotted #eee; }
+
 
 .switch-wrap {
   margin-bottom: 10px; }
@@ -2578,6 +2525,27 @@ h6 {
     background: transparent;
     color: #faba00; }
 
+.login_btn{
+  width: 100%;
+  display: inline-block;
+  background: #faba00;
+  padding: 0px 50px;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 50px;
+  border: 1px solid #faba00;
+  border-radius: 5px;
+  outline: none !important;
+  box-shadow: none !important;
+  text-align: center;
+  cursor: pointer;
+  transition: all 300ms linear 0s; }
+  .submit_btn:hover {
+    background: transparent;
+    color: #faba00; }
+
 .white_btn {
   display: inline-block;
   background: #f9f9ff;
@@ -3009,3 +2977,13 @@ h6 {
 /*---------------------------------------------------- */
 
 /*# sourceMappingURL=style.css.map */
+
+/* 내가 추가한것
+========================================================================
+*/
+
+
+#header.join_membership {
+    padding-bottom: 20px;
+    text-align: center;
+}

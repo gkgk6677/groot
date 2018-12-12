@@ -180,7 +180,7 @@ sup {
 }
 
 a {
-    color: #007bff;
+    color: #233656;
     text-decoration: none;
     background-color: transparent;
     -webkit-text-decoration-skip: objects
@@ -705,6 +705,7 @@ pre code {
 .col-xl-11,
 .col-xl-12,
 .col-xl-2,
+.col-xl-2,
 .col-xl-3,
 .col-xl-4,
 .col-xl-5,
@@ -1140,7 +1141,8 @@ pre code {
     .col-md-6 {
         -ms-flex: 0 0 50%;
         flex: 0 0 50%;
-        max-width: 50%
+        max-width: 50%;
+        margin: auto;
     }
     .col-md-7 {
         -ms-flex: 0 0 58.333333%;

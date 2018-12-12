@@ -20,4 +20,8 @@ from groot import views
 
 urlpatterns = [
     path('', views.groot),
+    path('login', views.login),
+    path('join', views.join),
+
+
 ]
