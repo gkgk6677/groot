@@ -25,6 +25,7 @@ urlpatterns = [
     path('main', views.groot),
     path('mypage', views.mypage),
     path('list', views.list),
-
+    path('notice', views.notice),
+    path('notice_write', views.notice_write),
 
 ]

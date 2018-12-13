@@ -18,3 +18,10 @@ def mypage(request):
 def list(request):
     return render(request, 'groot/list.html', {})
 
+def notice(request):
+    return render(request, 'groot/notice.html', {})
+
+def notice_write(request):
+    return render(request, 'groot/notice_write.html', {})
+
+

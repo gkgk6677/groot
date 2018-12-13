@@ -1770,6 +1770,18 @@ h6 {
   width: 20%;
   padding-right: 20px; }
 
+  .progress-table .count {
+  width: 20%;
+  padding-right: 20px; }
+
+  .progress-table .title {
+  width: 20%;
+  padding-right: 20px; }
+
+    .progress-table .UserID {
+  width: 20%;
+  padding-right: 20px; }
+
 .progress-table .table-head {
   display: flex; }
 
