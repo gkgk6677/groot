@@ -660,6 +660,20 @@ button:focus {
     border-radius: 45px;
     z-index: 0;
     background: #faba00; }
+
+   .blog_right_sidebar .search_widget .input-group .form-content {
+    font-size: 14px;
+    line-height: 29px;
+    border: 0px;
+    width: 100%;
+    font-weight: 300;
+    color: #fff;
+    padding-left: 20px;
+    border-radius: 45px;
+    z-index: 0;
+    background: #faba00; }
+
+
     .blog_right_sidebar .search_widget .input-group .form-control.placeholder {
       color: #fff; }
     .blog_right_sidebar .search_widget .input-group .form-control:-moz-placeholder {
