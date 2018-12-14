@@ -71,61 +71,54 @@
 			<div class="container">
 				<div class="join_form">
 
-						<div class="col-md-6">
-							<div id="header" class="join_membership" role="banner">
-								<h3 class="title_color">회원가입</h3>
-							</div>
-
-							<form action="#">
-									<div class="form-group">
-										<div class="input-group d-flex flex-row">
-                                        	<input type="text" name="id" placeholder="아이디" onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디'" required class="form-control form-control-input" >
-											<button class="btn sub-btn"><span>중복확인</span></button>
-										</div>
-                                    </div>
-									<div class="form-group">
-										<input type="password" name="password" placeholder="비밀번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control" id="form-control-input">
-									</div>
-									<div class="form-group ">
-										<input type="password" name="password" placeholder="비밀번호 확인" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control">
-									</div>
-									<div class="form-group ">
-										<input type="text" name="id" placeholder="회사명" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control">
-									</div>
-									<div class="form-group ">
-										<input type="text" name="id" placeholder="대표자" onfocus="this.placeholder = ''" onblur="this.placeholder = '대표자'" required class="form-control">
-									</div>
-									<div class="form-group ">
-										<div class="input-group d-flex flex-row">
-											<input type="text" name="business_number" placeholder="사업자등록번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '사업자등록번호'" required class="form-control form-control-input" >
-											<button class="btn sub-btn"><span>조회</span></button>
-                                    	</div>
-									</div>
-									<div class="form-group ">
-										<div class="input-group d-flex flex-row">
-											<input type="email" name="EMAIL" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="form-control form-control-input" >
-											<button class="btn sub-btn"><span>중복확인</span></button>
-										</div>
-									</div>
-									<div class="form-group">
-										<input type="text" name="address" placeholder="주소" onfocus="this.placeholder = ''" onblur="this.placeholder = '주소'" required class="form-control">
-									</div>
-									<div class="form-group input-group-icon">
-										<div class="icon"><i class="fa fa-globe" aria-hidden="true"></i></div>
-										<div class="form-select form-control" id="default-select2">
-											<select>
-												<option value="1">분야</option>
-												<option value="1">기술과학</option>
-												<option value="1">암그뤁</option>
-												<option value="1">암그뤁</option>
-												<option value="1"></option>
-											</select>
-										</div>
-									</div>
-							</form>
-							<button type="submit" value="submit" class="btn login_btn"><a href="main">회원가입</a></button>
+					<div class="col-md-6">
+						<div id="header" class="join_membership" role="banner">
+							<h3 class="title_color">회원가입</h3>
 						</div>
 
+						<form method='POST'>  <!--action="#"-->
+							{% csrf_token %}
+							<div class="form-group">
+								<div class="input-group d-flex flex-row">
+									<input type="text" name="user_id" placeholder="아이디" onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디'" required class="form-control form-control-input" id="user_id">
+									<button class="btn sub-btn"><span>중복확인</span></button>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="password" name="user_pw" placeholder="비밀번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호'" required class="form-control" id="user_pw" oninput="checkPwd()">
+							</div>
+							<div class="form-group ">
+								<input type="password" name="user_pw" placeholder="비밀번호 확인" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control" id="re_user_pw" oninput="checkPwd()">
+							</div>
+							<div class="form-group ">
+								<input type="text" name="com_name" placeholder="회사명" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="com_name">
+							</div>
+							<div class="form-group ">
+								<input type="text" name="com_head" placeholder="대표자" onfocus="this.placeholder = ''" onblur="this.placeholder = '대표자'" required class="form-control" id="com_head">
+							</div>
+							<div class="form-group ">
+								<div class="input-group d-flex flex-row">
+									<input type="text" name="com_num" placeholder="사업자등록번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '사업자등록번호'" required class="form-control form-control-input" id="com_num" >
+									<button class="btn sub-btn"><span>조회</span></button>
+								</div>
+							</div>
+							<div class="form-group ">
+								<div class="input-group d-flex flex-row">
+									<input type="email" name="email" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="form-control form-control-input" id="email">
+									<button class="btn sub-btn"><span>중복확인</span></button>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="text" name="address" placeholder="주소" onfocus="this.placeholder = ''" onblur="this.placeholder = '주소'" required class="form-control" id="address">
+							</div>
+							<div class="form-group ">
+									<input type="text" name="phone_num" placeholder="핸드폰 번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="phone_num">
+							</div>
+							<div>
+								<button type="submit" value="submit" class="btn login_btn">회원가입</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -152,4 +145,47 @@
         <script src="{%static 'vendors/counter-up/jquery.counterup.min.js' %}"></script>
         <script src="{%static 'js/mail-script.js' %}"></script>
         <script src="{%static 'js/theme.js' %}"></script>
+		<script>
+			$('button[type=submit]').click(function() {
+
+				$.ajax({
+					url: '/join',
+					type: 'post',
+					data: $('form').serialize(),
+					success: function(result) {
+						alert(result)
+						window.location.replace('/login')
+					}
+				})
+
+				return false
+			})
+
+
+			function checkPwd() {
+        		var inputed = $('#user_pw').val();
+        		var reinputed = $('#re_user_pw').val();
+        		if(reinputed=="" && (inputed != reinputed || inputed == reinputed)){
+					$(".btn login_btn").prop("disabled", true);
+					$(".btn login_btn").css("background-color", "#aaaaaa");
+					$("#re_user_pw").css("background-color", "#FFCECE");
+        		}
+        		else if (inputed == reinputed) {
+            		$("#re_user_pw").css("background-color", "#B0F6AC");
+					pwdCheck = 1;
+					if(idCheck==1 && pwdCheck == 1) {
+                		$(".btn login_btn").prop("disabled", false);
+                		$(".btn login_btn").css("background-color", "#4CAF50");
+            		}
+        		} else if (inputed != reinputed) {
+            		pwdCheck = 0;
+					$(".btn login_btn").prop("disabled", true);
+					$(".btn login_btn").css("background-color", "#aaaaaa");
+					$("#re_user_pw").css("background-color", "#FFCECE");
+				}
+    		}
+		</script>
+
+
 	</body>
+</html>

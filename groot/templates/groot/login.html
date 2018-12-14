@@ -60,7 +60,12 @@
 									</ul>
 								</li>
 								<li class="nav-item"><a class="nav-link-other" href="contact.html">고객센터</a></li>
-								<li class="nav-item"><a class="nav-link-other" href="login">로그인</a></li>
+								{%if request.session.user_id %}
+									<li class="nav-item"><a class="nav-link" href="mypage"><b>마이페이지</b></a></li>
+									<li class="nav-item"><a class="nav-link" href="logout" id="logout">Logout</a></li>
+								{% else %}
+									<li class="nav-item"><a class="nav-link" href="login">로그인</a></li>
+								{% endif %}
 							</ul>
 						</div>
 					</div>
@@ -68,84 +73,69 @@
             </div>
         </header>
         <!--================Header Menu Area =================-->
-
-
-        <!--================Contact Area =================-->
-
-        <section class="contact_area p_200" >
+        <section class="portfolio_details_area p_120">
             <div class="container">
-                <div class="align-items-center">
-                    <div class="bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
+                <div class="portfolio_details_inner">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="blog_right_sidebar">
 
-                        <div class="text-center">
-                            <h2>LOGIN</h2>
+                            <aside class="single_sidebar_widget author_widget">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/nojam.jpg' %}" alt="">
+                                <h4>{{ request.session.user_id }}</h4>
+                                <p>GrootBlockchain company</p>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <ul class="list cat-list">
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>내정보 수정</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="list" class="d-flex justify-content-between">
+                                            <p>계약 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>회원탈퇴</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
+
+                        </div>
+
+                        </div>
+                        <div class="col-lg-9">
+
                         </div>
                     </div>
-
-                <div class="col-md-6">
-                        <form class="contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="아이디를 입력해주세요">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력해주세요">
-                                </div>
-                                    <button type="submit" value="submit" class="btn login_btn">로그인</button>
-                        </form>
-                        <div id="contact_find_info">
-                            <a href="#" >아이디 찾기</a><span class="bar">|</span>
-                            <a href="#" >패스워드 찾기</a><span class="bar">|</span>
-                            <a href="join" >회원가입</a>
-                        </div>
                 </div>
-
-
 
 
             </div>
         </section>
 
-        <!--================Contact Area =================-->
 
-
-        <!--================End Footer Area =================-->
-
-        <!--================Contact Success and Error message Area =================-->
-        <div id="success" class="modal modal-message fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-close"></i>
-                        </button>
-                        <h2>Thank you</h2>
-                        <p>Your message is successfully sent...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modals error -->
-
-        <div id="error" class="modal modal-message fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-close"></i>
-                        </button>
-                        <h2>Sorry !</h2>
-                        <p> Something went wrong </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--================End Contact Success and Error message Area =================-->
+        <!--================Content Area =================-->
 
 
 
 
+
+
+
+
+
+
+
+
+
+        <!--================End Content Area =================-->
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>

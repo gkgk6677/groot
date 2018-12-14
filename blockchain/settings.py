@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1','210.107.78.149','www.grootchain.com']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -77,8 +76,12 @@ WSGI_APPLICATION = 'blockchain.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'SecDocu',
+        'USER': 'root',
+        'PASSWORD': 'dkagh',
+        'HOST': '210.107.78.149',
+        'PORT': ''
     }
 }
 

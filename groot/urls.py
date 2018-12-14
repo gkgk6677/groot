@@ -20,12 +20,11 @@ from groot import views
 
 urlpatterns = [
     path('', views.groot),
-    path('login', views.login),
-    path('join', views.join),
-    path('main', views.groot),
-    path('mypage', views.mypage),
-    path('list', views.list),
-    path('notice', views.notice),
-    path('notice_write', views.notice_write),
+    path('login', views.login, name='login'),
+    path('join', views.join, name='join'),
+    path('main', views.groot, name='main'),
+    path('mypage', views.mypage, name='mypage'),
+    path('list', views.list, name='list'),
+    path('logout', views.logout, name='logout'),
 
 ]
