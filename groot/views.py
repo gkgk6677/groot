@@ -26,7 +26,8 @@ def login(request):
 def logout(request) :
     del request.session['user_id']
     # return render(request, 'protect/home.html', {})
-    return redirect('main')
+    # return redirect('main')
+    return HttpResponse('로그아웃 하셨습니다.')
 
 def join(request):
     if request.method == 'GET':
@@ -42,7 +43,7 @@ def join(request):
         phone_num = request.POST['phone_num']
 
         user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num)
-        user.s_date = timezone.now()
+        user.c_date = timezone.now()
         user.save()
 
         return HttpResponse( user_id + '님 회원가입이 완료되었습니다.')

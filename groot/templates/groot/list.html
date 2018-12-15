@@ -62,9 +62,9 @@
 								<li class="nav-item"><a class="nav-link-other" href="contact.html">고객센터</a></li>
 								{%if request.session.user_id %}
 									<li class="nav-item"><a class="nav-link" href="mypage"><b>마이페이지</b></a></li>
-									<li class="nav-item"><a class="nav-link" href="logout" id="logout">Logout</a></li>
+									<li class="nav-item"><a class="nav-link-other" href="logout" id="logout">Logout</a></li>
 								{% else %}
-									<li class="nav-item"><a class="nav-link" href="login">로그인</a></li>
+									<li class="nav-item"><a class="nav-link-other" href="login">로그인</a></li>
 								{% endif %}
 							</ul>
 						</div>
@@ -85,7 +85,7 @@
 
                                 <aside class="single_sidebar_widget author_widget">
                                     <img class="author_img rounded-circle" src="{% static 'img/blog/nojam.jpg' %}" alt="">
-                                    <h4>Groot</h4>
+                                    <h4>{{ request.session.user_id }}</h4>
                                     <p>GrootBlockchain company</p>
                                     <div class="br"></div>
                                 </aside>

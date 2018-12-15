@@ -182,6 +182,24 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         <script src="{% static 'vendors/counter-up/jquery.waypoints.min.js' %}"></script>
         <script src="{% static 'vendors/counter-up/jquery.counterup.min.js' %}"></script>
         <script src="{% static 'js/mail-script.js' %}"></script>
+		<script>
+        $('button[type=submit]').click(function() {
+            $.ajax({
+                url: '/login',
+                type: 'post',
+                data: $('form').serialize(),
+                success: function(result) {
+                    alert(result)
+                    if(result == '로그인 하셨습니다.') {
+                        location='main'
+                    } else {
+                        location.reload()
+                    }
+                }
+            })
+            return false
+        })
+        </script>
 
     </body>
 </html>
