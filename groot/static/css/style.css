@@ -1792,14 +1792,14 @@ h6 {
   width: 20%;
   padding-right: 20px; }
 
-    .progress-table .UserID {
+  .progress-table .UserID {
   width: 20%;
   padding-right: 20px; }
 
 .progress-table .table-head {
   display: flex; }
 
-.progress-table .table-head .serial, .progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head .percentage {
+.progress-table .table-head .tr .td .tbody .serial, .progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head .percentage {
   color: #222222;
   line-height: 40px;
   text-transform: uppercase;

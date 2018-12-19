@@ -113,47 +113,73 @@
                                 <!--게시글 작성폼-->
 
 
-                                <form method="POST" >
+                                <form method="post">
                                     {% csrf_token %}
-                                    <table>
                                     <div class="form-group row">
                                         <label for="inputEmail3" class="col-sm-2 col-form-label">제목</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="inputEmail3" name="title"
-                                                   placeholder="제목을 작성해주세요." onfocus="this.placeholder = ''"  maxlength="50">
+                                            <input type="text" class="form-control" id="inputEmail3"
+                                                   placeholder="제목을 작성해주세요." maxlength="50">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10" ><input type="text" name="user_user">{{ request.session.user_id }}</div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">내용</label>
+                                        <label for="inputuser_id" class="col-sm-2 col-form-label">작성자</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="content" class="form-control row=10" id="inputcontent"
-                                                   placeholder="내용을 작성해주세요." onfocus="this.placeholder = ''"   style="height: 500px;">
+                                            <input type="text" class="form-control" id="inputuser_id"
+                                                   content="Groot">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
+                                        <label for="inputuser_id" class="col-sm-2 col-form-label">내용</label>
                                         <div class="col-sm-10">
-                                            <button type="submit" value="submit"  class="btn btn-default pull-right">등록</button>
+                                            <input type="text" class="form-control row=10" id="inputcontent"
+                                                   placeholder="내용을 작성해주세요. " style="height: 500px;">
+                                        </div>
+                                    </div>
+                                    </form>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-10">
+                                            <button type="button" value="등록" onclick="javascript:writeCheck();" class="btn btn-default pull-right"><a href="notice">등록</a></button>
                                             <div class="col-sm-10">
                                                 <button type="button" class="btn btn-default pull-right"><a href="notice">돌아가기</a></button>
                                             </div>
                                         </div>
                                     </div>
-                                    </table>
-                                </form>
-                                </div>
+
+                                    <script language="JavaScript">
+                                        function writeCheck(){
+                                        var form = document.writeform;
+
+                                        if (!form.title.value){
+                                        alert("제목을 적어주세요");
+                                        form.title.focus();
+                                        return;
+                                        }
+                                        if (!form.content.value){
+                                            alert("내용을 적어주세요");
+                                            form.content.focus();
+                                        }
+                                        form.submit;
+                                        }
+                                    </script>
+
 
                             </div>
+
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
+
+
+
 
 
 
@@ -177,8 +203,5 @@
         <script src="{% static 'js/jquery.form.js' %}"></script>
         <script src="{% static 'js/jquery.validate.min.js' %}"></script>
         <script src="{% static 'js/contact.js' %}"></script>
-
-
-
     </body>
 </html>

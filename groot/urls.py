@@ -27,4 +27,8 @@ urlpatterns = [
     path('list', views.list, name='list'),
     path('logout', views.logout, name='logout'),
 
+    path('notice', views.notice, name='notice'),
+    path('notice_write', views.notice_write, name='notice_write'),
+
+
 ]

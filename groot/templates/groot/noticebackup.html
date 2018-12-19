@@ -20,7 +20,6 @@
         <link rel="stylesheet" href="{%static 'css/style.css' %}">
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
 
-        <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 
     </head>
     <body>
@@ -101,59 +100,116 @@
                                     <div class="br"></div>
                                 </aside>
                             </div>
-
-                                <!--@@@@@@-->
                         </div>
+                 <!--@@@@@@-->
 
-                        <div class="container col-lg-9">
+                        <div class="col-lg-9">
                             <div class="section-table">
                                 <h3 class="mb-30 title_color">공지사항</h3>
-                                <div class="col-sm-10">
+                                <div class="progress-table-wrap">
+                                    <div class="progress-table">
 
-                                <!--게시글 작성폼-->
-
-
-                                <form method="POST" >
-                                    {% csrf_token %}
-                                    <table>
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">제목</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="inputEmail3" name="title"
-                                                   placeholder="제목을 작성해주세요." onfocus="this.placeholder = ''"  maxlength="50">
+                                        <div class="table-head">
+                                            <div class="serial">#</div>
+                                            <div class="title">제목</div>
+                                            <div class="UserID">작성자</div>
+                                            <div class="enroll_date">등록날짜</div>
+                                            <div class="count">조회수</div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10" ><input type="text" name="user_user">{{ request.session.user_id }}</div>
-                                    </div>
+                                            {% if noticeList %}
+                                                <div class="table-row">
 
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">내용</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" name="content" class="form-control row=10" id="inputcontent"
-                                                   placeholder="내용을 작성해주세요." onfocus="this.placeholder = ''"   style="height: 500px;">
-                                        </div>
-                                    </div>
+                                                    {% for notice in noticeList %}
+                                                    <div class="serial">{{ notice.notice_idx }}</div>
+                                                    <div class="title"><a
+                                                            href="notice_write={{ notice.user_id }} & current_page={{ current_page }}&searchStr=None"
+                                                            title="{{ notice.content }}">{{ notice.title }}</a></div>
+                                                    <div class="UserID">{{ notice.user_id }}</div>
+                                                    <div class="enroll_date"> {{ notice.c_date}}</div>
+                                                    <div class="count">{{ notice.count }}</div>
+                                                    {% endfor %}
 
-                                    <div class="form-group row">
-                                        <div class="col-sm-10">
-                                            <button type="submit" value="submit"  class="btn btn-default pull-right">등록</button>
-                                            <div class="col-sm-10">
-                                                <button type="button" class="btn btn-default pull-right"><a href="notice">돌아가기</a></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </table>
-                                </form>
+
+                                            {% else %}
+                                            <div class="content"> 게시된 글이 없습니다.</div>
+                                            {% endif %}
+                                        </table>
                                 </div>
+                                            <div class="table-row">
+                                                <li class="page-item">
+                                                    {% for page in totalPageList %}
+                                                    <a href="/notice?current_page={{ page }}">
+                                                        [
+                                                        {% ifequal page current_page %}
+                                                        <b>
+                                                            {% endifequal %}
+                                                            {{ page }}
 
-                            </div>
+                                                            {% ifequal page current_page %}
+                                                        </b>
+                                                        {% endifequal %}
+                                                        ]
+                                                        {% endfor %}
+                                                </li>
+                                            </div>
+
+
+                                                <!--<li class="page-item"><a class="page-link" href="#">1</a></li>-->
+                                                <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                                                <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                                                <!--<li class="page-item">-->
+                                                    <!--<a class="page-link" href="#">Next</a>-->
+                                                <!--</li>-->
+
+
+
+                                        <div>
+                                        <button type="button" class="btn btn-default pull-right"><a href="notice_write">글쓰기</a>
+                                        </button>
+                                            <form name="searchf" method="post" action="searchTitle"><p align="right"><input type="text" name="searchStr" size="30" maxlength="50"><input type="submit" value="검색"></p> </form>
+                                                <!--<button type="button" class="btn btn-dark "><a href="notice_write">글쓰기</a></button>-->
+                                            <!--</ul>-->
+                                            </div>
+                                        </nav>
+
+                                            <div class="table-row">
+                                                <div class="count">총 게시물 수 :{{ totalCnt }}</div>
+                                                <div class="count">페이지 : {{ current_page }}</div>
+                                            </div>
+
+                                        </table>
+
+
+
+                                        <!--<li class="page-item"><a class="page-link" href="notice_write">글쓰기</a></li>-->
+
+
+
+
+                                    </div>
+                                </div>
+					</div>
+
+
+
                         </div>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -177,8 +233,5 @@
         <script src="{% static 'js/jquery.form.js' %}"></script>
         <script src="{% static 'js/jquery.validate.min.js' %}"></script>
         <script src="{% static 'js/contact.js' %}"></script>
-
-
-
     </body>
 </html>

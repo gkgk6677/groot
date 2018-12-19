@@ -83,12 +83,18 @@ class Notice(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True, null=True)
     count = models.IntegerField(blank=True, null=True)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(auto_now_add=True)
     user_user = models.ForeignKey('User', models.DO_NOTHING)
+
+
 
     class Meta:
         managed = False
         db_table = 'Notice'
+
+    # @@2018 12 18 추가@@
+    def __str__(self):
+        return self.title
 
 
 class User(models.Model):
