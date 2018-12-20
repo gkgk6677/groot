@@ -27,7 +27,8 @@ def login(request):
 def logout(request) :
     del request.session['user_id']
     # return render(request, 'protect/home.html', {})
-    return redirect('main')
+    # return redirect('main')
+    return HttpResponse('로그아웃 하셨습니다.')
 
 def join(request):
     if request.method == 'GET':
@@ -57,8 +58,7 @@ def mypage(request):
 def list(request):
     return render(request, 'groot/list.html', {})
 
-def register(request):
-    return render(request, 'groot/register.html', {})
+
 
 rowsPerPage = 5
 def notice(request):
@@ -150,3 +150,11 @@ def notice_write(request):
 
 
 
+def register(request):
+    return render(request, 'groot/register.html', {})
+
+def application(request):
+    return render(request, 'groot/application.html', {})
+
+def test(request):
+    return render(request, 'groot/test.html', {})

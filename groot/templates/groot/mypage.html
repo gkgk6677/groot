@@ -39,11 +39,8 @@
 						<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 							<ul class="nav navbar-nav menu_nav ml-auto">
 								<li class="nav-item submenu dropdown">
-									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">기술임치신청</a>
-									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="projects.html">양자간 계약</a></li>
-										<li class="nav-item"><a class="nav-link" href="project-details.html">삼자간 계약</a></li>
-									</ul>
+									<a href="register" class="nav-link-other" role="button" aria-haspopup="true" aria-expanded="false">기술임치신청</a>
+
 								</li>
 								<li class="nav-item submenu dropdown">
 									<a href="#" class="nav-link-other otherpage dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">증명서</a>
@@ -81,7 +78,7 @@
                             <div class="blog_right_sidebar">
 
                             <aside class="single_sidebar_widget author_widget">
-                                <img class="author_img rounded-circle" src="{% static 'img/blog/nojam.jpg' %}" alt="">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
                                 <h4>{{ request.session.user_id }}</h4>
                                 <p>GrootBlockchain company</p>
                                 <div class="br"></div>
@@ -111,12 +108,29 @@
 
                         </div>
                         <div class="col-lg-9">
+                            <div class="user-content section-table">
+                                <h3 class="mb-30 title_color">Mypage</h3>
+                                <div class="progress-table-wrap">
+                                    <div class="progress-table">
+                                        <table class="table">
+                                        <tbody>
+                                        <tr><th scope="row">대표자</th><td>Mark</td></tr>
+                                        <tr><th scope="row">회사명</th><td>Groot company</td></tr>
+                                        <tr><th scope="row">이메일</th><td>groot@gmail.com</td></tr>
+                                        <tr><th scope="row">사업자번호</th><td>123456789</td></tr>
+                                        <tr><th scope="row">핸드폰번호</th><td>010***0000</td></tr>
+                                        <tr><th scope="row">비밀번호변경</th><td><a class="btn btn-sm btn-gray-light" href="" onclick="ga('send', 'event', '계정관리', '클릭', '회원정보_비밀번호변경')" id="reset_password" data-loading-text="전송중..">인증메일 발송하기</a></td></tr>
 
+                                        </tbody>
+                                        </table>
+                                        <a href="#" class="btn btn-outline-info btn-lg active" role="button" aria-pressed="true">OTP활성화</a>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
+            </div>
             </div>
         </section>
 

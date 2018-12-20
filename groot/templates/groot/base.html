@@ -20,8 +20,6 @@
         <link rel="stylesheet" href="{%static 'css/style.css' %}">
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
 
-        <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-
     </head>
     <body>
 
@@ -58,8 +56,13 @@
 										<li class="nav-item"><a class="nav-link" href="single-blog.html">계약고객</a></li>
 									</ul>
 								</li>
-								<li class="nav-item"><a class="nav-link-other" href="notice">고객센터</a></li>
-								<li class="nav-item"><a class="nav-link-other" href="login">로그인</a></li>
+								<li class="nav-item"><a class="nav-link-other" href="contact.html">고객센터</a></li>
+								{%if request.session.user_id %}
+									<li class="nav-item"><a class="nav-link" href="mypage"><b>마이페이지</b></a></li>
+									<li class="nav-item"><a class="nav-link-other" href="logout" id="logout">Logout</a></li>
+								{% else %}
+									<li class="nav-item"><a class="nav-link-other" href="login">로그인</a></li>
+								{% endif %}
 							</ul>
 						</div>
 					</div>
@@ -67,91 +70,75 @@
             </div>
         </header>
         <!--================Header Menu Area =================-->
-
-        <!--================Content Area =================-->
-
-
         <section class="portfolio_details_area p_120">
             <div class="container">
                 <div class="portfolio_details_inner">
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="blog_right_sidebar">
-                                <aside class="single_sidebar_widget post_category_widget">
-                                    <ul class="list cat-list">
-                                        <li>
-                                            <a href="#" class="d-flex justify-content-between">
-                                                <p>공지 사항</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="list" class="d-flex justify-content-between">
-                                                <p>자주 묻는 질문</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="d-flex justify-content-between">
-                                                <p>질문 게시판</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="br"></div>
-                                </aside>
-                            </div>
 
-                                <!--@@@@@@-->
+                            <aside class="single_sidebar_widget author_widget">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                                <h4>{{ request.session.user_id }}</h4>
+                                <p>GrootBlockchain company</p>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <ul class="list cat-list">
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>내정보 수정</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="list" class="d-flex justify-content-between">
+                                            <p>계약 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>회원탈퇴</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
+
                         </div>
 
-                        <div class="container col-lg-9">
-                            <div class="section-table">
-                                <h3 class="mb-30 title_color">공지사항</h3>
-                                <div class="col-sm-10">
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="user-content section-table">
+                                <h3 class="mb-30 title_color">Mypage</h3>
+                                <div class="progress-table-wrap">
+                                    <div class="progress-table">
+                                        <table class="table">
+                                        <tbody>
+                                        <tr><th scope="row">대표자</th><td>Mark</td></tr>
+                                        <tr><th scope="row">회사명</th><td>Groot company</td></tr>
+                                        <tr><th scope="row">이메일</th><td>groot@gmail.com</td></tr>
+                                        <tr><th scope="row">사업자번호</th><td>123456789</td></tr>
+                                        <tr><th scope="row">핸드폰번호</th><td>010***0000</td></tr>
+                                        <tr><th scope="row">비밀번호변경</th><td><a class="btn btn-sm btn-gray-light" href="" onclick="ga('send', 'event', '계정관리', '클릭', '회원정보_비밀번호변경')" id="reset_password" data-loading-text="전송중..">인증메일 발송하기</a></td></tr>
 
-                                <!--게시글 작성폼-->
+                                        </tbody>
+                                        </table>
+                                        <a href="#" class="btn btn-outline-info btn-lg active" role="button" aria-pressed="true">OTP활성화</a>
 
-
-                                <form method="POST" >
-                                    {% csrf_token %}
-                                    <table>
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">제목</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="inputEmail3" name="title"
-                                                   placeholder="제목을 작성해주세요." onfocus="this.placeholder = ''"  maxlength="50">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10" ><input type="text" name="user_user">{{ request.session.user_id }}</div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">내용</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" name="content" class="form-control row=10" id="inputcontent"
-                                                   placeholder="내용을 작성해주세요." onfocus="this.placeholder = ''"   style="height: 500px;">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-10">
-                                            <button type="submit" value="submit"  class="btn btn-default pull-right">등록</button>
-                                            <div class="col-sm-10">
-                                                <button type="button" class="btn btn-default pull-right"><a href="notice">돌아가기</a></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </table>
-                                </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            </div>
         </section>
 
+
+        <!--================Content Area ====================-->
+
+                {% block content %}
+                {% endblock %}
 
 
         <!--================End Content Area =================-->
@@ -174,8 +161,5 @@
         <script src="{% static 'js/jquery.form.js' %}"></script>
         <script src="{% static 'js/jquery.validate.min.js' %}"></script>
         <script src="{% static 'js/contact.js' %}"></script>
-
-
-
     </body>
 </html>

@@ -23,12 +23,14 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('join', views.join, name='join'),
     path('main', views.groot, name='main'),
+    path('register', views.register, name='register'),
+    path('application', views.application, name='application'),
     path('mypage', views.mypage, name='mypage'),
     path('list', views.list, name='list'),
     path('logout', views.logout, name='logout'),
-    path('register', views.register, name='register'),
     path('notice', views.notice, name='notice'),
     path('notice_write', views.notice_write, name='notice_write'),
+    path('test', views.test)
 
 
 ]

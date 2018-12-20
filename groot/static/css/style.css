@@ -3095,3 +3095,12 @@ a {
     text-decoration: none;
     transition: all 0.3s ease-in-out;
 }}
+
+.col-sm-3 {
+    width: 25%;
+}
+
+.col-sm-9 {
+    width: 75%;
+}
+
