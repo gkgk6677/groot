@@ -27,8 +27,7 @@ def login(request):
 def logout(request) :
     del request.session['user_id']
     # return render(request, 'protect/home.html', {})
-    # return redirect('main')
-    return HttpResponse('로그아웃 하셨습니다.')
+    return redirect('main')
 
 def join(request):
     if request.method == 'GET':
