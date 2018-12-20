@@ -57,7 +57,8 @@ def mypage(request):
 def list(request):
     return render(request, 'groot/list.html', {})
 
-
+def register(request):
+    return render(request, 'groot/register.html', {})
 
 rowsPerPage = 5
 def notice(request):
