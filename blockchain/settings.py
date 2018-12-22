@@ -58,7 +58,7 @@ ROOT_URLCONF = 'blockchain.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #base템플릿을 위해 추가
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

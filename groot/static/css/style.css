@@ -75,12 +75,12 @@ button:focus {
   box-shadow: none; }
 
 .p_120 {
-  padding-top: 120px;
+  padding-top: 60px;
   padding-bottom: 120px; }
 
 .p_200 {
   padding-top: 200px;
-  padding-bottom: 120px;
+  padding-bottom: 60px;
 }
 
 
@@ -147,7 +147,7 @@ button:focus {
   z-index: 99;
   transition: background 0.4s, all 0.3s linear; }
   .header_area .navbar {
-    background: #a57f7f3b;
+    background: transparent;
     padding: 0px;
     border: 0px;
     border-radius: 0px; }
