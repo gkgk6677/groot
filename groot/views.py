@@ -26,9 +26,7 @@ def login(request):
 
 def logout(request) :
     del request.session['user_id']
-    # return render(request, 'protect/home.html', {})
-    # return redirect('main')
-    return HttpResponse('로그아웃 하셨습니다.')
+    return redirect('main')
 
 def join(request):
     if request.method == 'GET':
@@ -156,3 +154,11 @@ def validate(request):
 def news(request):
     return render(request, 'groot/news.html', {})
 
+def faq(request):
+    return render(request, 'groot/faq.html', {})
+
+def qna(request):
+    return render(request, 'groot/qna.html', {})
+
+def bye(request):
+    return render(request, 'groot/bye.html', {})

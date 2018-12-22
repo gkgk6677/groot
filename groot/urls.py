@@ -35,4 +35,7 @@ urlpatterns = [
     path('read', views.read, name='read'),
     path('validate', views.validate, name='validate'),
     path('news', views.news, name='news'),
+    path('faq', views.faq, name='faq'),
+    path('qna', views.qna, name='qna'),
+    path('bye', views.bye, name='bye'),
 ]
