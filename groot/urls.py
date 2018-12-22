@@ -30,7 +30,9 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('notice', views.notice, name='notice'),
     path('notice_write', views.notice_write, name='notice_write'),
-    path('test', views.test)
-
-
+    path('test', views.test, name='test'),
+    path('issue', views.issue, name='issue'),
+    path('read', views.read, name='read'),
+    path('validate', views.validate, name='validate'),
+    path('news', views.news, name='news'),
 ]

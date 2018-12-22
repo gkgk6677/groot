@@ -50,14 +50,12 @@ def join(request):
         return HttpResponse( user_id + '님 회원가입이 완료되었습니다.')
 
 
-
 def mypage(request):
     return render(request, 'groot/mypage.html', {})
 
 
 def list(request):
     return render(request, 'groot/list.html', {})
-
 
 
 rowsPerPage = 5
@@ -73,10 +71,6 @@ def notice(request):
 
     return render(request, 'groot/notice.html',{'noticeList': noticeList,'totalCnt': totalCnt,
                                                  'current_page': current_page, 'totalPageList': totalPageList})
-
-
-
-
 
 class pagingHelper:
 
@@ -97,8 +91,6 @@ class pagingHelper:
     def __init__(self):
         self.total_pages = 0
         self.totalPageList = 0
-
-
 
 # DB연동 @@@@@@@@@@@@@@@@@@@@@@@@@
 # def notice_write(request):
@@ -128,11 +120,6 @@ def notice_write(request):
 
         return render(request, 'groot/notice_write.html',{})
 
-
-
-
-
-
 # def notice_write(request):
 #     if request.method =='GET':
 #         return render(request, 'groot/notice_write.html', {})
@@ -148,8 +135,6 @@ def notice_write(request):
 #
 #         return HttpResponse(title + '게시글 작성 완료')
 
-
-
 def register(request):
     return render(request, 'groot/register.html', {})
 
@@ -158,3 +143,16 @@ def application(request):
 
 def test(request):
     return render(request, 'groot/test.html', {})
+
+def issue(request):
+    return render(request, 'groot/issue.html', {})
+
+def read(request):
+    return render(request, 'groot/read.html', {})
+
+def validate(request):
+    return render(request, 'groot/validate.html', {})
+
+def news(request):
+    return render(request, 'groot/news.html', {})
+

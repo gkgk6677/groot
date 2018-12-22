@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="join_form">
+
+					<div class="col-md-6">
+						<div id="header" class="join_membership" role="banner">
+							<h3 class="title_color">회원가입</h3>
+						</div>
+
+						<form method='POST'>  <!--action="#"-->
+							{% csrf_token %}
+							<div class="form-group">
+								<div class="input-group d-flex flex-row">
+									<input type="text" name="user_id" placeholder="아이디" onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디'" required class="form-control form-control-input" id="user_id">
+									<button class="btn sub-btn"><span>중복확인</span></button>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="password" name="user_pw" placeholder="비밀번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호'" required class="form-control" id="user_pw" oninput="checkPwd()">
+							</div>
+							<div class="form-group ">
+								<input type="password" name="user_pw" placeholder="비밀번호 확인" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control" id="re_user_pw" oninput="checkPwd()">
+							</div>
+							<div class="form-group ">
+								<input type="text" name="com_name" placeholder="회사명" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="com_name">
+							</div>
+							<div class="form-group ">
+								<input type="text" name="com_head" placeholder="대표자" onfocus="this.placeholder = ''" onblur="this.placeholder = '대표자'" required class="form-control" id="com_head">
+							</div>
+							<div class="form-group ">
+								<div class="input-group d-flex flex-row">
+									<input type="text" name="com_num" placeholder="사업자등록번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '사업자등록번호'" required class="form-control form-control-input" id="com_num" >
+									<button class="btn sub-btn"><span>조회</span></button>
+								</div>
+							</div>
+							<div class="form-group ">
+								<div class="input-group d-flex flex-row">
+									<input type="email" name="email" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="form-control form-control-input" id="email">
+									<button class="btn sub-btn"><span>중복확인</span></button>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="text" name="address" placeholder="주소" onfocus="this.placeholder = ''" onblur="this.placeholder = '주소'" required class="form-control" id="address">
+							</div>
+							<div class="form-group ">
+									<input type="text" name="phone_num" placeholder="핸드폰 번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="phone_num">
+							</div>
+							<div>
+								<button type="submit" value="submit" class="btn login_btn">회원가입</button>
+							</div>
+						</form>
+					</div>
+				</div>
+{% endblock content %}

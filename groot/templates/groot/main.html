@@ -21,10 +21,8 @@
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
     </head>
     <body>
-
         <!--================Header Menu Area =================-->
         <header class="header_area">
-
             <div class="main_menu" id="mainNav">
             	<nav class="navbar navbar-expand-lg navbar-light">
 					<div class="container">
@@ -38,36 +36,36 @@
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 							<ul class="nav navbar-nav menu_nav ml-auto">
+								<li class="nav-item"><a class="nav-link-other" href="application" style="color: white;">기술임치신청</a></li>
+								<li class="nav-item"><a class="nav-link-other" href="issue" style="color: white;">증명서발급</a></li>
 								<li class="nav-item submenu dropdown">
-									<a href="register" class="nav-link" role="button" aria-haspopup="true" aria-expanded="false">기술임치신청</a>
-
-								</li>
-								<li class="nav-item submenu dropdown">
-									<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">증명서</a>
+									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;">임치문서관리</a>
 									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="projects.html">증명서 발급</a></li>
-										<li class="nav-item"><a class="nav-link" href="project-details.html">증명서 검증</a></li>
+										<li class="nav-item"><a class="nav-link" href="read" >문서열람</a></li>
+										<li class="nav-item"><a class="nav-link" href="validate" >원본검증</a></li>
 									</ul>
 								</li>
+								<li class="nav-item"><a class="nav-link-other" href="news" style="color: white;">IT news</a></li>
 								<li class="nav-item submenu dropdown">
-									<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">기술열람</a>
+									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;">고객센터</a>
 									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="blog.html">기업고객</a></li>
-										<li class="nav-item"><a class="nav-link" href="single-blog.html">계약고객</a></li>
+										<li class="nav-item"><a class="nav-link" href="notice" >공지사항</a></li>
+										<li class="nav-item"><a class="nav-link" href="faq">FAQ</a></li>
+										<li class="nav-item"><a class="nav-link" href="qna">Q&A</a></li>
 									</ul>
 								</li>
-								<li class="nav-item"><a class="nav-link" href="notice">고객센터</a></li>
 								{%if request.session.user_id %}
-									<li class="nav-item"><a class="nav-link" href="mypage"><b>마이페이지</b></a></li>
-									<li class="nav-item"><a class="nav-link" href="logout" id="logout">Logout</a></li>
+									<li class="nav-item"><a class="nav-link-other" href="mypage" style="color: white;"><b>마이페이지</b></a></li>
+									<li class="nav-item"><a class="nav-link-other" href="logout" id="logout" style="color: white;">Logout</a></li>
 								{% else %}
-									<li class="nav-item"><a class="nav-link" href="login">로그인</a></li>
+									<li class="nav-item"><a class="nav-link" href="login" ><b>login</b></a></li>
 								{% endif %}
 							</ul>
 						</div>
 					</div>
             	</nav>
             </div>
+			<hr style="border-width:2px;">
         </header>
         <!--================Header Menu Area =================-->
 
@@ -110,59 +108,21 @@
         <!--================End Home Banner Area =================-->
 
         <!--================Footer Area =================-->
-        <footer class="footer_area p_120">
+        <footer class="footer_area ">
         	<div class="container">
         		<div class="row footer_inner">
-        			<div class="col-lg-5 col-sm-6">
+        			<div class="col-lg-12 col-sm-12">
         				<aside class="f_widget ab_widget">
         					<div class="f_title">
-        						<h3>About Me</h3>
+        						<!--<h3>About Me</h3>-->
         					</div>
-        					<p>Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills,</p>
-        					<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-        				</aside>
-        			</div>
-        			<div class="col-lg-5 col-sm-6">
-        				<aside class="f_widget news_widget">
-        					<div class="f_title">
-        						<h3>Newsletter</h3>
-        					</div>
-        					<p>Stay updated with our latest trends</p>
-        					<div id="mc_embed_signup">
-                                <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get" class="subscribe_form relative">
-                                	<div class="input-group d-flex flex-row">
-                                        <input name="EMAIL" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address '" required="" type="email">
-                                        <button class="btn sub-btn"><span class="lnr lnr-arrow-right"></span></button>
-                                    </div>
-                                    <div class="mt-10 info"></div>
-                                </form>
-                            </div>
-        				</aside>
-        			</div>
-        			<div class="col-lg-2">
-        				<aside class="f_widget social_widget">
-        					<div class="f_title">
-        						<h3>Follow Me</h3>
-        					</div>
-        					<p>Let us be social</p>
-        					<ul class="list">
-        						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-        						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-        						<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-        						<li><a href="#"><i class="fa fa-behance"></i></a></li>
-        					</ul>
+        					<center><p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by <b>Team Groot</b></p></center>
         				</aside>
         			</div>
         		</div>
         	</div>
         </footer>
         <!--================End Footer Area =================-->
-
-
-
-
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -197,6 +157,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             return false
         })
         </script>
-
     </body>
 </html>
