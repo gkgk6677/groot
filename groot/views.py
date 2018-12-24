@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import User
+
+from groot.forms import ContractForm
+from .models import User, Contract
 from .models import Notice
 from django.utils import timezone
 
@@ -137,7 +139,27 @@ def register(request):
     return render(request, 'groot/register.html', {})
 
 def application(request):
-    return render(request, 'groot/application.html', {})
+    if request.method == 'POST':
+        form = ContractForm(request.POST)
+        user_id = request.session['user_id']
+
+        if form.is_valid():
+            contract = Contract()
+            u = User.objects.get(user_id=request.session.get('user_id'))
+            contract.user_user = User()
+            contract.title = form.cleaned_data['title']
+            contract.sort = form.cleaned_data['sort']
+            contract.e_date = form.cleaned_data['e_date']
+            contract.user_user = u
+            contract.save()
+
+            return redirect('mypage')
+
+
+    else:
+        form = ContractForm()
+    return render(request, 'groot/application.html', {'form': form})
+
 
 def test(request):
     return render(request, 'groot/test.html', {})

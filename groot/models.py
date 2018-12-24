@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+from django.forms import SelectDateWidget
+
 
 class CertVf(models.Model):
     cert_idx = models.AutoField(primary_key=True)
@@ -30,8 +32,8 @@ class Contract(models.Model):
     title = models.CharField(max_length=100)
     sort = models.CharField(max_length=100)
     e_date = models.DateTimeField()
-    c_date = models.DateTimeField()
-    user_user = models.ForeignKey('User', models.DO_NOTHING)
+    c_date = models.DateTimeField(auto_now=True)
+    user_user= models.ForeignKey('User', models.DO_NOTHING)
 
     class Meta:
         managed = False
