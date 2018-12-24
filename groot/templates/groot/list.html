@@ -56,32 +56,11 @@
                                             <div class="expired_date">만료날짜</div>
                                             <div class="constant">연장/편입/해지</div>
                                         </div>
-                                        <div class="table-row">
-                                            <div class="serial">1</div>
-                                            <div class="technology">technology1</div>
-                                            <div class="company">company1</div>
-                                            <div class="enroll_date">2018-12-12</div>
 
-                                            <div class="expired_date">2018-12-12</div>
-                                            <div class="constant"><a href="#">연장</a>/<a href="#">편입</a>/<a href="#">해지</a> </div>
-                                        </div>
-                                        <div class="table-row">
-                                            <div class="serial">2</div>
-                                            <div class="technology">technology2</div>
-                                            <div class="company">company2</div>
-                                            <div class="enroll_date">2018-12-12</div>
-
-                                            <div class="expired_date">2018-12-12</div>
-                                            <div class="constant"><a href="#">연장</a>/<a href="#">편입/</a><a href="#">해지</a></div>
-                                        </div>
-
-
+                                        <div class="table-row" id="contractinfo"></div>
                                     </div>
                                 </div>
-					</div>
-
-
-
+					        </div>
                         </div>
                     </div>
                 </div>
@@ -91,4 +70,20 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+$(function(){
+    showStatus();
+})
+function showStatus() {
+    let table = `
+    <div class="serial">{{contract_info.cont_idx}}</div>
+    <div class="technology">{{contract_info.title}}</div>
+    <div class="company">{{request.session.user_id}}</div>
+    <div class="enroll_date">{{contract_info.c_date}}</div>
+    <div class="expired_date">{{contract_info.e_date}}</div>
+    <div class="constant"><a href="extend">연장</a>/<a href="insert">편입/</a><a href="expire">해지</a></div>
+   `;
+   $('#contractinfo').empty();
+   $('#contractinfo').append(table); };
+                                        </script>
 {% endblock js %}

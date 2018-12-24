@@ -51,11 +51,15 @@ def join(request):
 
 
 def mypage(request):
-    return render(request, 'groot/mypage.html', {})
+    user_id = request.session['user_id']
+    userinfo = User.objects.get(pk=user_id)
+    return render(request, 'groot/mypage.html', {'userinfo':userinfo})
 
 
 def list(request):
-    return render(request, 'groot/list.html', {})
+    user_id = request.session['user_id']
+    contract_info = Contract.objects.get(user_user=user_id)
+    return render(request, 'groot/list.html', {'contract_info':contract_info})
 
 
 rowsPerPage = 5
@@ -184,3 +188,13 @@ def qna(request):
 
 def bye(request):
     return render(request, 'groot/bye.html', {})
+
+def extend(request):
+    return render(request, 'groot/extend.html', {})
+
+def insert(request):
+    return render(request, 'groot/insert.html', {})
+
+def expire(request):
+    return render(request, 'groot/expire.html', {})
+

@@ -38,4 +38,7 @@ urlpatterns = [
     path('faq', views.faq, name='faq'),
     path('qna', views.qna, name='qna'),
     path('bye', views.bye, name='bye'),
+    path('extend', views.extend, name='extend'),
+    path('insert', views.insert, name='insert'),
+    path('expire', views.expire, name='expire'),
 ]

@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+    <!--================Content Area =================-->
+
+        <section class="register_area p_200">
+            <div class="container">
+                <div class="main_title">
+        			<h2>기술 계약 해지</h2>
+        			<p>양식을 작성해주세요!</p>
+        		</div>
+                <div class="register_area_inner row">
+
+                </div>
+            </div>
+        </section>
+
+    <!--================End Content Area =================-->
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'js/contact.js' %}"></script>
+{% endblock js %}
