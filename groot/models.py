@@ -124,6 +124,20 @@ class Notice(models.Model):
         db_table = 'Notice'
         unique_together = ('notice_idx', 'user_id')
 
+    #title return
+    def __str__(self):
+        return self.title
+
+    # detail을 위한 함수
+    def get_abolute_url(self):
+        return reversed('notice-detail', args=[str(self.id)])
+
+    # update를 위한 함수
+    @property
+    def update_count(self):
+        self.count = self.count +1
+        self.save()
+
 
 class SortMst(models.Model):
     sort_idx = models.AutoField(primary_key=True)

@@ -109,29 +109,23 @@
 
                                 <!--게시글 작성폼-->
 
-
+<table>
                                 <form method="post">
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">제목</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="inputEmail3"
-                                                   placeholder="제목을 작성해주세요." maxlength="50">
+                                        <label class="col-sm-2 col-form-label">제목</label>
+                                        <div class="col-sm-10">{{ notice.title }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="inputuser_id" class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="inputuser_id"
-                                                   content="Groot">
+                                        <label class="col-sm-2 col-form-label">작성자</label>
+                                        <div class="col-sm-10">{{ notice.user_id }}
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="inputuser_id" class="col-sm-2 col-form-label">내용</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control row=10" id="inputcontent"
-                                                   placeholder="내용을 작성해주세요. " style="height: 500px;">
+                                        <label class="col-sm-2 col-form-label">내용</label>
+                                        <div class="col-sm-10">{{ notice.content|linebreaks }]
                                         </div>
                                     </div>
                                     </form>
@@ -145,24 +139,8 @@
                                         </div>
                                     </div>
 
-                                    <script language="JavaScript">
-                                        function writeCheck(){
-                                        var form = document.writeform;
 
-                                        if (!form.title.value){
-                                        alert("제목을 적어주세요");
-                                        form.title.focus();
-                                        return;
-                                        }
-                                        if (!form.content.value){
-                                            alert("내용을 적어주세요");
-                                            form.content.focus();
-                                        }
-                                        form.submit;
-                                        }
-                                    </script>
-
-
+</table>
                             </div>
 
 
@@ -170,6 +148,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
