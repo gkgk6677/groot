@@ -1,9 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from groot.forms import ContractForm
-from .models import User, Contract
-from .models import Notice
+# from groot.forms import ContractForm
+from .models import *
 from django.utils import timezone
 
 # Create your views here.
