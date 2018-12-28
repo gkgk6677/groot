@@ -1,74 +1,11 @@
-<!doctype html>
-{%load static%}
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="icon" href="{%static 'img/favicon.ico' %}" type="image/ico">
-        <title>Groot Blockchain</title>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{%static 'css/bootstrap.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/linericon/style.css' %}">
-        <link rel="stylesheet" href="{%static 'css/font-awesome.min.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/owl-carousel/owl.carousel.min.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/lightbox/simpleLightbox.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/nice-select/css/nice-select.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/animate-css/animate.css' %}">
-        <link rel="stylesheet" href="{%static 'vendors/flaticon/flaticon.css' %}">
-        <!-- main css -->
-        <link rel="stylesheet" href="{%static 'css/style.css' %}">
-        <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
+{% extends "base.html" %}
 
-        <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+{% block css %}
+{% endblock css %}
 
-    </head>
-    <body>
+{% block content %}
+<!--================Content Area =================-->
 
-        <!--================Header Menu Area =================-->
-        <header class="header_area">
-            <div class="main_menu" id="mainNav">
-            	<nav class="navbar navbar-expand-lg navbar-light">
-					<div class="container">
-						<!-- Brand and toggle get grouped for better mobile display -->
-						<a class="navbar-brand logo_h" href="main"><img src="{%static 'img/rsz_grootlogo.png' %}" alt=""><img src="{%static 'img/rsz_grootlogo.png' %}" alt=""></a>
-						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<!-- Collect the nav links, forms, and other content for toggling -->
-						<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-							<ul class="nav navbar-nav menu_nav ml-auto">
-								<li class="nav-item submenu dropdown">
-									<a href="register" class="nav-link-other" role="button" aria-haspopup="true" aria-expanded="false">기술임치신청</a>
-
-								</li>
-								<li class="nav-item submenu dropdown">
-									<a href="#" class="nav-link-other otherpage dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">증명서</a>
-									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="projects.html">증명서 발급</a></li>
-										<li class="nav-item"><a class="nav-link" href="project-details.html">증명서 검증</a></li>
-									</ul>
-								</li>
-								<li class="nav-item submenu dropdown">
-									<a href="#" class="nav-link-other otherpage dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">기술열람</a>
-									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="blog.html">기업고객</a></li>
-										<li class="nav-item"><a class="nav-link" href="single-blog.html">계약고객</a></li>
-									</ul>
-								</li>
-								<li class="nav-item"><a class="nav-link-other" href="notice">고객센터</a></li>
-								<li class="nav-item"><a class="nav-link-other" href="login">로그인</a></li>
-							</ul>
-						</div>
-					</div>
-            	</nav>
-            </div>
-        </header>
-        <!--================Header Menu Area =================-->
-
-        <!--================Content Area =================-->
 
 
         <section class="portfolio_details_area p_120">
@@ -111,7 +48,7 @@
 
 
                                 <form method="POST" >
-                                    {% csrf_token %}
+                                {% csrf_token %}
                                     <table>
                                     <div class="form-group row">
                                         <label for="inputEmail3" class="col-sm-2 col-form-label">제목</label>
@@ -122,7 +59,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10" ><input type="text" name="user_user">{{ request.session.user_id }}</div>
+                                        <div class="col-sm-10" >{{ request.session.user_id }}</div>
                                     </div>
 
                                     <div class="form-group row">
@@ -135,7 +72,8 @@
 
                                     <div class="form-group row">
                                         <div class="col-sm-10">
-                                            <button type="submit" value="submit"  class="btn btn-default pull-right">등록</button>
+                                            <button type="submit" value="submit"  class="btn btn-default pull-right">
+                                                <a href="notice">등록</a> </button>
                                             <div class="col-sm-10">
                                                 <button type="button" class="btn btn-default pull-right"><a href="notice">돌아가기</a></button>
                                             </div>
@@ -152,30 +90,7 @@
             </div>
         </section>
 
+{% endblock content %}
 
-
-        <!--================End Content Area =================-->
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-        <script src="{% static 'js/popper.js' %}"></script>
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'js/stellar.js' %}"></script>
-        <script src="{% static 'vendors/lightbox/simpleLightbox.min.js' %}"></script>
-        <script src="{% static 'vendors/nice-select/js/jquery.nice-select.min.js' %}"></script>
-        <script src="{% static 'vendors/isotope/imagesloaded.pkgd.min.js' %}"></script>
-        <script src="{% static 'vendors/isotope/isotope-min.js' %}"></script>
-        <script src="{% static 'vendors/owl-carousel/owl.carousel.min.js' %}"></script>
-        <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
-        <script src="{% static 'js/mail-script.js' %}"></script>
-        <script src="{% static 'vendors/counter-up/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'vendors/counter-up/jquery.counterup.min.js' %}"></script>
-        <!-- contact js -->
-        <script src="{% static 'js/jquery.form.js' %}"></script>
-        <script src="{% static 'js/jquery.validate.min.js' %}"></script>
-        <script src="{% static 'js/contact.js' %}"></script>
-
-
-
-    </body>
-</html>
+{% block js %}
+{% endblock js %}

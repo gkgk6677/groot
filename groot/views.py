@@ -95,48 +95,29 @@ class pagingHelper:
         self.total_pages = 0
         self.totalPageList = 0
 
-# DB연동 @@@@@@@@@@@@@@@@@@@@@@@@@
-# def notice_write(request):
-#     nw= Notice(title=request.POST['title'],
-#                 user_user=request.POST['user_user'],
-#                 content=request.POST['content'],
-#                 c_date=timezone.now(),
-#                 count=0
-#                 )
-#
-#     nw.save()
-#     url = '/notice?current_page=1'
-#     return HttpResponse(url)
+
 
 count=0
 def notice_write(request):
     if request.method == 'POST':
         if request.POST['title'] != '' and request.POST['content'] != '':
+            u = User.objects.get(user=request.session.get('user_id'))
             new_notice = Notice.objects.create(
-                title = request.POST['title'],
-                user_user= request.session.user_id,
+                user= u,
+                title=request.POST['title'],
                 content = request.POST['content'],
-                count =+ count,
-                c_date = timezone.now()
+                count = count,
+                c_date = timezone.now(),
+                m_date = timezone.now()
             )
-            return redirect(f'/notice/{ new_notice.pk }')
+        return redirect(f'/notice/ {new_notice.pk}')
+    return render(request, 'groot/notice_write.html')
+#
 
-        return render(request, 'groot/notice_write.html',{})
+def notice_detail(request,pk):
+    notice= Notice.objects.get(pk=pk)
+    return render(request, 'groot/notice_detail.html', {'notice': notice})
 
-# def notice_write(request):
-#     if request.method =='GET':
-#         return render(request, 'groot/notice_write.html', {})
-#     else:
-#         title = request.POST['title']
-#         content = request.POST['content']
-#
-#
-#         notice = Notice( title=title, content=content)
-#         notice.c_date = timezone.now()
-#         notice.save()
-#
-#
-#         return HttpResponse(title + '게시글 작성 완료')
 
 def register(request):
     return render(request, 'groot/register.html', {})
