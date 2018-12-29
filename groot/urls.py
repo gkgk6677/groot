@@ -44,5 +44,4 @@ urlpatterns = [
 
     path('notice/(?P<pk>\d+)/$', views.notice_detail, name='notice_detail'),
 ]
-]
 

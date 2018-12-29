@@ -3,6 +3,22 @@ from django.db import models
 # Create your models here.
 from django.forms import SelectDateWidget
 
+class User(models.Model):
+    user_id = models.CharField(primary_key=True, max_length=100)
+    user_pw = models.CharField(max_length=100)
+    com_num = models.IntegerField()
+    com_name = models.CharField(max_length=100)
+    com_head = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    phone_num = models.IntegerField()
+    c_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'User'
+
+
 class Certificate(models.Model):
     cert_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
@@ -41,17 +57,29 @@ class DocVf(models.Model):
         db_table = 'Doc_vf'
         unique_together = (('doc_idx', 'uuid'),)
 
+class SortMst(models.Model):
+    sort_idx = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100 )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        managed = False
+        db_table = 'Sort_MST'
+
+
 
 class Enrollment(models.Model):
     enroll_idx = models.AutoField(primary_key=True)
     user = models.ForeignKey('User', models.DO_NOTHING)
-    sort_idx = models.ForeignKey('SortMst', models.DO_NOTHING, db_column='sort_idx')
+    sort_idx = models.ForeignKey(SortMst, models.DO_NOTHING, db_column='sort_idx')
     title = models.CharField(max_length=100)
     term = models.IntegerField()
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -117,26 +145,6 @@ class Notice(models.Model):
         self.save()
 
 
-class SortMst(models.Model):
-    sort_idx = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'Sort_MST'
 
 
-class User(models.Model):
-    user_id = models.CharField(primary_key=True, max_length=100)
-    user_pw = models.CharField(max_length=100)
-    com_num = models.IntegerField()
-    com_name = models.CharField(max_length=100)
-    com_head = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
-    phone_num = models.IntegerField()
-    c_date = models.DateTimeField()
 
-    class Meta:
-        managed = False
-        db_table = 'User'

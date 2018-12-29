@@ -1,7 +1,10 @@
+import datetime
+
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-# from groot.forms import ContractForm
+from groot.forms import EnrollmentForm
 from .models import *
 from django.utils import timezone
 
@@ -57,8 +60,10 @@ def mypage(request):
 
 def list(request):
     user_id = request.session['user_id']
-    contract_info = Contract.objects.get(user_user=user_id)
-    return render(request, 'groot/list.html', {'contract_info':contract_info})
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+
+    # return HttpResponse(enroll_infos)
+    return render(request, 'groot/list.html', {'enroll_infos':enroll_infos})
 
 
 rowsPerPage = 5
@@ -122,26 +127,31 @@ def notice_detail(request,pk):
 def register(request):
     return render(request, 'groot/register.html', {})
 
+
 def application(request):
     if request.method == 'POST':
-        form = ContractForm(request.POST)
-        user_id = request.session['user_id']
 
+        form = EnrollmentForm(request.POST)
+        end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+        # return HttpResponse(end_date)
         if form.is_valid():
-            contract = Contract()
+            enrollment = Enrollment()
             u = User.objects.get(user_id=request.session.get('user_id'))
-            contract.user_user = User()
-            contract.title = form.cleaned_data['title']
-            contract.sort = form.cleaned_data['sort']
-            contract.e_date = form.cleaned_data['e_date']
-            contract.user_user = u
-            contract.save()
+            enrollment.user_id = User()
+            enrollment.title = request.POST['title']
+            enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx'])
+            enrollment.term = request.POST['term']
+            enrollment.user = u
+            enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+            enrollment.save()
 
-            return redirect('mypage')
+        return redirect('mypage')
+
 
 
     else:
-        form = ContractForm()
+
+        form = EnrollmentForm()
     return render(request, 'groot/application.html', {'form': form})
 
 

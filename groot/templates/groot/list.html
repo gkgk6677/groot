@@ -57,7 +57,18 @@
                                             <div class="constant">연장/편입/해지</div>
                                         </div>
 
-                                        <div class="table-row" id="contractinfo"></div>
+
+                                            {% for enroll_info in enroll_infos %}
+                                            <div class="table-row" id="enroll_info">
+                                                <div class="serial">{{enroll_info.enroll_idx}}</div>
+                                                <div class="technology">{{enroll_info.title}}</div>
+                                                <div class="company">{{enroll_info.user_id}}</div>
+                                                <div class="enroll_date">{{enroll_info.c_date}}</div>
+                                                <div class="expired_date">{{enroll_info.term}}</div>
+                                                <div class="constant"><a href="extend">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
+                                            </div>
+                                            {% endfor %}
+
                                     </div>
                                 </div>
 					        </div>
@@ -65,25 +76,13 @@
                     </div>
                 </div>
             </div>
+            </div>
         </section>
     <!--================End Content Area =================-->
 {% endblock content %}
 
 {% block js %}
 <script>
-$(function(){
-    showStatus();
-})
-function showStatus() {
-    let table = `
-    <div class="serial">{{contract_info.cont_idx}}</div>
-    <div class="technology">{{contract_info.title}}</div>
-    <div class="company">{{request.session.user_id}}</div>
-    <div class="enroll_date">{{contract_info.c_date}}</div>
-    <div class="expired_date">{{contract_info.e_date}}</div>
-    <div class="constant"><a href="extend">연장</a>/<a href="insert">편입/</a><a href="expire">해지</a></div>
-   `;
-   $('#contractinfo').empty();
-   $('#contractinfo').append(table); };
-                                        </script>
+
+</script>
 {% endblock js %}
