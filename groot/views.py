@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
+import requests
 from groot.forms import EnrollmentForm
 from .models import *
 from django.utils import timezone
@@ -127,7 +127,6 @@ def notice_detail(request,pk):
 def register(request):
     return render(request, 'groot/register.html', {})
 
-
 def application(request):
     if request.method == 'POST':
 
@@ -139,21 +138,28 @@ def application(request):
             u = User.objects.get(user_id=request.session.get('user_id'))
             enrollment.user_id = User()
             enrollment.title = request.POST['title']
-            enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx'])
+            sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
+            enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = request.POST['term']
             enrollment.user = u
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
-        return redirect('mypage')
-
-
+            # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
+            #    0          1        2         3        4        5       6          7            8
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
+            # 주소는 때에 따라 변경(210.107.78.150)
+            fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
+                                                            + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
+                                                            + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
+                                                            + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "null"
+            f = requests.get(fabric)
+            print(f.text) # cmd 창에 보여질 값
+            return redirect('mypage')
 
     else:
-
         form = EnrollmentForm()
     return render(request, 'groot/application.html', {'form': form})
-
 
 def test(request):
     return render(request, 'groot/test.html', {})
