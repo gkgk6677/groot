@@ -135,6 +135,31 @@ def notice_detail(request,pk):
     notice= Notice.objects.get(pk=pk)
     return render(request, 'groot/notice_detail.html', {'notice': notice})
 
+def extend(request,idx):
+
+    user_id = request.session['user_id']
+    # enrollinfo = Enrollment.objects.filter(user_id=user_id)
+
+    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+
+    if request.method == 'POST':
+
+        # enrollment = Enrollment()
+        e_date = enrollinfo.end_date
+        enrollinfo.term = request.POST['term']
+
+        enrollinfo.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
+        # return HttpResponse(enrollment.end_date)
+
+        #     # 업 데 이 트 하 는 방 법 이 필 요 해 !
+        enrollinfo.save()
+        #
+        #
+        return redirect('mypage')
+    else:
+#
+        return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
+
 
 def register(request):
     return render(request, 'groot/register.html', {})
