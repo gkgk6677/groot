@@ -28,8 +28,12 @@ def login(request):
         except User.DoesNotExist:
             return HttpResponse('ID와 Password를 확인해주세요.')
         else:
-            request.session['user_id'] = user_id
-            return HttpResponse('로그인 하셨습니다.')
+            if user_id == 'admin':
+                request.session['user_id'] = user_id
+                return HttpResponse('관리자 페이지로 접속합니다.')
+            else:
+                request.session['user_id'] = user_id
+                return HttpResponse('로그인 하셨습니다.')
 
 def logout(request) :
     del request.session['user_id']
@@ -248,4 +252,7 @@ def insert(request):
 
 def expire(request):
     return render(request, 'groot/expire.html', {})
+
+def a(request):
+    return render(request, 'groot/a.html', {})
 

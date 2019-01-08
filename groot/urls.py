@@ -47,5 +47,6 @@ urlpatterns = [
     path('change', views.change, name="change"),
     path('change_pw', views.change_pw, name="change_pw"),
     path('change_com', views.change_com, name="change_com"),
+    path('a', views.a, name="a"),
 ]
 
