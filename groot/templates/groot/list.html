@@ -79,17 +79,19 @@
                                             <div class="expire"><a href="#" type="button">폐지</a></div>
                                         </div>
 
-                                        {% for enroll_info in enroll_infos %}
-                                        <div class="table-row" id="enroll_info">
-                                            <div class="serial">{{enroll_info.enroll_idx}}</div>
-                                            <div class="technology">{{enroll_info.title}}</div>
-                                            <div class="company">{{enroll_info.user_id}}</div>
-                                            <div class="enroll_date">{{enroll_info.c_date}}</div>
-                                            <div class="expired_date">{{enroll_info.term}}</div>
-                                            <div class="constant"><a href="extend/{{enroll_info.enroll_idx}}">연장</a>/<a
-                                                    href="insert">편입</a>/<a href="expire">해지</a></div>
-                                        </div>
-                                        {% endfor %}
+
+                                            {% for enroll_info in enroll_infos %}
+                                            <div class="table-row" id="enroll_info">
+                                                <div class="serial">{{enroll_info.enroll_idx}}</div>
+                                                <div class="technology">{{enroll_info.title}}</div>
+                                                <div class="company">{{enroll_info.user_id}}</div>
+                                                <div class="enroll_date">{{enroll_info.c_date}}</div>
+                                                <div class="expired_date">{{enroll_info.term}}</div>
+                                                <div class="constant"><a href="extend/{{enroll_info.enroll_idx}}">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
+                                            </div>
+                                            {% endfor %}
+
+
                                     </div>
                                 </div>
 					        </div>

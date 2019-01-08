@@ -2,14 +2,19 @@ import datetime
 import json
 from functools import wraps
 from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from groot.forms import EnrollmentForm
+from groot.forms import *
 from .models import *
 from django.utils import timezone
+
+
 
 # Create your views here.
 
@@ -125,7 +130,7 @@ def notice_write(request):
                 content = request.POST['content'],
                 count = count,
                 c_date = timezone.now(),
-                m_date = timezone.now()
+                m_date = timezone.now(),
             )
         return redirect(f'/notice/ {new_notice.pk}')
     return render(request, 'groot/notice_write.html')
@@ -134,31 +139,6 @@ def notice_write(request):
 def notice_detail(request,pk):
     notice= Notice.objects.get(pk=pk)
     return render(request, 'groot/notice_detail.html', {'notice': notice})
-
-def extend(request,idx):
-
-    user_id = request.session['user_id']
-    # enrollinfo = Enrollment.objects.filter(user_id=user_id)
-
-    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
-
-    if request.method == 'POST':
-
-        # enrollment = Enrollment()
-        e_date = enrollinfo.end_date
-        enrollinfo.term = request.POST['term']
-
-        enrollinfo.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
-        # return HttpResponse(enrollment.end_date)
-
-        #     # 업 데 이 트 하 는 방 법 이 필 요 해 !
-        enrollinfo.save()
-        #
-        #
-        return redirect('mypage')
-    else:
-#
-        return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
 
 
 def register(request):
@@ -193,24 +173,86 @@ def application(request):
             enrollment.user = u
             enrollment.c_date = datetime.datetime.now()
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
-            enrollment.c_date = datetime.datetime.now()
             enrollment.save()
 
+        return redirect('mypage')
+    else:
+
+        form = EnrollmentForm()
+    return render(request, 'groot/application.html', {'form': form})
+
+#
+def extend(request,idx):
+
+
+
+    user_id = request.session['user_id']
+    # enrollinfo = Enrollment.objects.filter(user_id=user_id)
+
+    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+
+    if request.method == 'POST':
+
+        # enrollment = Enrollment()
+        e_date = enrollinfo.end_date
+        enrollinfo.term = request.POST['term']
+
+        enrollinfo.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
+        # return HttpResponse(enrollment.end_date)
+
+        #     # 업 데 이 트 하 는 방 법 이 필 요 해 !
+        enrollinfo.save()
+        #
+        #
+        return redirect('mypage')
+    else:
+
+        return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
+# #
+# # #
+#
+# # # TEST
+# def extend(request):
+#
+#     user_id = request.session['user_id']
+#     enrollinfo = Enrollment.objects.get(user_id=user_id)
+#
+#     if request.method == 'POST':
+#
+#         form = ExtendForm(request.POST)
+#         enrollment = Enrollment()
+#         e_date = enrollinfo.end_date
+#
+#
+#         if form.is_valid():
+#             enrollment.term = request.POST['term']
+#             form.save(commit=False)
+#             enrollment.end_date = e_date + datetime.timedelta(days=365+365 * int(enrollment.term))
+#             # return HttpResponse(enrollment.end_date)
+#             # 업 데 이 트 하 는 방 법 이 필 요 해 !
+#             enrollment.save()
+#
+#         return redirect('mypage')
+#     else:
+#
+#         form = ExtendForm()
+#     return render(request, 'groot/extend.html', {'form': form, 'enrollinfo':enrollinfo})
+# # # TEST
             # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
             #    0          1        2         3        4        5       6          7            8
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
             # 주소는 때에 따라 변경(210.107.78.150)
-            fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-                                                            + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-                                                            + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-                                                            + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
-                                                            + "201901081400"
-            f = requests.get(fabric)
-            print(f.text) # cmd 창에 보여질 값
-            return redirect('mypage')
-    else:
-        form = EnrollmentForm()
-    return render(request, 'groot/application.html', {'form': form})
+    #         fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
+    #                                                         + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
+    #                                                         + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
+    #                                                         + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
+    #                                                         + "201901081400"
+    #         f = requests.get(fabric)
+    #         print(f.text) # cmd 창에 보여질 값
+    #         return redirect('mypage')
+    # else:
+    #     form = EnrollmentForm()
+    # return render(request, 'groot/application.html', {'form': form})
 
 @csrf_exempt
 # @csrf_protect
@@ -225,6 +267,31 @@ def idcheck(request):
     context = {'ck_val': ck_val}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
+def insert(request):
+
+    user_id = request.session['user_id']
+    # enrollinfo = Enrollment.objects.get(user_id=user_id)
+
+    enrollinfo = Enrollment.objects.filter(name_id=user_id)
+    # .order_by('-update_date')
+
+    if request.method == 'POST':
+        form = EnrollmentForm(request.POST)
+
+        if form.is_valid():
+            enrollment = Enrollment()
+            e_date = enrollinfo.end_date
+
+            enrollment.term = request.POST['term']
+            enrollment.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
+
+            # return HttpResponse(enrollment.end_date)
+            # 업 데 이 트 하 는 방 법 이 필 요 해 !
+            form.save()
+            enrollment.save()
+
+
+        return redirect('mypage')
 
 @csrf_exempt
 def com_num_check(request):
@@ -234,6 +301,28 @@ def com_num_check(request):
         com_ck_val = 1
     else:
         com_ck_val = 0
+
+        form = EnrollmentForm()
+    return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
+
+#
+# class SearchFormView():
+#     form_class= SearchForm
+#     template_name = 'groot/insert.html'
+#
+#     def form_valid(self, form):
+#         word = '%s' %self.request.POST['word']
+#         com_list = Enrollment.objects.filter(
+#             Q(com_name__icontains=word)
+#         ).distinct()
+#         context = {}
+#         context['object_list']= com_list
+#         context['search_word']=word
+#         return context
+
+
+
+
 
     context = {'com_ck_val': com_ck_val}
     return HttpResponse(json.dumps(context), content_type='application/json')
@@ -277,11 +366,9 @@ def qna(request):
 def bye(request):
     return render(request, 'groot/bye.html', {})
 
-def extend(request):
-    return render(request, 'groot/extend.html', {})
 
-def insert(request):
-    return render(request, 'groot/insert.html', {})
+
+
 
 def expire(request):
     return render(request, 'groot/expire.html', {})
