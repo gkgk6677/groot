@@ -12,7 +12,6 @@
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="blog_right_sidebar">
-
                                 <aside class="single_sidebar_widget author_widget">
                                     <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
                                     <h4>{{ request.session.user_id }}</h4>
@@ -22,7 +21,7 @@
                                 <aside class="single_sidebar_widget post_category_widget">
                                     <ul class="list cat-list">
                                         <li>
-                                            <a href="mypage" class="d-flex justify-content-between">
+                                            <a href="change" class="d-flex justify-content-between">
                                                 <p>내정보 수정</p>
                                             </a>
                                         </li>
@@ -40,35 +39,56 @@
                                     <div class="br"></div>
                                 </aside>
                             </div>
-
                         </div>
+
                         <div class="col-lg-9">
                             <div class="section-table">
-                                <h3 class="mb-30 title_color">계약현황</h3>
+                                <h3 class="mb-30 title_color">계약 현황</h3>
                                 <div class="progress-table-wrap">
                                     <div class="progress-table">
                                         <div class="table-head">
-                                            <div class="serial">#</div>
-                                            <div class="technology">기술명</div>
-                                            <div class="company">신청기업</div>
-                                            <div class="enroll_date">등록날짜</div>
-
-                                            <div class="expired_date">만료날짜</div>
-                                            <div class="constant">연장/편입/해지</div>
+                                            <div class="index">번호</div>
+                                            <div class="enroll_title">임치명</div>
+                                            <div class="date">계약 기간</div>
+                                            <div class="status">상태</div>
+                                            <div class="extend">연장</div>
+                                            <div class="insert">편입</div>
+                                            <div class="update">갱신</div>
+                                            <div class="expire">폐지</div>
                                         </div>
 
+                                        <div class="table-row">
+                                            <div class="index">1</div>
+                                            <div class="enroll_title">블록체인 기반의 무역거래 시스템</div>
+                                            <div class="date">19.01.02~22.01.02</div>
+                                            <div class="status">대기</div>
+                                            <div class="extend"><a href="#" type="button">연장</a></div>
+                                            <div class="insert"><a href="#" type="button">편입</a></div>
+                                            <div class="update"><a href="#" type="button">갱신</a></div>
+                                            <div class="expire"><a href="#" type="button">폐지</a></div>
+                                        </div>
+    
+                                        <div class="table-row">
+                                            <div class="index">2</div>
+                                            <div class="enroll_title">전투의 민족</div>
+                                            <div class="date">19.01.02~22.01.02</div>
+                                            <div class="status">대기</div>
+                                            <div class="extend"><a href="#" type="button">연장</a></div>
+                                            <div class="insert"><a href="#" type="button">편입</a></div>
+                                            <div class="update"><a href="#" type="button">갱신</a></div>
+                                            <div class="expire"><a href="#" type="button">폐지</a></div>
+                                        </div>
 
-                                            {% for enroll_info in enroll_infos %}
-                                            <div class="table-row" id="enroll_info">
-                                                <div class="serial">{{enroll_info.enroll_idx}}</div>
-                                                <div class="technology">{{enroll_info.title}}</div>
-                                                <div class="company">{{enroll_info.user_id}}</div>
-                                                <div class="enroll_date">{{enroll_info.c_date}}</div>
-                                                <div class="expired_date">{{enroll_info.term}}</div>
-                                                <div class="constant"><a href="extend">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
-                                            </div>
-                                            {% endfor %}
-
+                                        {% for enroll_info in enroll_infos %}
+                                        <div class="table-row" id="enroll_info">
+                                            <div class="serial">{{enroll_info.enroll_idx}}</div>
+                                            <div class="technology">{{enroll_info.title}}</div>
+                                            <div class="company">{{enroll_info.user_id}}</div>
+                                            <div class="enroll_date">{{enroll_info.c_date}}</div>
+                                            <div class="expired_date">{{enroll_info.term}}</div>
+                                            <div class="constant"><a href="extend">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
 					        </div>

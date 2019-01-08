@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+    <section class="portfolio_details_area p_120"><br><br>
+        <div class="container">
+            <div class="portfolio_details_inner">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget author_widget">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                                <h4>{{ request.session.user_id }}</h4>
+                                <p>GrootBlockchain company</p>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <ul class="list cat-list">
+                                    <li>
+                                        <a href="change" class="d-flex justify-content-between">
+                                            <p>내정보 수정</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="list" class="d-flex justify-content-between">
+                                            <p>계약 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="bye" class="d-flex justify-content-between">
+                                            <p>회원탈퇴</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-5">
+                        <br><br><br><br>
+                        <div id="header" class="join_membership" role="banner">
+                                <h3 class="title_color">회사정보 변경</h3>
+                        </div>
+                        <div >
+                            <form action="#" style="padding-top: 30px;padding-left: 20px; padding-right: 20px; border-radius: 1.0em; border: 2px solid rgb(129,129,129)">                           
+                                <div class="form-group">
+                                    <div class="mt-10">
+                                        <input type="text" name="user_pw" required placeholder="변경할 이메일 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 이메일 주소를 입력하세요.'" class="form-control single-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="mt-10">
+                                        <input type="text" name="user_pw" required placeholder="변경할 회사 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 회사 주소를 입력하세요.'" class="form-control single-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="mt-10">
+                                        <input type="text" name="user_pw" required placeholder="변경할 연락처를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 연락처를 입력해주세요.'" class="form-control single-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="mt-10">
+                                        <a href="#" class="genric-btn info circle" style="position: absolute; right: 60px;">변경</a>
+                                    </div>
+                                </div>
+                                <br><br><br>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

@@ -207,6 +207,15 @@ def com_num_check(request):
     context = {'com_ck_val': com_ck_val}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
+def change(request):
+    return render(request, 'groot/change.html', {})
+
+def change_pw(request):
+    return render(request, 'groot/change_pw.html', {})
+
+def change_com(request):
+    return render(request, 'groot/change_com.html', {})
+
 def test(request):
     return render(request, 'groot/test.html', {})
 

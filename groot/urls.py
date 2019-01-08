@@ -44,6 +44,8 @@ urlpatterns = [
     path('notice/(?P<pk>\d+)/$', views.notice_detail, name='notice_detail'),
     path('idcheck', views.idcheck, name='idcheck'),
     path('com_num_check', views.com_num_check, name='com_num_check'),
-
+    path('change', views.change, name="change"),
+    path('change_pw', views.change_pw, name="change_pw"),
+    path('change_com', views.change_com, name="change_com"),
 ]
 
