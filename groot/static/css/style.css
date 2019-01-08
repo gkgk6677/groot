@@ -1777,29 +1777,63 @@ h6 {
 .progress-table .t_t {
   width: 5%; }
 
- .progress-table .expired_date {
+.progress-table .expired_date {
   width: 15%; }
 
 .progress-table .constant {
   width: 20%;
   padding-right: 20px; }
 
-  .progress-table .count {
+.progress-table .count {
   width: 20%;
   padding-right: 20px; }
 
-  .progress-table .title {
+.progress-table .title {
   width: 20%;
   padding-right: 20px; }
 
-  .progress-table .UserID {
+.progress-table .UserID {
   width: 20%;
   padding-right: 20px; }
+
+.progress-table .index {
+  width: 10%;
+}
+
+.progress-table .enroll_title{
+  width: 35%;
+}
+
+.progress-table .date {
+  width: 20%;
+}
+
+.progress-table .status {
+  width: 15%;
+}
+
+.progress-table .extend {
+  width: 10%;
+}
+
+.progress-table .insert {
+  width: 10%;
+}
+
+.progress-table .update {
+  width: 10%;
+}
+
+.progress-table .expire {
+  width: 10%;
+}
+
+
 
 .progress-table .table-head {
   display: flex; }
 
-.progress-table .table-head .tr .td .tbody .serial, .progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head .percentage {
+.progress-table .table-head .tr .td .tbody .serial, .progress-table .table-head .index, .progress-table .table-head .enroll_title, .progress-table .table-head .date, .progress-table .table-head .status, .progress-table .table-head .extend, .progress-table .table-head .insert, .progress-table .table-head .update, .progress-table .table-head .expire, .progress-table .table-head .country, .progress-table .table-head .visit, .progress-table .table-head .percentage {
   color: #222222;
   line-height: 40px;
   text-transform: uppercase;
