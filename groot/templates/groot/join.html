@@ -1,58 +1,64 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block css %}
 {% endblock css %}
 
 {% block content %}
 	<section class="contact_area p_200" >
 		<div class="container">
-			<div class="join_form">
+			<div class="join_form" id="join_form">
 
-				<div class="col-md-6">
+				<div class="col-md-6" id="join_form_col">
 					<div id="header" class="join_membership" role="banner">
 						<h3 class="title_color">회원가입</h3>
 					</div>
 
-					<form method='POST'>  <!--action="#"-->
+					<form method='POST' id="joinForm" >  <!--action="#"-->
 						{% csrf_token %}
 						<div class="form-group">
-							<div class="input-group d-flex flex-row">
-								<input type="text" name="user_id" placeholder="아이디" onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디'" required class="form-control form-control-input" id="user_id">
-								<button class="btn sub-btn"><span>중복확인</span></button>
+							<div class="input-group input_box d-flex flex-row">
+								<input type="text" name="user_id" placeholder="아이디" minlength="5" maxlength="20" onfocus="this.placeholder = ''" onblur="this.placeholder = '아이디'" required class="form-control form-control-input" id="user_id" autofocus>
+								<button class="btn sub-btn" id="idck"><span>중복확인</span></button>
 							</div>
 						</div>
-						<div class="form-group">
-							<input type="password" name="user_pw" placeholder="비밀번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호'" required class="form-control" id="user_pw" oninput="checkPwd()">
+						<span class="error_next_box" id="idMsg" style="display:none" role="alert"></span>
+						<div class="form-group input_box" id ="">
+							<input type="password" name="user_pw1" id="user_pw1" placeholder="비밀번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호'" required class="form-control" >
 						</div>
-						<div class="form-group ">
-							<input type="password" name="user_pw" placeholder="비밀번호 확인" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control" id="re_user_pw" oninput="checkPwd()">
+						<span class="error_next_box" id="pswd1Msg" style="display:none" role="alert"></span>
+						<div class="form-group input_box" >
+							<input type="password" name="user_pw2" id="user_pw2" placeholder="비밀번호 확인" onfocus="this.placeholder = ''" onblur="this.placeholder = '비밀번호 확인'" required class="form-control"  >
 						</div>
-						<div class="form-group ">
+						<span class="error_next_box" id="pswd2Msg" style="display:none" role="alert"></span>
+						<div class="form-group input_box">
 							<input type="text" name="com_name" placeholder="회사명" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="com_name">
 						</div>
-						<div class="form-group ">
+						<span class="error_next_box" id="com_nameMsg" style="display:none" role="alert"></span>
+						<div class="form-group input_box">
 							<input type="text" name="com_head" placeholder="대표자" onfocus="this.placeholder = ''" onblur="this.placeholder = '대표자'" required class="form-control" id="com_head">
 						</div>
-						<div class="form-group ">
+						<span class="error_next_box" id="com_headMsg" style="display:none" role="alert"></span>
+						<div class="form-group input_box">
 							<div class="input-group d-flex flex-row">
-								<input type="text" name="com_num" placeholder="사업자등록번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '사업자등록번호'" required class="form-control form-control-input" id="com_num" >
-								<button class="btn sub-btn"><span>조회</span></button>
+								<input type="text" name="com_num" placeholder="사업자등록번호(숫자만 입력해주세요)" onfocus="this.placeholder = ''" onblur="this.placeholder = '사업자등록번호'" required class="form-control form-control-input" id="com_num" >
+								<button class="btn sub-btn" id="com_ck"><span>중복조회</span></button>
 							</div>
 						</div>
-						<div class="form-group ">
+						<span class="error_next_box" id="cidMsg" style="display:none" role="alert"></span>
+						<div class="form-group input_box">
 							<div class="input-group d-flex flex-row">
 								<input type="email" name="email" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="form-control form-control-input" id="email">
-								<button class="btn sub-btn"><span>중복확인</span></button>
 							</div>
 						</div>
-						<div class="form-group">
+						<span class="error_next_box" id="emailMsg" style="display:none" role="alert"></span>
+						<div class="form-group input_box">
 							<input type="text" name="address" placeholder="주소" onfocus="this.placeholder = ''" onblur="this.placeholder = '주소'" required class="form-control" id="address">
 						</div>
-						<div class="form-group ">
+						<div class="form-group input_box">
 								<input type="text" name="phone_num" placeholder="핸드폰 번호" onfocus="this.placeholder = ''" onblur="this.placeholder = '회사명'" required class="form-control" id="phone_num">
 						</div>
 						<div>
-							<button type="submit" value="submit" class="btn login_btn">회원가입</button>
+							<button type="submit" value="submit" class="btn login_btn" id="btnSend">가입하기</button>
 						</div>
 					</form>
 				</div>
@@ -62,44 +68,5 @@
 {% endblock content %}
 
 {% block js %}
-	<script>
-		$('button[type=submit]').click(function() {
-
-			$.ajax({
-				url: '/join',
-				type: 'post',
-				data: $('form').serialize(),
-				success: function(result) {
-					alert(result)
-					window.location.replace('/login')
-				}
-			})
-
-			return false
-		})
-
-
-		function checkPwd() {
-			var inputed = $('#user_pw').val();
-			var reinputed = $('#re_user_pw').val();
-			if(reinputed=="" && (inputed != reinputed || inputed == reinputed)){
-				$(".btn login_btn").prop("disabled", true);
-				$(".btn login_btn").css("background-color", "#aaaaaa");
-				$("#re_user_pw").css("background-color", "#FFCECE");
-			}
-			else if (inputed == reinputed) {
-				$("#re_user_pw").css("background-color", "#B0F6AC");
-				pwdCheck = 1;
-				if(idCheck==1 && pwdCheck == 1) {
-					$(".btn login_btn").prop("disabled", false);
-					$(".btn login_btn").css("background-color", "#4CAF50");
-				}
-			} else if (inputed != reinputed) {
-				pwdCheck = 0;
-				$(".btn login_btn").prop("disabled", true);
-				$(".btn login_btn").css("background-color", "#aaaaaa");
-				$("#re_user_pw").css("background-color", "#FFCECE");
-			}
-		}
-	</script>
+<script src="{% static 'js/join.js' %}"></script>
 {% endblock js %}

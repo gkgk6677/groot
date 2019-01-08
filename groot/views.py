@@ -1,9 +1,11 @@
 import datetime
-
-from django.contrib.auth.decorators import login_required
+import json
+from functools import wraps
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
+from django.template import RequestContext
+from django.template.loader import get_template
+from django.views.decorators.csrf import csrf_exempt
 from groot.forms import EnrollmentForm
 from .models import *
 from django.utils import timezone
@@ -37,7 +39,7 @@ def join(request):
         return render(request, 'groot/join.html', {})
     else:
         user_id = request.POST['user_id']
-        user_pw = request.POST['user_pw']
+        user_pw = request.POST['user_pw1']
         com_num = request.POST['com_num']
         com_name = request.POST['com_name']
         com_head = request.POST['com_head']
@@ -46,10 +48,15 @@ def join(request):
         phone_num = request.POST['phone_num']
 
         user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num)
-        user.c_date = timezone.now()
+        user.status = 0
+        user.s_date = timezone.now()
         user.save()
 
-        return HttpResponse( user_id + '님 회원가입이 완료되었습니다.')
+        value = {'user_id': user_id}
+        template = get_template('groot/welcome.html')
+        output = template.render(value)
+
+        return HttpResponse(output)
 
 
 def mypage(request):
@@ -127,12 +134,23 @@ def notice_detail(request,pk):
 def register(request):
     return render(request, 'groot/register.html', {})
 
+#login required decorator
+def my_login_required(func):
+        @wraps(func)
+        def wrap(request, *args, **kwargs):
+                #this check the session
+                id = request.session.get('user_id');
+                if bool(id) != True:
+                    return redirect ('login')
+                return func(request, *args, **kwargs)
+        return wrap
 
+
+@my_login_required
 def application(request):
     if request.method == 'POST':
 
         form = EnrollmentForm(request.POST)
-        end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
         # return HttpResponse(end_date)
         if form.is_valid():
             enrollment = Enrollment()
@@ -147,13 +165,35 @@ def application(request):
 
         return redirect('mypage')
 
-
-
     else:
-
         form = EnrollmentForm()
     return render(request, 'groot/application.html', {'form': form})
 
+@csrf_exempt
+# @csrf_protect
+def idcheck(request):
+    find_userid = request.POST['userid']
+
+    if User.objects.filter(user_id = find_userid) :
+        ck_val = 1
+    else:
+        ck_val = 0
+
+    context = {'ck_val': ck_val}
+    return HttpResponse(json.dumps(context), content_type='application/json')
+
+
+@csrf_exempt
+def com_num_check(request):
+    find_num = request.POST['com_num']
+
+    if User.objects.filter(com_num = find_num) :
+        com_ck_val = 1
+    else:
+        com_ck_val = 0
+
+    context = {'com_ck_val': com_ck_val}
+    return HttpResponse(json.dumps(context), content_type='application/json')
 
 def test(request):
     return render(request, 'groot/test.html', {})
