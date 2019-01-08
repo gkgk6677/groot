@@ -2,7 +2,7 @@ import datetime
 
 from django import forms
 from django.forms import SelectDateWidget
-
+ 
 from .models import *
 
 class EnrollmentForm(forms.ModelForm):

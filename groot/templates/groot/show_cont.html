@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            font-weight: 400;
+            color: #2b3034;
+            list-style: none;
+        }
+        caption{display: none}
+        .wrap{width: 800px; height: 780px; margin: 5px auto; padding: 5px; border: 2px solid #000}
+        .wrap table{width: 100%; table-layout: fixed; border-collapse: collapse; border-spacing: 0}
+        .wrap thead th{height: 180px;}
+        .wrap thead td{height: 20px; font-size: 18px; text-align: left}
+        .wrap thead th span{font-size: 40px; font-weight: bold; border-bottom: 2px solid #000; text-align: center; letter-spacing: 10px}
+        .wrap th, .wrap td{height: 50px; font-size: 20px; text-align: center}
+        .wrap th{font-weight: bold; letter-spacing: 6px;}
+        .wrap tr:nth-child(5){height: 150px}
+        .wrap tr:nth-child(6){height: 10px}
+        .wrap tr:nth-child(7){height: 150px}
+        .wrap tr:nth-child(7) td{padding: 10px; text-align: right; vertical-align: bottom}
+     </style>
+{% endblock css %}
+
+{% block content %}
+    <section class="contact_area p_200" >
+            <div class="container" style="text-align:center;">
+                <!--<h3 class="mb-30 title_color">증명서</h3>-->
+                <div style="" class="vc_col-sm-12 wpb_column column_container vc_custom_1506404151224 ">
+                    <div class="wrap">
+                        <table>
+                            <caption>계약증명서</caption>
+                            <colgroup>
+                                <col style="width: 30%">
+                                <col style="width: *">
+                            </colgroup>
+                            <thead>
+                               <tr>
+                                   <td colspan="2">
+                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/apple">DFSA9479GSDW156DGE256GGEGHUJ60G902</a>
+                                   </td>
+                               </tr>
+                               <tr>
+                                    <th colspan="2"><span>계약증명서</span></th>
+                               </tr>
+                            </thead>
+                            <tbody>
+                               <tr>
+                                    <th scope="row">기술명</th>
+                                    <td>블록체인 기반 전자문서 위변조 방지 시스템</td>
+                               </tr>
+                               <tr>
+                                    <th scope="row">기업명</th>
+                                    <td>주식회사마크애니</td>
+                               </tr>
+                               <tr>
+                                    <th scope="row">사용기업명</th>
+                                    <td>GROOT</td>
+                               </tr>
+                               <tr>
+                                    <th scope="row">계약기간</th>
+                                    <td>2019.01.01. ~ 2021.01.01.</td>
+                               </tr>
+                               <tr>
+                                    <td colspan="2">위의 사실을 증명합니다.</td>
+                               </tr>
+                               <tr>
+                                    <td colspan="2">2019년 01월 29일</td>
+                               </tr>
+                               <tr>
+                                    <td colspan="2">
+                                        <p>서울특별시 신논현로 HP교육센터</p>
+                                        <p>주식회사 GROOT</p>
+                                    </td>
+                               </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <br><br><br><br>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

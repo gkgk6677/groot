@@ -176,11 +176,11 @@ def application(request):
             fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
                                                             + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
                                                             + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-                                                            + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "null"
+                                                            + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
+                                                            + "201901081400"
             f = requests.get(fabric)
             print(f.text) # cmd 창에 보여질 값
             return redirect('mypage')
-
     else:
         form = EnrollmentForm()
     return render(request, 'groot/application.html', {'form': form})
@@ -225,6 +225,12 @@ def test(request):
 
 def issue(request):
     return render(request, 'groot/issue.html', {})
+
+def show_app(request):
+    return render(request, 'groot/show_app.html', {})
+
+def show_cont(request):
+    return render(request, 'groot/show_cont.html', {})
 
 def read(request):
     return render(request, 'groot/read.html', {})
