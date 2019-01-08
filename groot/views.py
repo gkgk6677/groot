@@ -168,6 +168,7 @@ def application(request):
             enrollment.user = u
             enrollment.c_date = datetime.datetime.now()
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+            enrollment.c_date = datetime.datetime.now()
             enrollment.save()
 
             # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
