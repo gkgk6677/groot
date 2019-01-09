@@ -155,11 +155,9 @@ def my_login_required(func):
                 return func(request, *args, **kwargs)
         return wrap
 
-
 @my_login_required
 def application(request):
     if request.method == 'POST':
-
         form = EnrollmentForm(request.POST)
         # return HttpResponse(end_date)
         if form.is_valid():
@@ -175,17 +173,23 @@ def application(request):
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
-        return redirect('mypage')
+            # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
+            #    0          1        2         3        4        5       6          7            8
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
+            # 주소는 때에 따라 변경(210.107.78.150)
+            fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
+                     + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
+                     + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
+                     + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
+                     + "201901081400"
+            f = requests.get(fabric)
+            print(f.text)  # cmd 창에 보여질 값
+            return redirect('mypage')
     else:
-
         form = EnrollmentForm()
     return render(request, 'groot/application.html', {'form': form})
 
-#
 def extend(request,idx):
-
-
-
     user_id = request.session['user_id']
     # enrollinfo = Enrollment.objects.filter(user_id=user_id)
 
@@ -197,62 +201,13 @@ def extend(request,idx):
         e_date = enrollinfo.end_date
         enrollinfo.term = request.POST['term']
 
-        enrollinfo.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
+        enrollinfo.end_date = e_date + datetime.timedelta(days=365 * int(request.POST['term']))
         # return HttpResponse(enrollment.end_date)
-
-        #     # 업 데 이 트 하 는 방 법 이 필 요 해 !
         enrollinfo.save()
-        #
-        #
+
         return redirect('mypage')
     else:
-
         return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
-# #
-# # #
-#
-# # # TEST
-# def extend(request):
-#
-#     user_id = request.session['user_id']
-#     enrollinfo = Enrollment.objects.get(user_id=user_id)
-#
-#     if request.method == 'POST':
-#
-#         form = ExtendForm(request.POST)
-#         enrollment = Enrollment()
-#         e_date = enrollinfo.end_date
-#
-#
-#         if form.is_valid():
-#             enrollment.term = request.POST['term']
-#             form.save(commit=False)
-#             enrollment.end_date = e_date + datetime.timedelta(days=365+365 * int(enrollment.term))
-#             # return HttpResponse(enrollment.end_date)
-#             # 업 데 이 트 하 는 방 법 이 필 요 해 !
-#             enrollment.save()
-#
-#         return redirect('mypage')
-#     else:
-#
-#         form = ExtendForm()
-#     return render(request, 'groot/extend.html', {'form': form, 'enrollinfo':enrollinfo})
-# # # TEST
-            # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
-            #    0          1        2         3        4        5       6          7            8
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
-            # 주소는 때에 따라 변경(210.107.78.150)
-    #         fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-    #                                                         + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-    #                                                         + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-    #                                                         + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
-    #                                                         + "201901081400"
-    #         f = requests.get(fabric)
-    #         print(f.text) # cmd 창에 보여질 값
-    #         return redirect('mypage')
-    # else:
-    #     form = EnrollmentForm()
-    # return render(request, 'groot/application.html', {'form': form})
 
 @csrf_exempt
 # @csrf_protect
@@ -268,7 +223,6 @@ def idcheck(request):
     return HttpResponse(json.dumps(context), content_type='application/json')
 
 def insert(request):
-
     user_id = request.session['user_id']
     # enrollinfo = Enrollment.objects.get(user_id=user_id)
 
@@ -290,7 +244,6 @@ def insert(request):
             form.save()
             enrollment.save()
 
-
         return redirect('mypage')
 
 @csrf_exempt
@@ -302,8 +255,10 @@ def com_num_check(request):
     else:
         com_ck_val = 0
 
-        form = EnrollmentForm()
-    return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
+    context = {'com_ck_val': com_ck_val}
+    return HttpResponse(json.dumps(context), content_type='application/json')
+    #     form = EnrollmentForm()
+    # return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
 
 #
 # class SearchFormView():
@@ -320,13 +275,6 @@ def com_num_check(request):
 #         context['search_word']=word
 #         return context
 
-
-
-
-
-    context = {'com_ck_val': com_ck_val}
-    return HttpResponse(json.dumps(context), content_type='application/json')
-
 def change(request):
     return render(request, 'groot/change.html', {})
 
@@ -340,13 +288,29 @@ def test(request):
     return render(request, 'groot/test.html', {})
 
 def issue(request):
-    return render(request, 'groot/issue.html', {})
+    user_id = request.session['user_id']
+    enroll_infos = Enrollment.objects.all().filter(user_id=user_id)
+    contract_infos = Contract.objects.all().filter(user_id=user_id)
 
-def show_app(request):
-    return render(request, 'groot/show_app.html', {})
+    # return HttpResponse(enroll_infos)
+    return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
 
-def show_cont(request):
-    return render(request, 'groot/show_cont.html', {})
+def show_app(request, idx):
+    user_id = request.session['user_id']
+
+    enroll_info = Enrollment.objects.get(enroll_idx=idx)
+    user = User.objects.get(user_id=user_id)
+
+    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user})
+
+def show_cont(request, en_idx, cont_idx):
+    user_id = request.session['user_id']
+
+    enroll_info = Enrollment.objects.get(enroll_idx=en_idx)
+    user = User.objects.get(user_id=user_id)
+    contract = Contract.objects.get(cont_idx=cont_idx)
+
+    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract})
 
 def read(request):
     return render(request, 'groot/read.html', {})
@@ -365,10 +329,6 @@ def qna(request):
 
 def bye(request):
     return render(request, 'groot/bye.html', {})
-
-
-
-
 
 def expire(request):
     return render(request, 'groot/expire.html', {})

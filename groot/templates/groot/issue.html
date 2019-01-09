@@ -8,35 +8,58 @@
     <section class="contact_area p_200" >
             <div class="container" style="text-align:center;">
                 <h3 class="mb-30 title_color">계약서 목록</h3>
-                <table width="90%">
-                    <tr>
-                        <th style="padding:16px;">번호</th>
-                        <th>임치 계약 번호</th>
-                        <th>계약 날짜</th>
-                        <th>만료 날짜</th>
-                        <th width="150px"></th>
-                    </tr>
-                    <tr>
-                        <td style="padding:10px;">1</td>
-                        <td>00-001호</td>
-                        <td>2018-12-23</td>
-                        <td>2028-12-23</td>
-                        <td><a href="show_app" type="button" class="btn btn-primary" style="font-size:80%;">임치 증명서 발급</a></td>
-                    </tr>
-                    <tr>
-                        <td style="padding:10px;">2</td>
-                        <td>00-002호</td>
-                        <td>2018-11-01</td>
-                        <td>2028-11-01</td>
-                        <td><a href="show_cont" type="button" class="btn btn-primary" style="font-size:80%;">계약서 증명서 발급</a></td>
-                    </tr>
-                    <tr>
-                        <td style="padding:10px;">3</td>
-                        <td>00-003호</td>
-                        <td>2017-09-11</td>
-                        <td>2027-19-11</td>
-                        <td><a href="show_app" type="button" class="btn btn-primary" style="font-size:80%;">임치 증명서 발급</a></td>
-                    </tr>
+                <table class="table table-hover" width="90%">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>임치 기술명</th>
+                            <th>계약 날짜</th>
+                            <th>만료 날짜</th>
+                            <th>증명서 발급</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody id="enroll_info">
+                    {% for enroll_info in enroll_infos %}
+                        <tr>
+                            <td>{{enroll_info.enroll_idx}}</td>
+                            <td>{{enroll_info.title}}</td>
+                            <td>{{enroll_info.enroll_date}}</td>
+                            <td>{{enroll_info.end_date}}</td>
+                            <td>
+                                <a href="show_app/{{enroll_info.enroll_idx}}">
+                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% for contract_info in contract_infos %}
+                        <tr>
+                            <td>{{contract_info.enroll_idx}}</td>
+                            <td>{{contract_info.cont_idx}}</td>
+                            <td>{{contract_info.c_date}}</td>
+                            <td>{{contract_info.end_date}}</td>
+                            <td>
+                                <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                        <!--<tr>-->
+                            <!--<td>2</td>-->
+                            <!--<td>00-002호</td>-->
+                            <!--<td>2018-11-01</td>-->
+                            <!--<td>2028-11-01</td>-->
+                            <!--<td>-->
+                                <!--<a href="show_cont">-->
+                                    <!--<button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>-->
+                                <!--</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    </tbody>
                 </table>
             </div>
     </section>
