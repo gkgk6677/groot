@@ -331,7 +331,24 @@ def change(request):
     return render(request, 'groot/change.html', {})
 
 def change_pw(request):
-    return render(request, 'groot/change_pw.html', {})
+
+    userinfo = User.objects.get(user_id=request.session.get('user_id'))
+
+    if request.method == 'GET':
+        return render(request, 'groot/change_pw.html', {'userinfo':userinfo})
+    else:
+        user_pw = request.POST['confirm_pw']
+        new_pw1 = request.POST['new_pw1']
+        new_pw2 = request.POST['new_pw2']
+        if user_pw == userinfo.user_pw:
+            if new_pw1 == new_pw2:
+                userinfo.user_pw = new_pw1
+                userinfo.save()
+                return redirect('change')
+            else: 
+                return HttpResponse("두 비밀번호가 다릅니다.")
+        else:
+            return HttpResponse("기존 비밀번호가 다릅니다.")
 
 def change_com(request):
     return render(request, 'groot/change_com.html', {})
@@ -365,10 +382,6 @@ def qna(request):
 
 def bye(request):
     return render(request, 'groot/bye.html', {})
-
-
-
-
 
 def expire(request):
     return render(request, 'groot/expire.html', {})
