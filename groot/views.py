@@ -351,7 +351,26 @@ def change_pw(request):
             return HttpResponse("기존 비밀번호가 다릅니다.")
 
 def change_com(request):
-    return render(request, 'groot/change_com.html', {})
+
+    cominfo = User.objects.get(user_id=request.session.get('user_id'))
+
+    if request.method =='GET':
+        return render(request, 'groot/change_com.html', {'cominfo':cominfo})
+    else:
+        email = request.POST['email']
+        address = request.POST['address']
+        phone_num = request.POST['phone_num']
+ 
+        if email != '':
+            cominfo.email = email
+        if address != '':
+            cominfo.address = address
+        if phone_num != '':
+            cominfo.phone_num = phone_num
+        cominfo.save()
+
+        return redirect('change')
+    
 
 def test(request):
     return render(request, 'groot/test.html', {})
