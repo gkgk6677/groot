@@ -3073,8 +3073,8 @@ h6 {
 ========================================================================
 */
 
-.bye-form {
-  padding-top:40px;
+.inner-container {
+  padding-top: 40px;
 }
 
 #header.join_membership {
@@ -3121,8 +3121,7 @@ h6 {
     min-width: 460px;
 }
 
-.portfolio_details_inner .row .col-lg-9 .section-table{
-    padding-top: 50px;
+.row .col-lg-9 .section-table{
     padding-left: 50px;
 }
 

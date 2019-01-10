@@ -5,13 +5,11 @@
 {% endblock css %}
 
 {% block content %}
-    <section class="portfolio_details_area p_120">
+    <section class="p_120">
         <div class="container">
-            <div class="portfolio_details_inner">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="blog_right_sidebar">
-
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="blog_right_sidebar">
                         <aside class="single_sidebar_widget author_widget">
                             <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
                             <h4>{{ request.session.user_id }}</h4>
@@ -38,31 +36,28 @@
                             </ul>
                             <div class="br"></div>
                         </aside>
-
                     </div>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="user-content section-table">
-                            <h3 class="mb-30 title_color">Mypage</h3>
-                            <div class="progress-table-wrap">
-                                <div class="progress-table">
-                                    <table class="table">
-                                    <tbody>
-                                    <tr><th scope="row">대표자</th><td>{{userinfo.com_head}}</td></tr>
-                                    <tr><th scope="row">회사명</th><td>{{userinfo.com_name}}</td></tr>
-                                    <tr><th scope="row">이메일</th><td>{{userinfo.email}}</td></tr>
-                                    <tr><th scope="row">사업자번호</th><td>{{userinfo.com_num}}</td></tr>
-                                    <tr><th scope="row">핸드폰번호</th><td>0{{userinfo.phone_num}}</td></tr>
-                                    </tbody>
-                                    </table>
-                                    <a href="#" class="btn btn-outline-info btn-lg active" role="button" aria-pressed="true">OTP활성화</a>
-
+                </div>
+                <div class="col-lg-9 inner-container">
+                    <div class="user-content section-table">
+                        <h3 class="mb-30 title_color">Mypage</h3>
+                        <div class="progress-table-wrap">
+                            <div class="progress-table">
+                                <table class="table">
+                                <tbody>
+                                <tr><th scope="row">대표자</th><td>{{userinfo.com_head}}</td></tr>
+                                <tr><th scope="row">회사명</th><td>{{userinfo.com_name}}</td></tr>
+                                <tr><th scope="row">이메일</th><td>{{userinfo.email}}</td></tr>
+                                <tr><th scope="row">사업자번호</th><td>{{userinfo.com_num}}</td></tr>
+                                <tr><th scope="row">핸드폰번호</th><td>0{{userinfo.phone_num}}</td></tr>
+                                </tbody>
+                                </table>
+                                <a href="#" class="btn btn-outline-info btn-lg active" role="button" aria-pressed="true">OTP활성화</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 {% endblock content %}

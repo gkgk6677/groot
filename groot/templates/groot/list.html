@@ -6,107 +6,99 @@
 
 {% block content %}
     <!--================Content Area =================-->
-        <section class="portfolio_details_area p_120">
+        <section class="p_120">
             <div class="container">
-                <div class="portfolio_details_inner">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="blog_right_sidebar">
-                                <aside class="single_sidebar_widget author_widget">
-                                    <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
-                                    <h4>{{ request.session.user_id }}</h4>
-                                    <p>GrootBlockchain company</p>
-                                    <div class="br"></div>
-                                </aside>
-                                <aside class="single_sidebar_widget post_category_widget">
-                                    <ul class="list cat-list">
-                                        <li>
-                                            <a href="change" class="d-flex justify-content-between">
-                                                <p>내정보 수정</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="list" class="d-flex justify-content-between">
-                                                <p>계약 현황</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="bye" class="d-flex justify-content-between">
-                                                <p>회원탈퇴</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="br"></div>
-                                </aside>
-                            </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget author_widget">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                                <h4>{{ request.session.user_id }}</h4>
+                                <p>GrootBlockchain company</p>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <ul class="list cat-list">
+                                    <li>
+                                        <a href="change" class="d-flex justify-content-between">
+                                            <p>내정보 수정</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="list" class="d-flex justify-content-between">
+                                            <p>계약 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="bye" class="d-flex justify-content-between">
+                                            <p>회원탈퇴</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
                         </div>
+                    </div>
 
-                        <div class="col-lg-9">
-                            <div class="section-table">
-                                <h3 class="mb-30 title_color">&nbsp&nbsp계약 현황</h3>
-                                <hr style="border-top: 2px solid #E5E5E5;"><br>
-                                <div class="progress-table-wrap">
-                                    <div class="progress-table" style="text-align:center;">
-                                        <div class="table-head">
-                                            <div class="index"><Strong>번호</Strong></div>
-                                            <div class="enroll_title"><Strong>임치명</Strong></div>
-                                            <div class="date"><Strong>계약 기간</Strong></div>
-                                            <div class="status"><Strong>상태</Strong></div>
-                                            <div class="extend"><Strong>연장</Strong></div>
-                                            <div class="insert"><Strong>편입</Strong></div>
-                                            <div class="update"><Strong>갱신</Strong></div>
-                                            <div class="expire"><Strong>폐지</Strong></div>
-                                        </div>
-
-                                        <div class="table-row">
-                                            <div class="index">1</div>
-                                            <div class="enroll_title">블록체인 기반의 무역거래 시스템</div>
-                                            <div class="date">19.01.02~22.01.02</div>
-                                            <div class="status">대기</div>
-                                            <div class="extend"><a href="#" type="button">연장</a></div>
-                                            <div class="insert"><a href="#" type="button">편입</a></div>
-                                            <div class="update"><a href="#" type="button">갱신</a></div>
-                                            <div class="expire"><a href="#" type="button">폐지</a></div>
-                                        </div>
-    
-                                        <div class="table-row">
-                                            <div class="index">2</div>
-                                            <div class="enroll_title">전투의 민족</div>
-                                            <div class="date">19.01.02~22.01.02</div>
-                                            <div class="status">대기</div>
-                                            <div class="extend"><a href="#" type="button">연장</a></div>
-                                            <div class="insert"><a href="#" type="button">편입</a></div>
-                                            <div class="update"><a href="#" type="button">갱신</a></div>
-                                            <div class="expire"><a href="#" type="button">폐지</a></div>
-                                        </div>
-
-
-                                            {% for enroll_info in enroll_infos %}
-                                            <div class="table-row" id="enroll_info">
-                                                <div class="serial">{{enroll_info.enroll_idx}}</div>
-                                                <div class="technology">{{enroll_info.title}}</div>
-                                                <div class="company">{{enroll_info.user_id}}</div>
-                                                <div class="enroll_date">{{enroll_info.c_date}}</div>
-                                                <div class="expired_date">{{enroll_info.term}}</div>
-                                                <div class="constant"><a href="extend/{{enroll_info.enroll_idx}}">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
-                                            </div>
-                                            {% endfor %}
-
-
+                    <div class="col-lg-9 inner-container">
+                        <div class="section-table">
+                            <h3 class="mb-30 title_color">&nbsp&nbsp계약 현황</h3>
+                            <hr style="border-top: 2px solid #E5E5E5;"><br>
+                            <div class="progress-table-wrap">
+                                <div class="progress-table" style="text-align:center;">
+                                    <div class="table-head">
+                                        <div class="index"><Strong>번호</Strong></div>
+                                        <div class="enroll_title"><Strong>임치명</Strong></div>
+                                        <div class="date"><Strong>계약 기간</Strong></div>
+                                        <div class="status"><Strong>상태</Strong></div>
+                                        <div class="extend"><Strong>연장</Strong></div>
+                                        <div class="insert"><Strong>편입</Strong></div>
+                                        <div class="update"><Strong>갱신</Strong></div>
+                                        <div class="expire"><Strong>폐지</Strong></div>
                                     </div>
+
+                                    <div class="table-row">
+                                        <div class="index">1</div>
+                                        <div class="enroll_title">블록체인 기반의 무역거래 시스템</div>
+                                        <div class="date">19.01.02~22.01.02</div>
+                                        <div class="status">대기</div>
+                                        <div class="extend"><a href="#" type="button">연장</a></div>
+                                        <div class="insert"><a href="#" type="button">편입</a></div>
+                                        <div class="update"><a href="#" type="button">갱신</a></div>
+                                        <div class="expire"><a href="#" type="button">폐지</a></div>
+                                    </div>
+
+                                    <div class="table-row">
+                                        <div class="index">2</div>
+                                        <div class="enroll_title">전투의 민족</div>
+                                        <div class="date">19.01.02~22.01.02</div>
+                                        <div class="status">대기</div>
+                                        <div class="extend"><a href="#" type="button">연장</a></div>
+                                        <div class="insert"><a href="#" type="button">편입</a></div>
+                                        <div class="update"><a href="#" type="button">갱신</a></div>
+                                        <div class="expire"><a href="#" type="button">폐지</a></div>
+                                    </div>
+
+
+                                        {% for enroll_info in enroll_infos %}
+                                        <div class="table-row" id="enroll_info">
+                                            <div class="serial">{{enroll_info.enroll_idx}}</div>
+                                            <div class="technology">{{enroll_info.title}}</div>
+                                            <div class="company">{{enroll_info.user_id}}</div>
+                                            <div class="enroll_date">{{enroll_info.c_date}}</div>
+                                            <div class="expired_date">{{enroll_info.term}}</div>
+                                            <div class="constant"><a href="extend/{{enroll_info.enroll_idx}}">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
+                                        </div>
+                                        {% endfor %}
                                 </div>
-					        </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </section>
     <!--================End Content Area =================-->
 {% endblock content %}
 
 {% block js %}
-<script>
-
-</script>
 {% endblock js %}
