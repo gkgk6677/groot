@@ -19,46 +19,38 @@
                         </tr>
                     </thead>
 
+                    <tbody>
+                        {% for enroll_info in enroll_infos %}
+                            <tr>
+                                <td>
+                                    <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
+                                        {{enroll_info.enroll_idx}}
+                                    </a>
+                                </td>
+                                <td>{{enroll_info.title}}</td>
+                                <td>{{enroll_info.enroll_date}}</td>
+                                <td>{{enroll_info.end_date}}</td>
+                                <td>
+                                    <a href="show_app/{{enroll_info.enroll_idx}}">
+                                        <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
+                                    </a>
+                                </td>
+                            </tr>
 
-                    <tbody id="enroll_info">
-                    {% for enroll_info in enroll_infos %}
-                        <tr>
-                            <td>{{enroll_info.enroll_idx}}</td>
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.enroll_date}}</td>
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                <a href="show_app/{{enroll_info.enroll_idx}}">
-                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
-                                </a>
-                            </td>
-                        </tr>
-
-                        {% for contract_info in contract_infos %}
-                        <tr>
-                            <td>{{contract_info.enroll_idx}}</td>
-                            <td>{{contract_info.cont_idx}}</td>
-                            <td>{{contract_info.c_date}}</td>
-                            <td>{{contract_info.end_date}}</td>
-                            <td>
-                                <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
-                                </a>
-                            </td>
-                        </tr>
+                            {% for contract_info in contract_infos %}
+                                    <tr id="tr{{enroll_info.enroll_idx}}" class="tr_show" trid2="{{contract_info.enroll_idx}}">
+                                        <td> </td>
+                                        <td>{{contract_info.cont_idx}}</td>
+                                        <td>{{contract_info.c_date}}</td>
+                                        <td>{{contract_info.end_date}}</td>
+                                        <td>
+                                            <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                                <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                        <!--<tr>-->
-                            <!--<td>2</td>-->
-                            <!--<td>00-002호</td>-->
-                            <!--<td>2018-11-01</td>-->
-                            <!--<td>2028-11-01</td>-->
-                            <!--<td>-->
-                                <!--<a href="show_cont">-->
-                                    <!--<button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>-->
-                                <!--</a>-->
-                            <!--</td>-->
-                        <!--</tr>-->
                     </tbody>
                 </table>
             </div>
@@ -67,4 +59,17 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    $(function() {
+        $('.tr_link').click(function() {
+            let trid = $(this).attr('trid');
+            let trid2 = $('.tr_show').attr('trid2');
+            trid3 = "Enrollment object (" + trid + ")";
+
+            if(trid3 == trid2)
+                $('#tr'+trid).toggle(); // show <-> hide 반복
+        });
+        $('.tr_show').hide();
+    });
+</script>
 {% endblock js %}
