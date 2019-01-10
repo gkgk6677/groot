@@ -5,57 +5,54 @@
 {% endblock css %}
 
 {% block content %}
-    <section class="portfolio_details_area p_120"><br><br>
+    <section class="p_120">
         <div class="container">
-            <div class="portfolio_details_inner">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="blog_right_sidebar">
-                            <aside class="single_sidebar_widget author_widget">
-                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
-                                <h4>{{ request.session.user_id }}</h4>
-                                <p>GrootBlockchain company</p>
-                                <div class="br"></div>
-                            </aside>
-                            <aside class="single_sidebar_widget post_category_widget">
-                                <ul class="list cat-list">
-                                    <li>
-                                        <a href="change" class="d-flex justify-content-between">
-                                            <p>내정보 수정</p>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="list" class="d-flex justify-content-between">
-                                            <p>계약 현황</p>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="bye" class="d-flex justify-content-between">
-                                            <p>회원탈퇴</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div class="br"></div>
-                            </aside>
-                        </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="blog_right_sidebar">
+                        <aside class="single_sidebar_widget author_widget">
+                            <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                            <h4>{{ request.session.user_id }}</h4>
+                            <p>GrootBlockchain company</p>
+                            <div class="br"></div>
+                        </aside>
+                        <aside class="single_sidebar_widget post_category_widget">
+                            <ul class="list cat-list">
+                                <li>
+                                    <a href="change" class="d-flex justify-content-between">
+                                        <p>내정보 수정</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="list" class="d-flex justify-content-between">
+                                        <p>계약 현황</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="bye" class="d-flex justify-content-between">
+                                        <p>회원탈퇴</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="br"></div>
+                        </aside>
                     </div>
-
-                    <div class="col-lg-9">
-                        <div class="container" style="margin-left:20px; margin-top: 30px;">
-                            <br><br><br><br><br>
-                            <div class="row feature_inner">
-                                <div class="feature_item" style="width: 45%; margin: 10px">
-                                    <h4 style="padding-left: 10px;"><i class="lnr lnr-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;비밀번호 수정</h4>
-                                    <p class="context">주기적으로 비밀번호를 변경하여 안전하게 계정을 보호하세요.</p>
-                                    <a href="change_pw" class="genric-btn primary circle" style="float:right">수정</a>
-                                </div>
-                                <div class="feature_item" style="width: 45%; margin: 10px">
-                                    <h4 style="padding-left: 10px;"><i class="lnr lnr-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회사정보 수정</h4>
-                                    <p class="context">회사명, 주소, 연락처등의 회사 정보를 수정할 수 있습니다.</p>
-                                    <p><a href="change_com" class="genric-btn primary circle" style="float:right">수정</a></p> 
-                                </div>
-                            </div> 
-                        </div>
+                </div>
+                <div class="col-lg-9 inner-container">
+                    <div class="container" style="margin-left:20px; margin-top: 30px;">
+                        <br>
+                        <div class="row feature_inner">
+                            <div class="feature_item" style="width: 45%; margin: 10px">
+                                <h4 style="padding-left: 10px;"><i class="lnr lnr-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;비밀번호 수정</h4>
+                                <p class="context">주기적으로 비밀번호를 변경하여 안전하게 계정을 보호하세요.</p>
+                                <a href="change_pw" class="genric-btn primary circle" style="float:right">수정</a>
+                            </div>
+                            <div class="feature_item" style="width: 45%; margin: 10px">
+                                <h4 style="padding-left: 10px;"><i class="lnr lnr-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회사정보 수정</h4>
+                                <p class="context">회사명, 주소, 연락처등의 회사 정보를 수정할 수 있습니다.</p>
+                                <p><a href="change_com" class="genric-btn primary circle" style="float:right">수정</a></p> 
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>

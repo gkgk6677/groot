@@ -64,7 +64,11 @@ body {
   font-size: 14px;
   font-family: "Roboto", sans-serif;
   font-weight: normal;
-  color: #777777; }
+  height: 100%;
+  color: #777777; 
+  position: relative;
+  min-height: 940px;
+}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Heebo", sans-serif;
@@ -75,12 +79,12 @@ button:focus {
   box-shadow: none; }
 
 .p_120 {
-  padding-top: 60px;
-  padding-bottom: 120px; }
+  padding-top: 150px;
+  padding-bottom: 200px; }
 
 .p_200 {
-  padding-top: 200px;
-  padding-bottom: 60px;
+  padding-top: 150px;
+  padding-bottom: 200px;
 }
 
 
@@ -2896,8 +2900,7 @@ h6 {
 ============================================================================================ */
 /* Portfolio Details Area css
 ============================================================================================ */
-.portfolio_details_inner .row {
-  margin-bottom: 65px; }
+
 .portfolio_details_inner p {
   margin-bottom: 30px;
   font-size: 14px; }
@@ -2957,7 +2960,13 @@ h6 {
 /* Footer Area css
 ============================================================================================ */
 .footer_area {
-  background: #222222; }
+  background: #222222; 
+  position: absolute; 
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 100px;
+}
 
 .f_title {
   margin-bottom: 35px; }
@@ -3064,6 +3073,9 @@ h6 {
 ========================================================================
 */
 
+.inner-container {
+  padding-top: 40px;
+}
 
 #header.join_membership {
     padding-bottom: 20px;
@@ -3109,8 +3121,7 @@ h6 {
     min-width: 460px;
 }
 
-.portfolio_details_inner .row .col-lg-9 .section-table{
-    padding-top: 100px;
+.row .col-lg-9 .section-table{
     padding-left: 50px;
 }
 
