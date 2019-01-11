@@ -42,16 +42,37 @@
                     <div style="text-align:center;">
                         <h1>회원탈퇴</h1><br>
                         <h6>그루트 홈페이지를 탈퇴하시려면 임치되어있는 계약을 먼저 해지해주세요.</h6>
-                        <br><br><br>
-                        <div class="bye-form-left" style="text-align:left" ><h5>계약 현황</h5></div>
+                        <br>
+                        <!-- <div class="bye-form-left" style="text-align:left" ><h5>계약 현황</h5></div>
                         <hr><br>
                         이용중인 계약이 없습니다.
-                        <br><br><br>
-                        <div class="bye-form-left" style="text-align:left" ><h5>그루트 회원 탈퇴</h5></div>
-                        <hr><br>
-                        <a href="비밀번호 입력 페이지" class="genric-btn info circle arrow">회원 탈퇴</a>
-                        <br><br><br><br><br><br><br><br><br><br><br><br>
-                        헬로우
+                        <br><br><br> -->
+                        <!-- <div class="bye-form-left" style="text-align:left" ><h5>그루트 회원 탈퇴</h5></div> -->
+                        <hr>
+                        그루트 홈페이지에서는 개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며<br>
+                        동일한 아이디로 재가입이 불가능합니다.
+                        <hr>
+                        <form onsubmit="return check()" method="POST">
+                            {% csrf_token %}
+                            <div class="progress-table-wrap">
+                                <div class="progress-table" style="text-align:center;">
+                                    <div class="table-head">
+                                        <div style="width: 150px; padding-left: 20px">비밀번호</div>
+                                        <div style="padding-left: 40px" ><input type="password" id="pw1" name="pw1" ></div>
+                                    </div>
+                                    <br>
+                                    <div class="table-head">
+                                        <div style="width: 150px; padding-left: 20px">비밀번호 확인</div>
+                                        <div style="padding-left: 40px"><input type="password" id="pw2" name="pw2" ></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow">
+                            </div>
+                            {{userinfo.user_pw}}
+                        </form>    
                     </div>
                 </div>
             </div>
@@ -60,4 +81,34 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    $(function(){
+        $('#pw1').change(function(){
+            $('#pw1').css("background","");
+        });
+        $('#pw2').change(function(){
+            $('#pw2').css("background","");
+        });
+    })
+
+    function check(){
+        pw1 = $('#pw1').val();
+        pw2 = $('#pw2').val();
+        if (pw1 != "{{userinfo.user_pw}}" && pw2 != "{{userinfo.user_pw}}"){
+            alert('비밀번호가 틀렸습니다.');
+            $('#pw1').focus();
+            $('#pw1').select();
+            $('#pw1').css("background","#F6A0A4");
+            return false;
+        }
+
+        if (pw1 != pw2) {
+            alert('두 비밀번호가 다릅니다.')
+            $('#pw2').focus();
+            $('#pw2').select();
+            $('#pw2').css("background","#F6A0A4");
+            return false;
+        }
+    }
+</script>
 {% endblock js %}

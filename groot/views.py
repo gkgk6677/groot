@@ -400,7 +400,20 @@ def qna(request):
     return render(request, 'groot/qna.html', {})
 
 def bye(request):
-    return render(request, 'groot/bye.html', {})
+
+    userinfo = User.objects.get(user_id=request.session.get('user_id'))
+    
+    if request.method == 'GET':
+        return render(request, 'groot/bye.html', {'userinfo':userinfo})
+    else:
+        password = request.POST['pw1']
+        password_check = request.POST['pw2']
+
+        # userinfo.user_pw = password
+        # userinfo.save()
+
+        # del request.session['user_id']
+        return render(request, 'groot/mypage.html',{'userinfo':userinfo}) 
 
 def expire(request):
     return render(request, 'groot/expire.html', {})
