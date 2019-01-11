@@ -378,11 +378,10 @@ def bye(request):
         password = request.POST['pw1']
         password_check = request.POST['pw2']
 
-        # userinfo.user_pw = password
-        # userinfo.save()
-
-        # del request.session['user_id']
-        return render(request, 'groot/mypage.html',{'userinfo':userinfo}) 
+        del request.session['user_id']
+        userinfo.delete() 
+        
+        return redirect('main')
 
 def expire(request):
     return render(request, 'groot/expire.html', {})
