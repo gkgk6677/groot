@@ -325,8 +325,8 @@ def test(request):
 
 def issue(request):
     user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id)
-    contract_infos = Contract.objects.filter(user_id=user_id)
+    contract_infos = Contract.objects.all().filter(user_id=user_id)
+    # contract_infos = Contract.objects.filter(user_id=user_id)
     # contract_infos = Contract.objects.filter(enroll_idx__in=Subquery(enroll_infos.values('enroll_idx'))) 서브쿼리도 안됨
     # contract_infos = Contract.objects.filter(enroll_idx__name=Enrollment('enroll_idx')) 다른 데이터필드 간 비교도 안됨
 
@@ -334,7 +334,7 @@ def issue(request):
     #     contract_info = Contract.objects.filter(enroll_idx=enroll_info.enroll_idx)
     #     contract_infos += contract_info 전역변수 에러 발생
 
-    return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
+    return render(request, 'groot/issue.html', {'contract_infos': contract_infos})
 
 def show_app(request, idx):
     user_id = request.session['user_id']
