@@ -336,7 +336,43 @@ def show_app(request, idx):
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
     user = User.objects.get(user_id=user_id)
 
-    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user})
+    # Hyperledger-Fabric에서 데이터 받아오기
+    #    0          1        2         3        4        5       6          7            8
+    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
+    # 주소는 때에 따라 변경(210.107.78.150)
+    fabric = "http://210.107.78.150:8000/gen_enroll_cert/" + enroll_info.title
+    result = requests.get(fabric)
+
+    parse = result.json() # JSON형식으로 parse(분석)
+    # [
+    #   {
+    #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
+    #       "Value":{
+    #                  "technology":"TEST2","sort":13,
+    #                   "company":"LG","com_num":156181987,"term":5,
+    #                   "content":["sldkfjs"],
+    #                   "client":{
+    #                       "dahee":3
+    #                   },
+    #                  "enroll_date":"2018.01.11"
+    #       },
+    #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
+    #       "IsDelete":"false"
+    #   },
+    #   { ... }, { ... }, ...
+    #  ]
+    block = parse[0] # 임치증명서는 첫 transaction이므로
+
+    txid = block.get('TxId')
+    tech = block.get('Value').get('technology')
+    print(txid + '\n' + tech)
+
+    # for data in parse : # JSON Array 안에 JSON Object 여러개 있는 경우
+    #     txid = data.get('TxId')
+    #     technology = data.get('Value').get('technology')
+    #     print(txid + '\n' + technology)  # cmd 창에 보여질 값
+
+    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cc':block})
 
 def show_cont(request, en_idx, cont_idx):
     user_id = request.session['user_id']
