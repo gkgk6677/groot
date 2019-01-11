@@ -7,7 +7,7 @@
 {% block content %}
     <section class="contact_area p_200" >
             <div class="container" style="text-align:center;">
-                <h3 class="mb-30 title_color">계약서 목록</h3>
+                <h3 class="mb-30 title_color">임치 및 계약 목록</h3>
                 <table class="table table-hover" width="90%">
                     <thead>
                         <tr>
@@ -20,36 +20,38 @@
                     </thead>
 
                     <tbody>
-                        {% for contract_info in contract_infos %}
-                            <tr>
-                                <td>
-                                    <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
-                                        {{contract_info.enroll_idx.enroll_idx}}
-                                    </a>
-                                </td>
-                                <td>{{contract_info.enroll_idx.title}}</td>
-                                <td>{{contract_info.enroll_idx.enroll_date}}</td>
-                                <td>{{contract_info.enroll_idx.end_date}}</td>
-                                <td>
-                                    <a href="show_app/{{enroll_info.enroll_idx}}">
-                                        <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
-                                    </a>
-                                </td>
-                            </tr>
+                    {% for enroll_info in enroll_infos %}
                         <tr>
-                            <td> {{contract_info.enroll_idx.enroll_idx}}</td>
-                            <td>{{contract_info.cont_idx}}</td>
-                            <td>{{contract_info.c_date}}</td>
-                            <td>{{cotract_info.end_date}}</td>
                             <td>
-                                <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
+                                    {{enroll_info.enroll_idx}}
+                                </a>
+                            </td>
+                            <td>{{enroll_info.title}}</td>
+                            <td>{{enroll_info.enroll_date}}</td>
+                            <td>{{enroll_info.end_date}}</td>
+                            <td>
+                                <a href="show_app/{{enroll_info.enroll_idx}}">
+                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
                                 </a>
                             </td>
                         </tr>
-
-
+                        {% for contract_info in contract_infos %}
+                            {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                <tr id="tr{{contract_info.enroll_idx.enroll_idx}}" class="tr_show">
+                                    <td> </td>
+                                    <td>{{contract_info.cont_idx}}</td>
+                                    <td>{{contract_info.c_date}}</td>
+                                    <td>{{contract_info.end_date}}</td>
+                                    <td>
+                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                            <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -58,17 +60,13 @@
 {% endblock content %}
 
 {% block js %}
-<!--<script>-->
-    <!--$(function() {-->
-        <!--$('.tr_link').click(function() {-->
-            <!--let trid = $(this).attr('trid');-->
-            <!--let trid2 = $('.tr_show').attr('trid2');-->
-            <!--trid3 = "Enrollment object (" + trid + ")";-->
-
-            <!--if(trid3 == trid2)-->
-                <!--$('#tr'+trid).toggle(); // show <-> hide 반복-->
-        <!--});-->
-        <!--$('.tr_show').hide();-->
-    <!--});-->
-<!--</script>-->
+<script>
+    $(function() {
+        $('.tr_link').click(function() {
+            let trid = $(this).attr('trid');
+            $('#tr'+trid).toggle();
+        });
+        $('.tr_show').hide();
+    });
+</script>
 {% endblock js %}
