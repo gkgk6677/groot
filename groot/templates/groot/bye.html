@@ -52,7 +52,7 @@
                         그루트 홈페이지에서는 개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며<br>
                         동일한 아이디로 재가입이 불가능합니다.
                         <hr>
-                        <form onsubmit="return check()" method="POST">
+                        <form id="bye_form" onsubmit="return check()" method="POST">
                             {% csrf_token %}
                             <div class="progress-table-wrap">
                                 <div class="progress-table" style="text-align:center;">
@@ -71,8 +71,7 @@
                             <div>
                                 <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow">
                             </div>
-                            {{userinfo.user_pw}}
-                        </form>    
+                        </form>
                     </div>
                 </div>
             </div>
@@ -109,6 +108,8 @@
             $('#pw2').css("background","#F6A0A4");
             return false;
         }
+        alert('탈퇴되었습니다.');
+        return true
     }
 </script>
 {% endblock js %}
