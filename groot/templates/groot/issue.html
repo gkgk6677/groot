@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block css %}
+    <style>
+        .tr_link:hover{color:black; font-weight: bold;}
+    </style>
 {% endblock css %}
 
 {% block content %}
@@ -28,7 +31,8 @@
                                 </a>
                             </td>
                             <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.enroll_date}}</td>
+                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
+                            <!--<td>{{enroll_info.enroll_date}}</td>-->
                             <td>{{enroll_info.end_date}}</td>
                             <td>
                                 <a href="show_app/{{enroll_info.enroll_idx}}">
@@ -38,14 +42,16 @@
                         </tr>
                         {% for contract_info in contract_infos %}
                             {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                <tr id="tr{{contract_info.enroll_idx.enroll_idx}}" class="tr_show">
-                                    <td> </td>
+                                <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                                    <td>
+                                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                    </td>
                                     <td>{{contract_info.cont_idx}}</td>
                                     <td>{{contract_info.c_date}}</td>
                                     <td>{{contract_info.end_date}}</td>
                                     <td>
                                         <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                            <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                            <button type="button" class="btn btn-outline-success" style="font-size:80%;"> 계약 증명서 발급 </button>
                                         </a>
                                     </td>
                                 </tr>
@@ -64,9 +70,9 @@
     $(function() {
         $('.tr_link').click(function() {
             let trid = $(this).attr('trid');
-            $('#tr'+trid).toggle();
+            $('.tr'+trid).toggle();
         });
-        $('.tr_show').hide();
+        <!--$('.tr'+trid').hide();-->
     });
 </script>
 {% endblock js %}

@@ -44,8 +44,8 @@
                             <thead>
                                <tr>
                                    <td colspan="2">
-                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/apple">
-                                           DFSA9479GSDW156DGE256GGEGHUJ60G902
+                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/{{cc.Value.technology}}">
+                                           {{ cc.TxId }}
                                        </a>
                                    </td>
                                </tr>
@@ -56,19 +56,19 @@
                             <tbody>
                                <tr>
                                     <th scope="row">기술명</th>
-                                    <td> {{enroll_info.title}} </td>
+                                    <td> {{cc.Value.technology}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">기업명</th>
-                                    <td> {{user.com_name}} </td>
+                                    <td> {{cc.Value.company}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">사용기업명</th>
-                                    <td> {{contract.user_id}} </td>
+                                    <td> {{cc.Value.client}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">계약기간</th>
-                                    <td> {{contract.c_date}} ~ {{contract.end_date}} </td>
+                                    <td> {{contract.c_date | date:"Y.m.d"}} ~ {{contract.end_date | date:"Y.m.d"}} </td>
                                </tr>
                                <tr>
                                     <td colspan="2">위의 사실을 증명합니다.</td>

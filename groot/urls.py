@@ -18,6 +18,7 @@ from django.urls import path
 
 from groot import views
 
+
 urlpatterns = [
     path('', views.groot),
     path('login', views.login, name='login'),
@@ -32,6 +33,7 @@ urlpatterns = [
     path('notice_write', views.notice_write, name='notice_write'),
     path('test', views.test, name='test'),
     path('issue/', views.issue, name='issue'),
+    # path('issue/show_app/<int:idx>', views.Pdf.as_view(), name='show_app'),
     path('issue/show_app/<int:idx>', views.show_app, name='show_app'),
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
     path('read', views.read, name='read'),

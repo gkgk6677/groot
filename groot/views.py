@@ -14,9 +14,16 @@ from groot.forms import *
 from .models import *
 from django.utils import timezone
 
-
+# html2pdf 위한 라이브러리
+from django.views.generic.base import View
+from .render import Render
+import os
+from django.conf import settings
+from django.template import Context
+from xhtml2pdf import pisa
 
 # Create your views here.
+
 
 def groot(request):
     return render(request, 'groot/main.html', {})
@@ -174,14 +181,12 @@ def application(request):
             enrollment.save()
 
             # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
-            #    0          1        2         3        4        5       6          7            8
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
-            # 주소는 때에 따라 변경(210.107.78.150)
+            #    0          1        2         3        4        5       6          7            8           9
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
             fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
                      + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
                      + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-                     + enrollment.term + "-" + "Content" + "-" + "null" + "-" + "0" + "-" \
-                     + "201901081400"
+                     + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
             f = requests.get(fabric)
             print(f.text)  # cmd 창에 보여질 값
             return redirect('mypage')
@@ -191,13 +196,9 @@ def application(request):
 
 def extend(request,idx):
     user_id = request.session['user_id']
-    # enrollinfo = Enrollment.objects.filter(user_id=user_id)
-
     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST':
-
-        # enrollment = Enrollment()
         e_date = enrollinfo.end_date
         enrollinfo.term = request.POST['term']
 
@@ -205,6 +206,13 @@ def extend(request,idx):
         # return HttpResponse(enrollment.end_date)
         enrollinfo.save()
 
+        # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
+        #    0          1        2
+        # Technology   Term   Status
+        fabric = "http://210.107.78.150:8000/change_term/" + enrollinfo.title + "-" \
+                 + enrollinfo.term + "-" + "3"
+        f = requests.get(fabric)
+        print(f.text)  # cmd 창에 보여질 값
         return redirect('mypage')
     else:
         return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
@@ -330,6 +338,7 @@ def issue(request):
 
     return render(request, 'groot/issue.html', {'enroll_infos':enroll_infos, 'contract_infos': contract_infos})
 
+# class Pdf(View):
 def show_app(request, idx):
     user_id = request.session['user_id']
 
@@ -337,10 +346,9 @@ def show_app(request, idx):
     user = User.objects.get(user_id=user_id)
 
     # Hyperledger-Fabric에서 데이터 받아오기
-    #    0          1        2         3        4        5       6          7            8
-    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date
-    # 주소는 때에 따라 변경(210.107.78.150)
-    fabric = "http://210.107.78.150:8000/gen_enroll_cert/" + enroll_info.title
+    #    0          1        2         3        4        5       6          7            8          9
+    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+    fabric = "http://210.107.78.150:8000/generate_cert/" + enroll_info.title
     result = requests.get(fabric)
 
     parse = result.json() # JSON형식으로 parse(분석)
@@ -367,10 +375,8 @@ def show_app(request, idx):
     tech = block.get('Value').get('technology')
     print(txid + '\n' + tech)
 
-    # for data in parse : # JSON Array 안에 JSON Object 여러개 있는 경우
-    #     txid = data.get('TxId')
-    #     technology = data.get('Value').get('technology')
-    #     print(txid + '\n' + technology)  # cmd 창에 보여질 값
+    # params = {'enroll_info': enroll_info, 'user':user, 'cc':block, 'request':request}
+    # return Render.render('groot/show_app.html', params)
 
     return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cc':block})
 
@@ -381,7 +387,39 @@ def show_cont(request, en_idx, cont_idx):
     user = User.objects.get(user_id=user_id)
     contract = Contract.objects.get(cont_idx=cont_idx)
 
-    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract})
+    # Hyperledger-Fabric에서 데이터 받아오기
+    #    0          1        2         3        4        5       6          7            8          9
+    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+    fabric = "http://210.107.78.150:8000/generate_cert/" + enroll_info.title
+    result = requests.get(fabric)
+
+    parse = result.json() # JSON형식으로 parse(분석)
+    # [
+    #   {
+    #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
+    #       "Value":{
+    #                  "technology":"TEST2","sort":13,
+    #                   "company":"LG","com_num":156181987,"term":5,
+    #                   "content":["sldkfjs"],
+    #                   "client":{
+    #                       "dahee":3
+    #                   },
+    #                  "enroll_date":"2018.01.11"
+    #       },
+    #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
+    #       "IsDelete":"false"
+    #   },
+    #   { ... }, { ... }, ...
+    #  ]
+    for par in parse :
+        if par.get('Value').get('status') == 4 : # 상태가 4인 값(편입)
+            block = par
+
+    txid = block.get('TxId')
+    tech = block.get('Value').get('technology')
+    print(txid + '\n' + tech)
+
+    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cc': block})
 
 def read(request):
     return render(request, 'groot/read.html', {})

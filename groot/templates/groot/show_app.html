@@ -78,7 +78,7 @@
                                         <!--year = enroll_info.end_date.split(' ')-->
                                         <!--year = year[0]-->
                                     <!--</script>-->
-                                    <td> {{enroll_info.c_date}} ~ {{enroll_info.end_date}} </td>
+                                    <td> {{enroll_info.c_date | date:"Y.m.d"}} ~ {{enroll_info.end_date | date:"Y.m.d"}} </td>
                                </tr>
                                <tr>
                                     <td colspan="2">위의 사실을 증명합니다.</td>

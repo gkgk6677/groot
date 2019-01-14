@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['127.0.0.1','210.107.78.149','www.grootchain.com']
 
 INSTALLED_APPS = [
     'groot',
+    'wkhtmltopdf',
     'administrator',
     'django.contrib.admin',
     'django.contrib.auth',
