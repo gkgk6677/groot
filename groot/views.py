@@ -162,25 +162,26 @@ def my_login_required(func):
                 return func(request, *args, **kwargs)
         return wrap
 
+
 @my_login_required
 def application(request):
     if request.method == 'POST':
         form = EnrollmentForm(request.POST)
         # return HttpResponse(end_date)
         if form.is_valid():
+
             enrollment = Enrollment()
             u = User.objects.get(user_id=request.session.get('user_id'))
             enrollment.user_id = User()
-            enrollment.title = request.POST['title']
+            enrollment.title = form.cleaned_date['title']
             sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
-            enrollment.term = request.POST['term']
+            enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-            enrollment.c_date = datetime.datetime.now()
+            enrollment.c_date = form.cleaned_data['c_date']
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
-            enrollment.save()
+            # enrollment.save()
 
-            # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
             #    0          1        2         3        4        5       6          7            8           9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
             fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
@@ -191,8 +192,10 @@ def application(request):
             print(f.text)  # cmd 창에 보여질 값
             return redirect('mypage')
     else:
-        form = EnrollmentForm()
-    return render(request, 'groot/application.html', {'form': form})
+        create_date = datetime.date.today()
+        form = EnrollmentForm(initial={'c_date':create_date})
+        user = User.objects.get(user_id=request.session.get('user_id'))
+    return render(request, 'groot/app.html', {'form': form, 'user':user, 'create_date':create_date})
 
 def extend(request,idx):
     user_id = request.session['user_id']
