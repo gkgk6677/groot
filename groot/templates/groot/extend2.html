@@ -1,114 +1,133 @@
-{% extends "base.html" %}
-{% load static %}
 
-{% block css %}
-{% endblock css %}
+<section class="about_area p_120">
+        <div class="first_wrap" align="center">
+            <div class="logo_div">
+                <h1>
+                        <img src="/beginner/images/header/txt_titleKIPRIS.png" alt="임치된 기술 간단 검색">
+                    </a>
+                </h1>
+            </div>
+            <div class="number_info">
+                <table border="0">
+                    <thead>
+                        <tr>
 
-{% block content %}
-    <!--================Content Area =================-->
-
-        <section class="register_area p_200">
-            <div class="container">
-                <div class="main_title">
-        			<h2>기술임치 연장신청</h2>
-        		</div>
-                <div class="register_area_inner row">
-                   <form action="" method="POST">{% csrf_token %}
-
-                       <table class="table">
+                        </tr>
+                    </thead>
+                </table>
+                <table border="0" class="number_info_howtouse">
                     <tbody>
-                        <tr>
-                            <td colspan="9">
-                                <h4>기술자료 임치 연장 신청서</h4>
-                            </td>
-                        </tr>
-                        <tr>
-                                <th scope="row">기술 임치 연장 신청자</th>
-                                <td>
-                                    {%if request.session.user_id %}
-                                    {{enrollinfo.user_id}}
-                                    {% endif %}
-                                </td>
+                        <tr><td colspan="3" class="info_title fa fa-info-circle"><p>검색방법</p></td></tr>
+                        <tr class="number_info_top number_info_bg">
+                            <td colspan="2" class="number_info_howtouse_title"><b>분류번호</b> 선택</td>
+                            <td><span class="number_info_gray"> 후 </span>기술 키워드 검색<span class="number_info_gray"> </span></td>
                         </tr>
 
-                        <tr>
-                                <th scope="row">임치 기술 명칭</th>
-                                <td>
-                                    {{enrollinfo.title}}
-                                </td>
-                        </tr>
-                        <tr>
-                                <th scope="row">기술 종류 </th>
-                                <td>
-                                    {{ enrollinfo.sort_idx }}
-                                </td>
-                        </tr>
-                        <tr>
-                                <th scope="row">현재 임치 제공 기간 </th>
-                                <td>
-                                    {{enrollinfo.end_date}}<br>
-                                </td>
-                        </tr>
-                        <tr>
-                                <th scope="row">임치 연장 기간 </th>
-                                <td>
-                                    <input type="number" value="기간" name="term"><br>(1년 단위)
-                                </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <p>기본정보 공시동의</p>
-                            </td>
-                            <td colspan="2">
-                                <input type="radio"/><label>예</label>
-                                <input type="radio"/><label>아니오</label>
-                            </td>
-                            <td colspan="6">
-                                <p>※ 공시내용 : 임치물 제호, 개발인·사용인 기업명 및 주소, 임치기술의 분류ㆍ종류ㆍ임치연월일</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="9">
-                                <p>「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라 위와 같이 기술자료 임치를 신청합니다.</p>
-                                <p></p>
-                                <p>20 년 월 일</p>
-                                <p></p>
-                                <p>신청인(개발인) : 대표자 (인)</p>
-                                <p></p>
-                                <p>대·중소기업·농어업협력재단 사무총장 귀하</p>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="9">
-
-                                <p>1. 대리인임을 증명하는 서류 각 1부(대리인이 신청하는 경우)</p>
-                                <p>2. 신분증 사본 각 1부</p>
-                                <p>3. 사업자등록증 및 법인인감증명서(법인사업자에 한함)</p>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
-
-
-                       <div class="button-group-area mt-40 col-md-6">
-                <!--<a href="#" class="genric-btn primary circle arrow">임시저장<span class="lnr lnr-arrow-right"></span></a>-->
-                <!--<a href="mypage" type="submit" class="genric-btn primary circle arrow" onclick="alert('제출되었습니다')">제출<span class="lnr lnr-arrow-right"></span></a>-->
-                    <a href="main" class="genric-btn primary circle arrow" onclick="alert('취소되었습니다')">취소<span class="lnr lnr-arrow-right"></span></a>
-                    <button type="submit" class="btn btn-primary btn-md" onclick="alert('제출되었습니다')">제출</button>
             </div>
-                   </form>
+            <section class="search_box_section" >
+                <div class="first_search_box">
+                <div id="search_box" class="first_search_box">
+                    <form name="numberSearchF" id="numberSearchF" class="search_Form" method="post" action="/beginner/search/headerSearch.do">
+                        <input type="hidden" id="searchRight" name="searchRight" value="">
+                        <input type="hidden" id="searchType" name="searchType" value="SNU">
+                        <input type="hidden" id="searchYear" name="searchYear" value="">
+                        <input type="hidden" id="queryText" name="queryText" value="">
+                        <input type="hidden" id="searchClass" name="searchClass" value="numberSearch">
+
+                        <div class="search_box_wrap">
+                            <tr>
+                                <th>종류</th>
+                                <td>{{form.sort_idx}}</td>
+                                <td colspan="2" class="left">※ 산업기술분류체계를 참조하여 기재하여 주십시오.</td>
+                            </tr>
+                             <select id="searchTypeSelect" class="search_type_select">
+                                <option value="all" label="전체권리">분류</option>
+                                <option value="10" label="(10)특허">(10)특허</option>
+                                <option value="20" label="(20)실용신안">(20)실용신안</option>
+                                <option value="30" label="(30)디자인">(30)디자인</option>
+                                <option value="40" label="(40)상표">(40)상표</option>
+                                <option value="41" label="(41)서비스표">(41)서비스표</option>
+                                <option value="42" label="(42)업무표장">(42)업무표장</option>
+                                <option value="43" label="(43)단체표장">(43)단체표장</option>
+                                <option value="44" label="(44)지리적 표시 단체표장">(44)지리적 표시 단체표장</option>
+                                <option value="45" label="(45)상표, 서비스표">(45)상표·서비스표</option>
+                                <option value="47" label="(47)증명표장">(47)증명표장</option>
+                                <option value="48" label="(48)지리적 표시 증명표장">(48)지리적 표시 증명표장</option>
+                            </select>
+                             <input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="키워드를 입력하세요">
+                                <!--<input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="키워드를 입력하세요">-->
+                             <div class="searchButtonBox">
+                                 <button title="검색" type="submit" id="numberSearchBtn" class="searchButton">검색</button>
+                                 <!--<button title="검색" type="submit" id="numberSearchBtn" class="searchButton">검색</button>-->
+                             </div>
+                         </div>
+                    </form>
                 </div>
+                    </div>
+            </section>
+        </div>
+
+
+
+
+    <section class="contact_area p_130" >
+            <div class="container" style="text-align:center;">
+                <h3 class="mb-30 title_color">임치된 계약 목록</h3>
+                <table class="table table-hover" width="90%">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>임치 기술명</th>
+                            <th>회사명</th>
+                            <th>연락처</th>
+                            <th>홈페이지 주소</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for enroll_info in enroll_infos %}
+                        <tr>
+                            <td>
+                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
+                                    {{enroll_info.enroll_idx}}
+                                </a>
+                            </td>
+                            <td>{{enroll_info.title}}</td>
+                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
+                            <!--<td>{{enroll_info.enroll_date}}</td>-->
+                            <td>{{enroll_info.end_date}}</td>
+                            <td>
+                                <a href="show_app/{{enroll_info.enroll_idx}}">
+                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% for contract_info in contract_infos %}
+                            {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                                    <td>
+                                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                    </td>
+                                    <td>{{contract_info.cont_idx}}</td>
+                                    <td>{{contract_info.c_date}}</td>
+                                    <td>{{contract_info.end_date}}</td>
+                                    <td>
+                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                            <button type="button" class="btn btn-outline-success" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </section>
+    </section>
+    <br><br><br><br><br><br><br><br><br>
 
-    <!--================End Content Area =================-->
-{% endblock content %}
 
-{% block js %}
-    <script src="{% static 'js/jquery.form.js' %}"></script>
-    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'js/contact.js' %}"></script>
-{% endblock js %}
+    </section>
 
