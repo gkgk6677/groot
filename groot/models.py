@@ -74,7 +74,7 @@ class Enrollment(models.Model):
     sort_idx = models.ForeignKey('SortMst', models.DO_NOTHING, db_column='sort_idx')
     user = models.ForeignKey('User', models.DO_NOTHING)
     title = models.CharField(max_length=100)
-    term = models.IntegerField()
+    term = models.PositiveIntegerField(default=1)
     summary = models.TextField(blank=True, null=True)
     status = models.IntegerField(blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)

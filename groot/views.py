@@ -195,7 +195,7 @@ def application(request):
         create_date = datetime.date.today()
         form = EnrollmentForm(initial={'c_date':create_date})
         user = User.objects.get(user_id=request.session.get('user_id'))
-    return render(request, 'groot/app.html', {'form': form, 'user':user, 'create_date':create_date})
+    return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
 
 def extend(request,idx):
     user_id = request.session['user_id']
