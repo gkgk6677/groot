@@ -4,6 +4,8 @@
 {% block css %}
     <style>
         .tr_link:hover{color:black; font-weight: bold;}
+        .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
+        .btn-outline-info:hover{color:white; background-color:#00c8a9;}
     </style>
 {% endblock css %}
 
@@ -26,7 +28,7 @@
                     {% for enroll_info in enroll_infos %}
                         <tr>
                             <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
+                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
                                     {{enroll_info.enroll_idx}}
                                 </a>
                             </td>
@@ -36,22 +38,24 @@
                             <td>{{enroll_info.end_date}}</td>
                             <td>
                                 <a href="show_app/{{enroll_info.enroll_idx}}">
-                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
+                                    <button type="button" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 임치 증명서 발급 </button>
                                 </a>
                             </td>
                         </tr>
                         {% for contract_info in contract_infos %}
                             {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
                                 <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
-                                    <td>
-                                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                    <td style="padding-left:9%;">
+                                        <span style="font-size: 20px; color: Dodgerblue;">
+                                          <i class="fa fa-angle-right"></i>
+                                        </span>
                                     </td>
                                     <td>{{contract_info.cont_idx}}</td>
                                     <td>{{contract_info.c_date}}</td>
                                     <td>{{contract_info.end_date}}</td>
                                     <td>
                                         <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                            <button type="button" class="btn btn-outline-success" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                            <button type="button" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 계약 증명서 발급 </button>
                                         </a>
                                     </td>
                                 </tr>
@@ -73,6 +77,15 @@
             $('.tr'+trid).toggle();
         });
         <!--$('.tr'+trid').hide();-->
+
+        <!--$('.tr_link').hover(function() {-->
+            <!--let trid = $(this).attr('trid');-->
+            <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
+                           <!--<i class="fa fa-search-plus"></i>-->
+                        <!--</span>`;-->
+            <!--$('#'+trid).html(icon);-->
+        <!--});-->
+        <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
     });
 </script>
 {% endblock js %}
