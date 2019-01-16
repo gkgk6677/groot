@@ -22,3 +22,10 @@ class EnrollmentForm(forms.ModelForm):
          if commit:
              enrollment.save()
          return enrollment
+
+class SearchForm(forms.ModelForm):
+    word = forms.CharField(label="검색")
+
+    class Meta:
+        model = User
+        fields = ['user_id']

@@ -14,6 +14,9 @@ from groot.forms import *
 from .models import *
 from django.utils import timezone
 
+from django.views.generic.edit import FormView
+from django.db.models import Q
+
 # # html2pdf 위한 라이브러리
 # from django.views.generic.base import View
 # from .render import Render
@@ -198,8 +201,11 @@ def application(request):
     return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
 
 def extend(request,idx):
-    user_id = request.session['user_id']
+
+    u = User.objects.get(user_id=request.session.get('user_id'))
     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+    enrollinfo.user_id = User()
+    enrollinfo.user = u
 
     if request.method == 'POST':
         e_date = enrollinfo.end_date
@@ -218,7 +224,11 @@ def extend(request,idx):
         print(f.text)  # cmd 창에 보여질 값
         return redirect('mypage')
     else:
-        return render(request, 'groot/extend.html', {'enrollinfo': enrollinfo})
+        create_date = datetime.date.today()
+
+        user = User.objects.get(user_id=request.session.get('user_id'))
+
+    return render(request, 'groot/extend.html', {'user':user, 'enrollinfo': enrollinfo,'create_date':create_date})
 
 @csrf_exempt
 # @csrf_protect
@@ -460,3 +470,24 @@ def expire(request):
 def a(request):
     return render(request, 'groot/a.html', {})
 
+
+######################TEST
+class SearchFormView(FormView):
+    form_class = SearchForm
+    template_name = 'groot/search.html'
+
+    def form_valid(self, form):
+        schWord = self.request.POST['search_word']
+        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
+
+        context = {}
+        context['form'] = form
+        context['search_term'] = schWord
+        context['object_list'] = user_list
+
+
+
+        return render(self.request, self.template_name, context)
+
+
+#########################TEST

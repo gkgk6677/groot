@@ -3149,3 +3149,48 @@ a {
     width: 75%;
 }
 
+
+.first_search_box{
+ height :40px;
+ width : 400px;
+ border : 1px solid #1b5ac2;
+ background: #ffffff;
+}
+
+.search_keyword_box{
+font-size : 16px;
+padding : 10px;
+border: 0px;
+outline : none;
+float: left;
+}
+
+.searchButton{
+ width: 50px;
+ height: 100%;
+ border: 0px;
+ background : #1b5ac2;
+ outline : none;
+ float :right;
+ color : #ffffff
+}
+
+
+.searchButton2 {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    _cursor: hand;
+    text-decoration: none;
+    overflow: visible;
+    font-family:"NanumBarunGothic", "돋움", dotum, Gulim, Tahoma, Verdana, AppleGothic, UnDotum, sans-serif;
+    letter-spacing: -1px;
+    white-space: nowrap;
+    }
+
+.search_keyword_box{
+    outline: none;
+    border: 0;
+}
