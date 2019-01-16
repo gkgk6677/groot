@@ -14,13 +14,13 @@ from groot.forms import *
 from .models import *
 from django.utils import timezone
 
-# html2pdf 위한 라이브러리
-from django.views.generic.base import View
-from .render import Render
-import os
-from django.conf import settings
-from django.template import Context
-from xhtml2pdf import pisa
+# # html2pdf 위한 라이브러리
+# from django.views.generic.base import View
+# from .render import Render
+# import os
+# from django.conf import settings
+# from django.template import Context
+# from xhtml2pdf import pisa
 
 # Create your views here.
 
