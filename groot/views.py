@@ -8,7 +8,6 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
-import requests
 from groot.forms import EnrollmentForm
 from groot.forms import *
 from .models import *
@@ -132,7 +131,7 @@ def notice_write(request):
                 c_date = timezone.now(),
                 m_date = timezone.now(),
             )
-        return redirect(f'/notice/ {new_notice.pk}')
+        return redirect('/notice/ {new_notice.pk}')
     return render(request, 'groot/notice_write.html')
 #
 
@@ -171,6 +170,7 @@ def application(request):
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = request.POST['term']
             enrollment.user = u
+	    enrollment.status = 0
             enrollment.c_date = datetime.datetime.now()
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
@@ -376,3 +376,27 @@ def expire(request):
 def a(request):
     return render(request, 'groot/a.html', {})
 
+
+######################TEST
+class SearchFormView(FormView):
+    form_class = SearchForm
+    template_name = 'groot/search.html'
+
+    def form_valid(self, form):
+        schWord = self.request.POST['search_word']
+        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
+
+        context = {}
+        context['form'] = form
+        context['search_term'] = schWord
+        context['object_list'] = user_list
+
+
+
+        return render(self.request, self.template_name, context)
+
+
+#########################TEST
+
+def upload(request):
+    return render(request, 'groot/upload.html', {})
