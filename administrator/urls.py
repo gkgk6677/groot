@@ -6,6 +6,7 @@ urlpatterns = [
     path('index/logout/', views.logout, name='logout'),
     path('index/application/', views.admin_application, name="admin_application"),
     path('index/application/<int:idx>', views.application_detail, name="application_detail"),
+    # path('index/application/test', views.test, name="test"),
     path('index/expire/', views.admin_expire, name="admin_expire"),
     path('index/insert/', views.admin_insert, name="admin_insert"),
     path('index/log/', views.admin_log, name="admin_log"),

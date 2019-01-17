@@ -16,7 +16,7 @@ def index(request):
             count_enroll += 1
 
     for val in contract_info:
-        if val.user_id == 'eodahee':
+        if val.status == 0:
             count_cont += 1
 
 
@@ -29,18 +29,28 @@ def logout(request):
 def blank(request):
     return render(request, 'administrator/blank.html', {})
 
-def admin_application(request):
+def admin_application(request):   
+    app_info = Enrollment.objects.all().filter(status=0)
 
-    app_info = Enrollment.objects.all().filter(status=1)
+    if request.method == 'GET':
+        return render(request, 'administrator/admin-application.html', {'app_info':app_info})
 
-    return render(request, 'administrator/admin-application.html', {'app_info':app_info})
+
 
 def application_detail(request, idx):
 
     enrollment_info = Enrollment.objects.get(enroll_idx=idx)
-
-
-    return render(request, 'administrator/application_detail.html', {'enrollment_info':enrollment_info})
+    if request.method == 'GET': 
+        return render(request, 'administrator/application_detail.html', {'enrollment_info':enrollment_info})
+    else:
+        if request.POST.get('yes'):
+            enrollment_info.status = 1
+            enrollment_info.save()
+            return redirect('index')
+        else:
+            enrollment_info.status = 2
+            enrollment_info.save()
+            return redirect('index')
 
 def admin_insert(request):
     return render(request, 'administrator/admin-insert.html', {})

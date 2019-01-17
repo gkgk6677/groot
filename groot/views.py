@@ -176,7 +176,7 @@ def application(request):
             enrollment = Enrollment()
             u = User.objects.get(user_id=request.session.get('user_id'))
             enrollment.user_id = User()
-            enrollment.title = form.cleaned_date['title']
+            enrollment.title = form.cleaned_data['title']
             sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
