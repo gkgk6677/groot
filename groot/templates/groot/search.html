@@ -22,8 +22,7 @@
         <div class="first_wrap">
              <div class="logo_div">
                 <h1>
-                    <a href="/beginner/search/firstSearch.jsp" title="KIPRIS 초보자 단계별검색 첫페이지로 이동">
-                        <img src="/beginner/images/header/txt_titleKIPRIS.png" alt="임치된 기술 검색">
+                        <img src="{% static 'img/search.png' %}">  임치된 기술 검색
                     </a>
                 </h1>
              </div>
@@ -139,13 +138,103 @@
                     </form>
                 </div>
             </div>
+        </div> <!--first_wrap 끝-->
+             <section class="first_wrap" >
+            <div class="container" style="text-align:center;",  >
+                <h3 class="mb-30 title_color">임치 및 계약 목록</h3>
+                <table class="table table-hover" width="90%">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>임치 기술명</th>
+                            <th>계약 날짜</th>
+                            <th>만료 날짜</th>
+                            <th>증명서 발급</th>
+                        </tr>
+                    </thead>
 
-        </div>
+                    <tbody>
+                    {% for enroll_info in enroll_infos %}
+                        <tr>
+                            <td>
+                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
+                                    {{enroll_info.enroll_idx}}
+                                </a>
+                            </td>
+                            <td>{{enroll_info.title}}</td>
+                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
+                            <!--<td>{{enroll_info.enroll_date}}</td>-->
+                            <td>{{enroll_info.end_date}}</td>
+                            <td>
+                                <a href="show_app/{{enroll_info.enroll_idx}}">
+                                    <button type="button" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 임치 증명서 발급 </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% for contract_info in contract_infos %}
+                            {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                                    <td style="padding-left:9%;">
+                                        <span style="font-size: 20px; color: Dodgerblue;">
+                                          <i class="fa fa-angle-right"></i>
+                                        </span>
+                                    </td>
+                                    <td>{{contract_info.cont_idx}}</td>
+                                    <td>{{contract_info.c_date}}</td>
+                                    <td>{{contract_info.end_date}}</td>
+                                    <td>
+                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                            <button type="button" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 계약 증명서 발급 </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </section>
+    <br><br><br><br><br><br><br><br><br>
     </section>
 
 
 
+
+
+<!--================End Content Area =================-->
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/jquery.form.js' %}"></script>
+<script src="{% static 'js/jquery.validate.min.js' %}"></script>
+<script src="{% static 'js/contact.js' %}"></script>
+{% endblock js %}
+
+
+
 <script type="text/javascript">
+<!--하이드메뉴-->
+
+$(function() {
+    $('.tr_link').click(function() {
+        let trid = $(this).attr('trid');
+        $('.tr'+trid).toggle();
+    });
+    <!--$('.tr'+trid').hide();-->
+
+    <!--$('.tr_link').hover(function() {-->
+        <!--let trid = $(this).attr('trid');-->
+        <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
+                       <!--<i class="fa fa-search-plus"></i>-->
+                    <!--</span>`;-->
+        <!--$('#'+trid).html(icon);-->
+    <!--});-->
+    <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
+});
+
+<!--END-->
+
 jQuery(document).ready(function(){
 	if( $('.cd-stretchy-nav').length > 0 ) {
 		var stretchyNavs = $('.cd-stretchy-nav');
@@ -181,15 +270,11 @@ if(searchType=="SKW"){
 
 
 </script>
-    </div>
-
-
 <script>
 //<!--
 //var srchpos = "TOP";
 ////-->
 </script>
-
 
 <script type="text/javascript">
 
@@ -222,23 +307,7 @@ jQuery("#firstSearchF").submit(
 });
 
 </script>
-</body>
-</html>
 
-
-
-
-
-
-
-<!--================End Content Area =================-->
-{% endblock content %}
-
-{% block js %}
-<script src="{% static 'js/jquery.form.js' %}"></script>
-<script src="{% static 'js/jquery.validate.min.js' %}"></script>
-<script src="{% static 'js/contact.js' %}"></script>
-{% endblock js %}
 <script type="text/javascript">
 $(document).ready(function(){
         jQuery("#goTopBtn").click(function() { $(window).scrollTop(0);}) ;

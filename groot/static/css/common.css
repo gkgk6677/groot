@@ -218,6 +218,13 @@ img, fieldset, button, textarea, select{
     width : 95%;
     margin: 0 auto;
 }
+.second_wrap{
+    position: relative;
+    top: 10%;
+    /*width: 70%;*/
+    width : 95%;
+    margin: 0 auto;
+}
 .kdc_wrap{
     position: relative;
     top: 10%;
