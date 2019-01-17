@@ -19,126 +19,126 @@
 
     <section class="first_search_body">
         <div id="allResultLoading" class="loading_bar_div"><img src="/beginner/images/common/loading_all.gif" alt="검색결과를 불러오고 있습니다." /></div>
-        <div class="first_wrap">
-             <div class="logo_div">
-                <h1>
-                        <img src="{% static 'img/search.png' %}">  임치된 기술 검색
-                    </a>
-                </h1>
-             </div>
+        <!--<div class="first_wrap">-->
+             <!--<div class="logo_div">-->
+                <!--<h1>-->
+                        <!--<img src="{% static 'img/search.png' %}">  임치된 기술 검색-->
+                    <!--</a>-->
+                <!--</h1>-->
+             <!--</div>-->
 
 
-        <!-- 단계별검색 안내 -->
-        <section class="step_ex_box step01">
-            <span class="step_ex_main_title">STEP 01</span>
-            <div class="step_ex_sub_box">
-                <div class="step_ex_title">검색어를 입력하고 검색을 클릭해주세요.</div>
+        <!--&lt;!&ndash; 단계별검색 안내 &ndash;&gt;-->
+        <!--<section class="step_ex_box step01">-->
+            <!--<span class="step_ex_main_title">STEP 01</span>-->
+            <!--<div class="step_ex_sub_box">-->
+                <!--<div class="step_ex_title">검색어를 입력하고 검색을 클릭해주세요.</div>-->
 
-                    <div class="step_ex_sub_title">
-                        <span class="step_ex_sub_title_01">연산자를 이용하여 <b>검색식</b>을 작성해보세요!</span><br/>
-                        <span class="step_ex_sub_title_02">연산자를 이용한 검색식 작성을 통해 좀 더 다양한 검색을 할 수 있습니다.</span>
-                    </div>
+                    <!--<div class="step_ex_sub_title">-->
+                        <!--<span class="step_ex_sub_title_01">연산자를 이용하여 <b>검색식</b>을 작성해보세요!</span><br/>-->
+                        <!--<span class="step_ex_sub_title_02">연산자를 이용한 검색식 작성을 통해 좀 더 다양한 검색을 할 수 있습니다.</span>-->
+                    <!--</div>-->
 
-                    <div class="step_ex_img">
-                        <img src="{% static 'img/step1_on.png' %}" alt="STEP1"/>
-                        <img src="{% static 'img/step2_off.png' %}" alt="STEP2"/>
-                        <img src="{% static 'img/step3_off.png' %}" alt="STEP3"/>
-                    </div>
+                    <!--<div class="step_ex_img">-->
+                        <!--<img src="{% static 'img/step1_on.png' %}" alt="STEP1"/>-->
+                        <!--<img src="{% static 'img/step2_off.png' %}" alt="STEP2"/>-->
+                        <!--<img src="{% static 'img/step3_off.png' %}" alt="STEP3"/>-->
+                    <!--</div>-->
 
-            <!--검색식 설명-->
-            <div class="step_info">
-                <table border="0">
-                    <tbody class="step_info_main">
-                         <tr>
-                            <td rowspan="5" class="step_info_formula_title">검색식</td>
-                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">*&nbsp;(AND)</div><p>&nbsp;검색결과에 반드시 포함되어야 할 단어</p></td>
-                            <td>
-                               <table border="0">
-                                   <tbody class="step_info_example_contents">
-                                    <tr>
-                                        <td><span>'자동차'와 '엔진' 두 키워드를 모두 포함하여 검색할 경우</span></td>
+            <!--&lt;!&ndash;검색식 설명&ndash;&gt;-->
+            <!--<div class="step_info">-->
+                <!--<table border="0">-->
+                    <!--<tbody class="step_info_main">-->
+                         <!--<tr>-->
+                            <!--<td rowspan="5" class="step_info_formula_title">검색식</td>-->
+                            <!--<td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">*&nbsp;(AND)</div><p>&nbsp;검색결과에 반드시 포함되어야 할 단어</p></td>-->
+                            <!--<td>-->
+                               <!--<table border="0">-->
+                                   <!--<tbody class="step_info_example_contents">-->
+                                    <!--<tr>-->
+                                        <!--<td><span>'자동차'와 '엔진' 두 키워드를 모두 포함하여 검색할 경우</span></td>-->
 
-                                    </tr>
-                                    <tr>
-                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">*</span>&nbsp;엔진</span></td>
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">*</span>&nbsp;엔진</span></td>-->
 
-                                    </tr>
-                                    </tbody>
-                               </table>
-                            </td>
-                        </tr>
+                                    <!--</tr>-->
+                                    <!--</tbody>-->
+                               <!--</table>-->
+                            <!--</td>-->
+                        <!--</tr>-->
 
-                        <tr>
-                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">+&nbsp;(OR)</div><p>&nbsp;입력키워드 중 하나만 포함되어도 되는 단어</p></td>
-                            <td>
-                               <table border="0">
-                                   <tbody class="step_info_example_contents">
-                                    <tr>
-                                        <td><span>'자동차'와 '엔진' 중 하나 이상의 키워드를 포함하여 검색할 경우 </span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">+</span>&nbsp;엔진</span></td>
-                                    </tr>
-                                    </tbody>
-                               </table>
-                            </td>
-                        </tr>
+                        <!--<tr>-->
+                            <!--<td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">+&nbsp;(OR)</div><p>&nbsp;입력키워드 중 하나만 포함되어도 되는 단어</p></td>-->
+                            <!--<td>-->
+                               <!--<table border="0">-->
+                                   <!--<tbody class="step_info_example_contents">-->
+                                    <!--<tr>-->
+                                        <!--<td><span>'자동차'와 '엔진' 중 하나 이상의 키워드를 포함하여 검색할 경우 </span></td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">+</span>&nbsp;엔진</span></td>-->
+                                    <!--</tr>-->
+                                    <!--</tbody>-->
+                               <!--</table>-->
+                            <!--</td>-->
+                        <!--</tr>-->
 
-                        <tr>
-                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">!&nbsp;(NOT)</div><p>&nbsp;검색결과에서 제외되어야 할 단어</p></td>
-                            <td>
-                               <table border="0">
-                                   <tbody class="step_info_example_contents">
-                                    <tr>
-                                        <td><span>'자동차'로 검색된 결과에서 '엔진' 키워드를 가진 결과를 제외할 경우</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">&nbsp;자동차*<span class="formula_sign">!</span>엔진</span></td>
-                                    </tr>
-                                    </tbody>
-                               </table>
-                            </td>
-                        </tr>
+                        <!--<tr>-->
+                            <!--<td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_formula">!&nbsp;(NOT)</div><p>&nbsp;검색결과에서 제외되어야 할 단어</p></td>-->
+                            <!--<td>-->
+                               <!--<table border="0">-->
+                                   <!--<tbody class="step_info_example_contents">-->
+                                    <!--<tr>-->
+                                        <!--<td><span>'자동차'로 검색된 결과에서 '엔진' 키워드를 가진 결과를 제외할 경우</span></td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td class="step_formula_ex">검색식 예시 : <span class="info_gray">&nbsp;자동차*<span class="formula_sign">!</span>엔진</span></td>-->
+                                    <!--</tr>-->
+                                    <!--</tbody>-->
+                               <!--</table>-->
+                            <!--</td>-->
+                        <!--</tr>-->
 
-                        <tr>
-                            <td colspan="2" class="step_info_formula_explain_extend"> 다양한 키워드를 적절한 연산자와 조합하면 더 구체적인 검색이 가능합니다. </td>
-                        </tr>
-                         <tr>
-                            <td colspan="2" class="step_info_formula_explain text_center border_right"> 검색식 응용 예시 : <span class="info_gray">자동차<span class="formula_sign">*</span>엔진<span class="formula_sign">*</span>(효율<span class="formula_sign">+</span>하이브리드)*<span class="formula_sign">!</span>(장치<span class="formula_sign">+</span> 시스템)</span> </td>
-                        </tr>
+                        <!--<tr>-->
+                            <!--<td colspan="2" class="step_info_formula_explain_extend"> 다양한 키워드를 적절한 연산자와 조합하면 더 구체적인 검색이 가능합니다. </td>-->
+                        <!--</tr>-->
+                         <!--<tr>-->
+                            <!--<td colspan="2" class="step_info_formula_explain text_center border_right"> 검색식 응용 예시 : <span class="info_gray">자동차<span class="formula_sign">*</span>엔진<span class="formula_sign">*</span>(효율<span class="formula_sign">+</span>하이브리드)*<span class="formula_sign">!</span>(장치<span class="formula_sign">+</span> 시스템)</span> </td>-->
+                        <!--</tr>-->
 
-                    </tbody>
-                </table>
-            </div>
-            <!--검색식 설명 끝-->
-            </div>
-        </section>
+                    <!--</tbody>-->
+                <!--</table>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;검색식 설명 끝&ndash;&gt;-->
+            <!--</div>-->
+        <!--</section>-->
 
-             <div class="search_box_section">
-                <div id="search_box" class="first_search_box">
+             <!--<div class="search_box_section">-->
+                <!--<div id="search_box" class="first_search_box">-->
 
-                    <form name="firstSearchF" id="firstSearchF" class="search_Form" method="post" action="/beginner/search/headerSearch.do">
-                        <input type="hidden" id="searchRight" name="searchRight" value="" />
-                        <input type="hidden" id="searchType" name="searchType" value="SKW" />
-                        <input type="hidden" id="queryText" name="queryText" value="" />
-                        <input type="hidden" id="searchClass" name="searchClass" value="firstSearch" />
-                        <div class="search_box_wrap">
-                            <input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="검색어를 입력해주세요 ex) 자동차*엔진" />
+                    <!--<form name="firstSearchF" id="firstSearchF" class="search_Form" method="post" action="/beginner/search/headerSearch.do">-->
+                        <!--<input type="hidden" id="searchRight" name="searchRight" value="" />-->
+                        <!--<input type="hidden" id="searchType" name="searchType" value="SKW" />-->
+                        <!--<input type="hidden" id="queryText" name="queryText" value="" />-->
+                        <!--<input type="hidden" id="searchClass" name="searchClass" value="firstSearch" />-->
+                        <!--<div class="search_box_wrap">-->
+                            <!--<input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="검색어를 입력해주세요 ex) 자동차*엔진" />-->
 
-                            <select id="searchTypeSelect" class="search_type_select">
-                                <option value="all" label="전체">전체</option>
-                                <option value="patent" label="특허실용신안">특허실용신안</option>
-                                <option value="design" label="디자인">디자인</option>
-                                <option value="trademark" label="상표">상표</option>
-                            </select>
-                            <div class="searchButtonBox">
-                                <button title="검색" type="submit" id="firstSearchBtn" class="searchButton">검색</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div> <!--first_wrap 끝-->
+                            <!--<select id="searchTypeSelect" class="search_type_select">-->
+                                <!--<option value="all" label="전체">전체</option>-->
+                                <!--<option value="patent" label="특허실용신안">특허실용신안</option>-->
+                                <!--<option value="design" label="디자인">디자인</option>-->
+                                <!--<option value="trademark" label="상표">상표</option>-->
+                            <!--</select>-->
+                            <!--<div class="searchButtonBox">-->
+                                <!--<button title="검색" type="submit" id="firstSearchBtn" class="searchButton">검색</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div> &lt;!&ndash;first_wrap 끝&ndash;&gt;-->
              <section class="first_wrap" >
             <div class="container" style="text-align:center;",  >
                 <h3 class="mb-30 title_color">임치 및 계약 목록</h3>
@@ -147,50 +147,21 @@
                         <tr>
                             <th>번호</th>
                             <th>임치 기술명</th>
-                            <th>계약 날짜</th>
-                            <th>만료 날짜</th>
-                            <th>증명서 발급</th>
+                            <th>회사명</th>
+                            <th>홈페이지 주소</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                    {% for enroll_info in enroll_infos %}
-                        <tr>
-                            <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                    {{enroll_info.enroll_idx}}
-                                </a>
-                            </td>
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
-                            <!--<td>{{enroll_info.enroll_date}}</td>-->
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                <a href="show_app/{{enroll_info.enroll_idx}}">
-                                    <button type="button" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 임치 증명서 발급 </button>
-                                </a>
-                            </td>
-                        </tr>
-                        {% for contract_info in contract_infos %}
-                            {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
-                                    <td style="padding-left:9%;">
-                                        <span style="font-size: 20px; color: Dodgerblue;">
-                                          <i class="fa fa-angle-right"></i>
-                                        </span>
-                                    </td>
-                                    <td>{{contract_info.cont_idx}}</td>
-                                    <td>{{contract_info.c_date}}</td>
-                                    <td>{{contract_info.end_date}}</td>
-                                    <td>
-                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                            <button type="button" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 계약 증명서 발급 </button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
+                            {% for app_infos in app_info %}
+                            <tr>
+                                <td><a href="{{app_infos.enroll_idx}}">{{app_infos.title}}</a></td>
+                                <td>{{app_infos.user.com_head}}</td>
+                                <td class="center">{{app_infos.c_date}}</td>
+                                <td class="center" style="text-align:center;">
+                                </td>
+                            </tr>
+                            {% endfor %}
+
                     </tbody>
                 </table>
             </div>
@@ -210,6 +181,16 @@
 <script src="{% static 'js/jquery.validate.min.js' %}"></script>
 <script src="{% static 'js/contact.js' %}"></script>
 {% endblock js %}
+<script>
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
 
 
 

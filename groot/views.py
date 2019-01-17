@@ -487,5 +487,14 @@ class SearchFormView(FormView):
 
 #########################TEST
 
+
+def search_list(request):
+
+    app_info = Status.objects.all().filter(status=0)
+
+    if request.method == 'GET':
+        return render(request, 'groot/search.html',{'app_info': app_info})
+
+
 def upload(request):
     return render(request, 'groot/upload.html', {})

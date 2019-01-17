@@ -30,7 +30,7 @@ def blank(request):
     return render(request, 'administrator/blank.html', {})
 
 def admin_application(request):   
-    app_info = Enrollment.objects.all().filter(status=0)
+    app_info = Enrollment.objects.all().filter(status=1)
 
     if request.method == 'GET':
         return render(request, 'administrator/admin-application.html', {'app_info':app_info})

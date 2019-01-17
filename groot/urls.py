@@ -56,7 +56,9 @@ urlpatterns = [
     path('change_pw', views.change_pw, name="change_pw"),
     path('change_com', views.change_com, name="change_com"),
     path('a', views.a, name="a"),
-    path('search', SearchFormView.as_view(), name='search'),
+    # path('search', SearchFormView.as_view(), name='search'),
+    path('search', views.search_list, name="search"),
+
 
 ]
 
