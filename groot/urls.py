@@ -45,6 +45,7 @@ urlpatterns = [
     path('extend/<int:idx>', views.extend, name='extend'),
     path('insert', views.insert, name='insert'),
     path('expire', views.expire, name='expire'),
+    path('upload', views.upload, name='upload'),
 
 
     path('notice/(?P<pk>\d+)/$', views.notice_detail, name='notice_detail'),

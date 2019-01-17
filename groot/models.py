@@ -61,7 +61,7 @@ class SortMst(models.Model):
     title = models.CharField(max_length=100 )
 
     def __str__(self):
-        return self.title
+        return '(' + str(self.sort_idx) + ')' + self.title
 
     class Meta:
         managed = False
@@ -80,7 +80,8 @@ class Enrollment(models.Model):
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         managed = False
