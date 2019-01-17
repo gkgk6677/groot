@@ -1,12 +1,13 @@
 import datetime
 import json
 from functools import wraps
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from groot.forms import EnrollmentForm
@@ -181,19 +182,20 @@ def application(request):
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-            enrollment.c_date = form.cleaned_data['c_date']
+            enrollment.summary = form.cleaned_data['summary']
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
-            # enrollment.save()
+            enrollment.save()
 
             #    0          1        2         3        4        5       6          7            8           9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-                     + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-                     + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-                     + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
-            f = requests.get(fabric)
-            print(f.text)  # cmd 창에 보여질 값
-            return redirect('mypage')
+            # fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
+            #          + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
+            #          + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
+            #          + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
+            # f = requests.get(fabric)
+            # print(f.text)  # cmd 창에 보여질 값
+            return HttpResponseRedirect(reverse('upload'))
+
     else:
         create_date = datetime.date.today()
         form = EnrollmentForm(initial={'c_date':create_date})
@@ -470,24 +472,3 @@ def expire(request):
 def a(request):
     return render(request, 'groot/a.html', {})
 
-
-######################TEST
-class SearchFormView(FormView):
-    form_class = SearchForm
-    template_name = 'groot/search.html'
-
-    def form_valid(self, form):
-        schWord = self.request.POST['search_word']
-        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
-
-        context = {}
-        context['form'] = form
-        context['search_term'] = schWord
-        context['object_list'] = user_list
-
-
-
-        return render(self.request, self.template_name, context)
-
-
-#########################TEST
