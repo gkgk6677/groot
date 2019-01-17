@@ -32,27 +32,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd gradeX">
-                                <td>1</td>
-                                <td>name1</td>
-                                <td>seo</td>
-                                <td class="center">19.01.16 18:00</td>
-                                <td class="center"></td>
+                            {% for app_infos in app_info %}
+                            <tr>
+                                <td><a href="{{app_infos.enroll_idx}}">{{app_infos.title}}</a></td>
+                                <td>{{app_infos.user.com_head}}</td>
+                                <td class="center">{{app_infos.c_date}}</td>
+                                <td class="center" style="text-align:center;">
+                                    <a href="" type="button" class="btn btn-success">승인</a>
+                                    <a href="" type="button" class="btn btn-danger">반려</a>
+                                </td>
                             </tr>
-                            <tr class="even gradeC">
-                                <td>2</td>
-                                <td>name2</td>
-                                <td>dahee</td>
-                                <td class="center">19.01.16 13:00</td>
-                                <td class="center"></td>
-                            </tr>
-                            <tr class="odd gradeA">
-                                <td>3</td>
-                                <td>name3</td>
-                                <td>jinsu</td>
-                                <td class="center">19.01.13 18:10</td>
-                                <td class="center"></td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -64,6 +54,15 @@
     </div>
 </div>
 {% endblock content %}
-
 {% block js %}
+<script>
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
 {% endblock js %}

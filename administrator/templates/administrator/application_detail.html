@@ -1,0 +1,27 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">기술임치 신청서</h1>
+                    <div>임치 기술명 : {{enrollment_info.title}}</div>
+                    <div>분류 : {{enrollment_info.sort_idx}}</div>
+                    <div>개발회사 : {{enrollment_info.user.com_name}}</div>
+                    <div>대표자 : {{enrollment_info.user.com_head}}</div>
+                    <div>임치 기간 : {{enrollment_info.term}} 년</div>
+                    <div>연락처 : {{enrollment_info.user.phone_num}}</div>
+                    <div>기술요약 문서 : {{enrollment_info.summary}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
