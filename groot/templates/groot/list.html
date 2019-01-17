@@ -44,56 +44,54 @@
                         <div class="col-lg-9">
                             <div class="section-table">
                                 <h3 class="mb-30 title_color">계약 현황</h3>
-                                <div class="progress-table-wrap">
-                                    <div class="progress-table" style="text-align:center;">
-                                        <div class="table-head">
-                                            <div class="index">번호</div>
-                                            <div class="enroll_title">임치명</div>
-                                            <div class="date">계약 기간</div>
-                                            <div class="status">상태</div>
-                                            <div class="extend">연장</div>
-                                            <div class="insert">편입</div>
-                                            <div class="update">갱신</div>
-                                            <div class="expire">폐지</div>
-                                        </div>
-
-                                        <div class="table-row">
-                                            <div class="index">1</div>
-                                            <div class="enroll_title">블록체인 기반의 무역거래 시스템</div>
-                                            <div class="date">19.01.02~22.01.02</div>
-                                            <div class="status">대기</div>
-                                            <div class="extend"><a href="#" type="button">연장</a></div>
-                                            <div class="insert"><a href="#" type="button">편입</a></div>
-                                            <div class="update"><a href="#" type="button">갱신</a></div>
-                                            <div class="expire"><a href="#" type="button">폐지</a></div>
-                                        </div>
-    
-                                        <div class="table-row">
-                                            <div class="index">2</div>
-                                            <div class="enroll_title">전투의 민족</div>
-                                            <div class="date">19.01.02~22.01.02</div>
-                                            <div class="status">대기</div>
-                                            <div class="extend"><a href="#" type="button">연장</a></div>
-                                            <div class="insert"><a href="#" type="button">편입</a></div>
-                                            <div class="update"><a href="#" type="button">갱신</a></div>
-                                            <div class="expire"><a href="#" type="button">폐지</a></div>
-                                        </div>
+                                <table class="table table-hover" width="90%">
+                                    <thead>
+                                        <tr align="center">
+                                            <th>번호</th>
+                                            <th>기술명</th>
+                                            <th>등록 기간</th>
+                                            <th>등록 일자</th>
+                                            <th>만료 일자</th>
+                                            <th>연장</th>
+                                            <th>편입</th>
+                                            <th>갱신</th>
+                                            <th>폐지</th>
+                                        </tr>
+                                    </thead>
 
 
-                                            {% for enroll_info in enroll_infos %}
-                                            <div class="table-row" id="enroll_info">
-                                                <div class="serial">{{enroll_info.enroll_idx}}</div>
-                                                <div class="technology">{{enroll_info.title}}</div>
-                                                <div class="company">{{enroll_info.user_id}}</div>
-                                                <div class="enroll_date">{{enroll_info.c_date}}</div>
-                                                <div class="expired_date">{{enroll_info.term}}</div>
-                                                <div class="constant"><a href="extend/{{enroll_info.enroll_idx}}">연장</a>/<a href="insert">편입</a>/<a href="expire">해지</a></div>
-                                            </div>
-                                            {% endfor %}
-
-
-                                    </div>
-                                </div>
+                                    <tbody id="enroll_info">
+                                    {% for enroll_info in enroll_infos %}
+                                        <tr align="center">
+                                            <td>{{enroll_info.enroll_idx}}</td>
+                                            <td>{{enroll_info.title}}</td>
+                                            <td>{{enroll_info.term}}</td>
+                                            <td>{{enroll_info.enroll_date}}</td>
+                                            <td>{{enroll_info.end_date}}</td>
+                                            <td>
+                                                <a href="extend/{{enroll_info.enroll_idx}}">
+                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 연장 </button>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="insert">
+                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 편입 </button>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#">
+                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 갱신 </button>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="expire">
+                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 해지 </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table>
 					        </div>
                         </div>
                     </div>

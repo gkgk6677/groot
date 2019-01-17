@@ -30,6 +30,7 @@
 {% endblock css %}
 
 {% block content %}
+    <!--================Content Area =================-->
     <section class="contact_area p_200" >
             <div class="container" style="text-align:center;">
                 <!--<h3 class="mb-30 title_color">증명서</h3>-->
@@ -44,7 +45,9 @@
                             <thead>
                                <tr>
                                    <td colspan="2">
-                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/apple">DFSA9479GSDW156DGE256GGEGHUJ60G902</a>
+                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/{{cc.Value.technology}}">
+                                                {{ cc.TxId }}
+                                       </a>
                                    </td>
                                </tr>
                                <tr>
@@ -54,23 +57,28 @@
                             <tbody>
                                <tr>
                                     <th scope="row">기술명</th>
-                                    <td>블록체인 기반 전자문서 위변조 방지 시스템</td>
+                                    <!--<td> {{enroll_info.title}} </td>-->
+                                    <td> {{cc.Value.technology}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">기술분야</th>
-                                    <td>소프트웨어</td>
+                                    <td> {{cc.Value.sort}} ( {{enroll_info.sort_idx}} ) </td>
                                </tr>
                                <tr>
                                     <th scope="row">기업명</th>
-                                    <td>주식회사마크애니</td>
+                                    <td> {{cc.Value.company}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">사업자등록번호</th>
-                                    <td>1234-12-45011</td>
+                                    <td> {{cc.Value.com_num}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">등록기간</th>
-                                    <td>2019.01.01. ~ 2024.01.01.</td>
+                                    <!--<script>-->
+                                        <!--year = enroll_info.end_date.split(' ')-->
+                                        <!--year = year[0]-->
+                                    <!--</script>-->
+                                    <td> {{enroll_info.c_date | date:"Y.m.d"}} ~ {{enroll_info.end_date | date:"Y.m.d"}} </td>
                                </tr>
                                <tr>
                                     <td colspan="2">위의 사실을 증명합니다.</td>

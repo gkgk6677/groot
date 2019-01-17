@@ -35,17 +35,19 @@ ALLOWED_HOSTS = ['127.0.0.1','210.107.78.149','www.grootchain.com']
 
 INSTALLED_APPS = [
     'groot',
+    # 'wkhtmltopdf',
+    'administrator',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'debug_toolbar',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,7 +58,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'blockchain.urls'
-# INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ('127.0.0.1',)
 
 TEMPLATES = [
     {
