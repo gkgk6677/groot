@@ -36,7 +36,6 @@ def admin_application(request):
         return render(request, 'administrator/admin-application.html', {'app_info':app_info})
 
 
-
 def application_detail(request, idx):
 
     enrollment_info = Enrollment.objects.get(enroll_idx=idx)
@@ -45,10 +44,23 @@ def application_detail(request, idx):
     else:
         if request.POST.get('yes'):
             enrollment_info.status = 1
+            enrollment_info.enroll_date = datetime.datetime.now()
+            enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
             enrollment_info.save()
+
+            #     0          1        2         3        4        5       6          7            8          9
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+            fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
+                     + enrollment_info.user.com_name + "@" \
+                     + str(enrollment_info.user.com_num) + "@" \
+                     + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
+            f = requests.get(fabric)
+            print(f.text)  # cmd 창에 보여질 값
+
             return redirect('index')
         else:
             enrollment_info.status = 2
+            enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.save()
             return redirect('index')
 

@@ -3,7 +3,7 @@ import json
 from functools import wraps
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-
+import requests
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
@@ -181,23 +181,12 @@ def application(request):
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-<<<<<<< HEAD
-	    enrollment.status = 0
+            enrollment.status = 0
             enrollment.c_date = datetime.datetime.now()
-=======
             enrollment.summary = form.cleaned_data['summary']
->>>>>>> cc6b81e460211a4d468de751fcc24d02706975e0
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
-            #    0          1        2         3        4        5       6          7            8           9
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            # fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-            #          + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-            #          + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-            #          + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
-            # f = requests.get(fabric)
-            # print(f.text)  # cmd 창에 보여질 값
             return HttpResponseRedirect(reverse('upload'))
 
     else:
@@ -224,7 +213,7 @@ def extend(request,idx):
         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
         #    0          1        2
         # Technology   Term   Status
-        fabric = "http://210.107.78.150:8000/change_term/" + enrollinfo.title + "-" \
+        fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "-" \
                  + enrollinfo.term + "-" + "3"
         f = requests.get(fabric)
         print(f.text)  # cmd 창에 보여질 값
@@ -367,7 +356,7 @@ def show_app(request, idx):
     # Hyperledger-Fabric에서 데이터 받아오기
     #    0          1        2         3        4        5       6          7            8          9
     # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-    fabric = "http://210.107.78.150:8000/generate_cert/" + enroll_info.title
+    fabric = "http://210.107.78.150:8001/generate_cert/" + enroll_info.title
     result = requests.get(fabric)
 
     parse = result.json() # JSON형식으로 parse(분석)
