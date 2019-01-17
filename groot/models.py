@@ -39,7 +39,6 @@ class Contract(models.Model):
     term = models.IntegerField()
     end_date = models.DateTimeField()
     reason = models.TextField()
-    status = models.IntegerField()
     c_date = models.DateTimeField()
     user = models.ForeignKey('User', models.DO_NOTHING)
 
@@ -79,7 +78,6 @@ class Enrollment(models.Model):
     title = models.CharField(max_length=100)
     term = models.PositiveIntegerField(default=1)
     summary = models.TextField(blank=True, null=True)
-    status = models.IntegerField(blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
@@ -90,6 +88,22 @@ class Enrollment(models.Model):
         managed = False
         db_table = 'Enrollment'
         unique_together = (('enroll_idx', 'sort_idx'),)
+
+class Status(models.Model):
+    status_idx = models.IntegerField(primary_key=True)
+    enroll_status = models.IntegerField(blank=True, null=True)
+    agree_status = models.IntegerField(blank=True, null=True)
+    extend_status = models.IntegerField(blank=True, null=True)
+    update_status = models.IntegerField(blank=True, null=True)
+    expire_status = models.IntegerField(blank=True, null=True)
+    contract_status = models.IntegerField(blank=True, null=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+
+    class Meta:
+        managed = False
+        db_table = 'Status'
+
+
 
 class Similarity(models.Model):
     similarity_idx = models.IntegerField(primary_key=True)
