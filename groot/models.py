@@ -12,6 +12,7 @@ class User(models.Model):
     email = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     phone_num = models.IntegerField()
+    homepage = models.CharField(max_length=100)
     c_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -37,6 +38,8 @@ class Contract(models.Model):
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
     term = models.IntegerField()
     end_date = models.DateTimeField()
+    reason = models.TextField()
+    status = models.IntegerField()
     c_date = models.DateTimeField()
     user = models.ForeignKey('User', models.DO_NOTHING)
 
@@ -61,7 +64,7 @@ class SortMst(models.Model):
     title = models.CharField(max_length=100 )
 
     def __str__(self):
-        return self.title
+        return '(' + str(self.sort_idx) + ')' + self.title
 
     class Meta:
         managed = False
@@ -80,12 +83,25 @@ class Enrollment(models.Model):
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         managed = False
         db_table = 'Enrollment'
         unique_together = (('enroll_idx', 'sort_idx'),)
+
+class Similarity(models.Model):
+    similarity_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    summary_value = models.CharField(max_length=100, blank=True, null=True)
+    keyword_value = models.CharField(max_length=100, blank=True, null=True)
+    result = models.CharField(max_length=100, blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Similarity'
 
 
 class File(models.Model):

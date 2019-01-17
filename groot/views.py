@@ -1,14 +1,14 @@
 import datetime
 import json
 from functools import wraps
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-
+import requests
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-import requests
 from groot.forms import EnrollmentForm
 from groot.forms import *
 from .models import *
@@ -142,7 +142,7 @@ def notice_write(request):
                 c_date = timezone.now(),
                 m_date = timezone.now(),
             )
-        return redirect(f'/notice/ {new_notice.pk}')
+        return redirect('/notice/ {new_notice.pk}')
     return render(request, 'groot/notice_write.html')
 #
 
@@ -176,24 +176,19 @@ def application(request):
             enrollment = Enrollment()
             u = User.objects.get(user_id=request.session.get('user_id'))
             enrollment.user_id = User()
-            enrollment.title = form.cleaned_date['title']
+            enrollment.title = form.cleaned_data['title']
             sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-            enrollment.c_date = form.cleaned_data['c_date']
+            enrollment.status = 0
+            enrollment.c_date = datetime.datetime.now()
+            enrollment.summary = form.cleaned_data['summary']
             enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
-            # enrollment.save()
+            enrollment.save()
 
-            #    0          1        2         3        4        5       6          7            8           9
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-                     + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-                     + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-                     + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
-            f = requests.get(fabric)
-            print(f.text)  # cmd 창에 보여질 값
-            return redirect('mypage')
+            return HttpResponseRedirect(reverse('upload'))
+
     else:
         create_date = datetime.date.today()
         form = EnrollmentForm(initial={'c_date':create_date})
@@ -218,7 +213,7 @@ def extend(request,idx):
         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
         #    0          1        2
         # Technology   Term   Status
-        fabric = "http://210.107.78.150:8000/change_term/" + enrollinfo.title + "-" \
+        fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "-" \
                  + enrollinfo.term + "-" + "3"
         f = requests.get(fabric)
         print(f.text)  # cmd 창에 보여질 값
@@ -361,7 +356,7 @@ def show_app(request, idx):
     # Hyperledger-Fabric에서 데이터 받아오기
     #    0          1        2         3        4        5       6          7            8          9
     # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-    fabric = "http://210.107.78.150:8000/generate_cert/" + enroll_info.title
+    fabric = "http://210.107.78.150:8001/generate_cert/" + enroll_info.title
     result = requests.get(fabric)
 
     parse = result.json() # JSON형식으로 parse(분석)
@@ -491,3 +486,6 @@ class SearchFormView(FormView):
 
 
 #########################TEST
+
+def upload(request):
+    return render(request, 'groot/upload.html', {})

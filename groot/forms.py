@@ -4,8 +4,8 @@ from .models import *
 class EnrollmentForm(forms.ModelForm):
 
     sort_idx = forms.ModelChoiceField(queryset = SortMst.objects.all(), empty_label="산업분류", required=True, widget=forms.Select(attrs={'class':'dropdown1'}) )
-    title= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '100자 이내로 입력해주세요.'}))
-    summary = forms.CharField(widget=forms.TextInput(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.'}))
+    title= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '100자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 100)"}))
+    summary = forms.CharField(widget=forms.Textarea(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 300)"}))
     #
     class Meta:
         model = Enrollment
