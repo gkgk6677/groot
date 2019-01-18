@@ -6,21 +6,28 @@ from groot.models import *
 # Create your views here.
 
 def index(request):
-    enrollment_info = Enrollment.objects.all()
-    contract_info = Contract.objects.all()
+
+    status = Status.objects.all()
+
     count_enroll = 0
     count_cont = 0
+    count_extend = 0
+    count_update = 0
+    count_expire = 0
 
-    for val in enrollment_info:
-        if val.status == 0:
+    for val in status:
+        if val.enroll_status == 0:
             count_enroll += 1
-
-    for val in contract_info:
-        if val.status == 0:
+        if val.contract_status == 0 and val.enroll_status == 1:
             count_cont += 1
+        if val.extend_status == 0 and val.enroll_status == 1:
+            count_extend += 1
+        if val.update_status == 0 and val.enroll_status == 1:
+            count_update += 1
+        if val.expire_status == 0 and val.enroll_status == 1:
+            count_expire += 1
 
-
-    return render(request, 'administrator/index.html', {'count_enroll':count_enroll, 'count_cont':count_cont})
+    return render(request, 'administrator/index.html', {'status':status,   'count_enroll':count_enroll, 'count_cont':count_cont, 'count_extend':count_extend, 'count_update':count_update, 'count_expire':count_expire})
 
 def logout(request):
     del request.session['user_id']
@@ -30,7 +37,7 @@ def blank(request):
     return render(request, 'administrator/blank.html', {})
 
 def admin_application(request):   
-    app_info = Enrollment.objects.all().filter(status=1)
+    app_info = Status.objects.all().filter(enroll_status=0)
 
     if request.method == 'GET':
         return render(request, 'administrator/admin-application.html', {'app_info':app_info})
@@ -39,14 +46,16 @@ def admin_application(request):
 def application_detail(request, idx):
 
     enrollment_info = Enrollment.objects.get(enroll_idx=idx)
+    status_info = Status.objects.get(enroll_idx=idx)
+
     if request.method == 'GET': 
         return render(request, 'administrator/application_detail.html', {'enrollment_info':enrollment_info})
     else:
         if request.POST.get('yes'):
-            enrollment_info.status = 1
+            status_info.enroll_status = 1
             enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
-            enrollment_info.save()
+            status_info.save()
 
             #     0          1        2         3        4        5       6          7            8          9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
@@ -56,11 +65,16 @@ def application_detail(request, idx):
                      + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
             f = requests.get(fabric)
             print(f.text)  # cmd 창에 보여질 값
+            enrollment_info.enroll_tx = f.text[1:-1]
+            enrollment_info.save()
 
             return redirect('index')
+        elif request.POST.get('check'):
+            return redirect('admin_application')
         else:
-            enrollment_info.status = 2
+            status_info.enroll_status = 2
             enrollment_info.enroll_date = datetime.datetime.now()
+            status_info.save()
             enrollment_info.save()
             return redirect('index')
 
