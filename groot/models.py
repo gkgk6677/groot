@@ -36,11 +36,14 @@ class Certificate(models.Model):
 class Contract(models.Model):
     cont_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
-    term = models.IntegerField()
-    end_date = models.DateTimeField()
-    reason = models.TextField()
-    c_date = models.DateTimeField()
     user = models.ForeignKey('User', models.DO_NOTHING)
+    term = models.IntegerField()
+    reason = models.TextField()
+    end_date = models.DateTimeField(blank=True, null=True)
+    status = models.IntegerField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    contract_tx = models.CharField(max_length=100, blank=True, null=True)
+    c_date = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -77,6 +80,8 @@ class Enrollment(models.Model):
     user = models.ForeignKey('User', models.DO_NOTHING)
     title = models.CharField(max_length=100)
     term = models.PositiveIntegerField(default=1)
+    enroll_status = models.IntegerField()
+    agree_status = models.IntegerField()
     summary = models.TextField(blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
@@ -89,20 +94,42 @@ class Enrollment(models.Model):
         db_table = 'Enrollment'
         unique_together = (('enroll_idx', 'sort_idx'),)
 
-class Status(models.Model):
-    status_idx = models.IntegerField(primary_key=True)
-    enroll_status = models.IntegerField(blank=True, null=True)
-    agree_status = models.IntegerField(blank=True, null=True)
-    extend_status = models.IntegerField(blank=True, null=True)
-    update_status = models.IntegerField(blank=True, null=True)
-    expire_status = models.IntegerField(blank=True, null=True)
-    contract_status = models.IntegerField(blank=True, null=True)
+class Update(models.Model):
+    update_idx = models.IntegerField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
 
     class Meta:
         managed = False
-        db_table = 'Status'
+        db_table = 'Update'
 
+class Extend(models.Model):
+    extend_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    term = models.IntegerField()
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Extend'
+
+class Expire(models.Model):
+    expire_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Expire'
 
 
 class Similarity(models.Model):
