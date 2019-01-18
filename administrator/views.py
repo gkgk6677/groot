@@ -15,7 +15,6 @@ def index(request):
     count_update = 0
     count_expire = 0
 
-
     for val in status:
         if val.enroll_status == 0:
             count_enroll += 1
@@ -57,7 +56,6 @@ def application_detail(request, idx):
             enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
             status_info.save()
-            enrollment_info.save()
 
             #     0          1        2         3        4        5       6          7            8          9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
@@ -67,8 +65,12 @@ def application_detail(request, idx):
                      + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
             f = requests.get(fabric)
             print(f.text)  # cmd 창에 보여질 값
+            enrollment_info.enroll_tx = f.text[1:-1]
+            enrollment_info.save()
 
             return redirect('index')
+        elif request.POST.get('check'):
+            return redirect('admin_application')
         else:
             status_info.enroll_status = 2
             enrollment_info.enroll_date = datetime.datetime.now()
