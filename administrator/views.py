@@ -38,7 +38,7 @@ def blank(request):
     return render(request, 'administrator/blank.html', {})
 
 def admin_application(request):   
-    app_info = Status.objects.all().filter(enroll_status=1)
+    app_info = Status.objects.all().filter(enroll_status=0)
 
     if request.method == 'GET':
         return render(request, 'administrator/admin-application.html', {'app_info':app_info})
@@ -47,13 +47,16 @@ def admin_application(request):
 def application_detail(request, idx):
 
     enrollment_info = Enrollment.objects.get(enroll_idx=idx)
+    status_info = Status.objects.get(enroll_idx=idx)
+
     if request.method == 'GET': 
         return render(request, 'administrator/application_detail.html', {'enrollment_info':enrollment_info})
     else:
         if request.POST.get('yes'):
-            enrollment_info.status = 1
+            status_info.enroll_status = 1
             enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
+            status_info.save()
             enrollment_info.save()
 
             #     0          1        2         3        4        5       6          7            8          9
@@ -67,8 +70,9 @@ def application_detail(request, idx):
 
             return redirect('index')
         else:
-            enrollment_info.status = 2
+            status_info.enroll_status = 2
             enrollment_info.enroll_date = datetime.datetime.now()
+            status_info.save()
             enrollment_info.save()
             return redirect('index')
 
