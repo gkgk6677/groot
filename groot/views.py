@@ -485,15 +485,15 @@ class SearchFormView(FormView):
         return render(self.request, self.template_name, context)
 
 
+
+
 #########################TEST
-
-
 def search_list(request):
-
-    app_info = Status.objects.all().filter(status=0)
+    app_info = Status.objects.all().filter(enroll_status=1)
 
     if request.method == 'GET':
         return render(request, 'groot/search.html',{'app_info': app_info})
+
 
 
 def upload(request):

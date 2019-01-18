@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from groot import views
-from groot.views import SearchFormView
+# from groot.views import SearchFormView
 
 
 urlpatterns = [
@@ -57,7 +57,7 @@ urlpatterns = [
     path('change_com', views.change_com, name="change_com"),
     path('a', views.a, name="a"),
     # path('search', SearchFormView.as_view(), name='search'),
-    path('search', views.search_list, name="search"),
+    path('search/', views.search_list, name="search"),
 
 
 ]
