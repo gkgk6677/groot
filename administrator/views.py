@@ -85,16 +85,28 @@ def application_detail(request, idx):
             return redirect('index')
 
 def admin_insert(request):
-    return render(request, 'administrator/admin-insert.html', {})
+
+    insert_infos = Contract.objects.all().filter(status=0)
+
+    return render(request, 'administrator/admin-insert.html', {'insert_infos':insert_infos})
 
 def admin_extend(request):
-    return render(request, 'administrator/admin-extend.html', {})
+
+    extend_info = Extend.objects.all().filter(status=0)
+
+    return render(request, 'administrator/admin-extend.html', {'extend_info':extend_info})
 
 def admin_update(request):
-    return render(request, 'administrator/admin-update.html', {})
+
+    update_infos = Update.objects.all().filter(status=0)
+
+    return render(request, 'administrator/admin-update.html', {'update_infos':update_infos})
 
 def admin_expire(request):
-    return render(request, 'administrator/admin-expire.html', {})
+
+    expire_infos = Expire.objects.all().filter(status=0)
+
+    return render(request, 'administrator/admin-expire.html', {'expire_infos':expire_infos})
 
 def admin_log(request):
     return render(request, 'administrator/admin-log.html', {})
