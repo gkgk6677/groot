@@ -6,21 +6,29 @@ from groot.models import *
 # Create your views here.
 
 def index(request):
-    enrollment_info = Enrollment.objects.all()
-    contract_info = Contract.objects.all()
+
+    status = Status.objects.all()
+
     count_enroll = 0
     count_cont = 0
+    count_extend = 0
+    count_update = 0
+    count_expire = 0
 
-    for val in enrollment_info:
-        if val.status == 0:
+
+    for val in status:
+        if val.enroll_status == 0:
             count_enroll += 1
-
-    for val in contract_info:
-        if val.status == 0:
+        if val.contract_status == 0 and val.enroll_status == 1:
             count_cont += 1
+        if val.extend_status == 0 and val.enroll_status == 1:
+            count_extend += 1
+        if val.update_status == 0 and val.enroll_status == 1:
+            count_update += 1
+        if val.expire_status == 0 and val.enroll_status == 1:
+            count_expire += 1
 
-
-    return render(request, 'administrator/index.html', {'count_enroll':count_enroll, 'count_cont':count_cont})
+    return render(request, 'administrator/index.html', {'status':status,   'count_enroll':count_enroll, 'count_cont':count_cont, 'count_extend':count_extend, 'count_update':count_update, 'count_expire':count_expire})
 
 def logout(request):
     del request.session['user_id']
@@ -30,7 +38,7 @@ def blank(request):
     return render(request, 'administrator/blank.html', {})
 
 def admin_application(request):   
-    app_info = Enrollment.objects.all().filter(status=1)
+    app_info = Status.objects.all().filter(enroll_status=1)
 
     if request.method == 'GET':
         return render(request, 'administrator/admin-application.html', {'app_info':app_info})
