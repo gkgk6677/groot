@@ -32,12 +32,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for app_infos in app_info %}
+                            {% for extend_infos in extend_info %}
                             <tr>
-                                <td><a href="{{app_infos.enroll_idx.enroll_idx}}">{{app_infos.enroll_idx.title}}</a></td>
-                                <td>{{app_infos.enroll_idx.user.com_name}}</td>
-                                <td class="center">{{app_infos.enroll_idx.user.user_id}}</td>
-                                <td class="center">{{app_infos.enroll_idx.c_date}}</td>
+                                <td><a href="{{extend_infos.enroll_idx.enroll_idx}}">{{extend_infos.enroll_idx.title}}</a></td>
+                                <td>{{extend_infos.enroll_idx.user.com_name}}</td>
+                                <td class="center">{{extend_infos.enroll_idx.user.user_id}}</td>
+                                <td class="center">{{extend_infos.enroll_idx.c_date}}</td>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -54,4 +54,14 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
 {% endblock js %}

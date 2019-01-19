@@ -11,5 +11,6 @@ urlpatterns = [
     path('index/log/', views.admin_log, name="admin_log"),
     path('index/read/', views.admin_read, name="admin_read"),
     path('index/extend/', views.admin_extend, name="admin_extend"),
+    path('index/extend/<int:idx>', views.extend_detail, name="extend_detail"),
     path('index/update/', views.admin_update, name="admin_update"),
 ]
