@@ -94,6 +94,23 @@ def list(request):
     # return HttpResponse(enroll_infos)
     return render(request, 'groot/list.html', {'enroll_infos':enroll_infos, 'extend_info':extend_info})
 
+@csrf_exempt
+def login2(request):
+    if request.method == "POST":
+        idxx = request.POST['idx']
+        extend_info = Extend.objects.get(enroll_idx = idxx)
+        if extend_info.status == 0 :
+            ck_val = 0
+            # 연장신청햇음
+        else :
+            ck_val = 1
+
+        context = {'ck_val': ck_val}
+        return HttpResponse(json.dumps(context), content_type='application/json')
+    if request.method =='GET':
+        return HttpResponse('get')
+
+
 
 rowsPerPage = 5
 def notice(request):
