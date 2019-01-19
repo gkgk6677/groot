@@ -181,10 +181,10 @@ def application(request):
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-            enrollment.status = 0
+            enrollment.enroll_status = 0
             enrollment.c_date = datetime.datetime.now()
             enrollment.summary = form.cleaned_data['summary']
-            enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+            # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
             return HttpResponseRedirect(reverse('upload'))

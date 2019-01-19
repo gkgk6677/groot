@@ -1,0 +1,220 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block css %}
+<link href="{%static 'css/application_detail.css' %}" rel="stylesheet">   
+{% endblock css %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container" style="text-align:center; margin-top: 40px; margin-left: 40px; margin-bottom: 100px;">
+                    <div class="col-lg-12 col-md-12" style="padding-top:20px; padding-left:140px;">
+                        <form class="enrollment-form" action="" method="POST">
+                            {% csrf_token %}
+                            <div id="table">
+                                <table>
+                                    <caption>기술자료 임치 연장 신청서</caption>
+                                    <colgroup>
+                                        <col style="width: 13.5554%">
+                                        <col style="width: 13.3333%">
+                                        <col style="width: 30%">
+                                        <col style="width: 13.3333%">
+                                        <col style="width: 30%">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5"><span>기술자료 임치 연장 신청서</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th rowspan="2">임치물</th>
+                                            <th>제호</th>
+                                            <td colspan="3">{{enroll_infos.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>종류</th>
+                                            <td colspan="3">{{ enroll_infos.sort_idx }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="3">개발인</th>
+                                            <th>기업명</th>
+                                            <td>{{enroll_infos.user.com_name}}</td>
+                                            <th>사업자등록번호</th>
+                                            <td>{{enroll_infos.user.com_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>대표자</th>
+                                            <td>{{enroll_infos.user.com_head}}</td>
+                                            <th>전화번호</th>
+                                            <td>{{enroll_infos.user.phone_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>주소</th>
+                                            <td colspan="3">{{enroll_infos.user.address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>현재 임치 기간</th>
+                                            <td class="center" colspan="5">{{enroll_enrolldate}} ~ {{enroll_enddate}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>임치 연장 기간</th>
+                                            <td class="center" colspan="5">{{extend_infos.term}} 년</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="center" colspan="5">임치 연장 사유</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" style="padding:30px;">{{extend_infos.reason}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="left" colspan="5" style="padding-top:30px;">「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라<br> 위와 같이 임치기간 연장을 신청합니다.<br><br></td>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="5" style="text-align: right; padding-right: 30px;">신청일 : {{extend_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(개발인) :  {{enroll_infos.user.com_head}}  (인)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="center" colspan="5">그루트재단 사무총장 귀하</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="button-group-area col-lg-12 col-md-6">
+                               <button type="submit" name="yes" value="yes" class="btn submit_btn submit_btn">승인</button>
+                               <button type="submit" name='no' value="no" class="btn submit_btn" >반려</button>
+                           </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <section class="register_area p_77">
+        <div class="page-header header-filter clear-filter purple-filter" data-parallax="true">
+            <div class="container">
+              <div class="content">
+    
+                  <div class="brand" style="padding-top:60px; padding-bottom:30px;">
+    
+    
+                    <h1><img src="{% static 'img/safebox/s14.png' %}" style="width: 70px;padding-right: 13px;">기술 임치 연장 신청</h1>
+                          <br>
+                    <h4>연장 신청 양식을 작성해주세요!</h4>
+    
+                  </div>
+                  <div id="sliderDouble" class="slider slider-info noUi-target noUi-ltr noUi-horizontal">
+                                <div class="noUi-base">
+                                    <div class="noUi-origin" style="left: 20%;"></div>
+                                    <div class="noUi-connect" style="left: 0%; right: 66%;"></div>
+                                    <div class="noUi-origin" style="left: 15%;"></div>
+                                </div>
+                            </div>
+              </div>
+            </div>
+        </div>
+        <div class="main main-raised">
+            <div class="section section-basic">
+              <div class="container">
+                    <div class="col-md-12 ml-auto mr-auto" style="padding-top:20px;">
+                         <form class="enrollment-form" action="" method="POST">{% csrf_token %}
+                                <div id="table">
+                                    <table>
+                                        <caption>기술자료 임치 연장 신청서</caption>
+                                        <colgroup>
+                                            <col style="width: 13.5554%">
+                                            <col style="width: 13.3333%">
+                                            <col style="width: 30%">
+                                            <col style="width: 13.3333%">
+                                            <col style="width: 30%">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th colspan="5"><span>기술자료 임치 연장 신청서</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th rowspan="2">임치물</th>
+                                                <th>제호</th>
+                                                <td colspan="3">{{enrollinfo.title}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>종류</th>
+                                                <td colspan="3">{{ enrollinfo.sort_idx }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th rowspan="3">개발인</th>
+                                                <th>기업명</th>
+                                                <td>{{enrollinfo.user.com_name}}</td>
+                                                <th>사업자등록번호</th>
+                                                <td>{{enrollinfo.user.com_num}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>대표자</th>
+                                                <td>{{enrollinfo.user.com_head}}</td>
+                                                <th>전화번호</th>
+                                                <td>{{enrollinfo.user.phone_num}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>주소</th>
+                                                <td colspan="3">{{enrollinfo.user.address}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>현재 임치 기간</th>
+                                             
+                                                <td class="center" colspan="5">{{enrollinfo.end_date}}까지
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>임치 연장 기간</th>
+                                                
+                                                <td class="center" colspan="5">{{form.term}} 년</td>
+                                            </tr>
+    
+                                            <tr>
+                                                <th class="center" colspan="5">임치 연장 사유</th>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5">{{form.reason}}<span id="counter">###</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left" colspan="5">「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라<br> 위와 같이 기술자료 임치를 신청합니다.<br><br></td>
+                                                </td>
+                                            </tr>
+    
+                                            <tr>
+                                                <td colspan="5" style="text-align: right; padding-right: 30px;">신청일 : {{create_date}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(개발인) :  {{enrollinfo.user.com_head}}  (인)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="center" colspan="5">대·중소기업·농어업협력재단 사무총장  귀하</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="button-group-area mt-40 col-md-6">
+                                   <button type="submit" value="submit" class="btn submit_btn submit_btn">취소</button>
+                                   <button type="submit" value="submit" class="btn submit_btn" >제출</button>
+                               </div>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+    </section> -->
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
