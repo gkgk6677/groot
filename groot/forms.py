@@ -23,9 +23,30 @@ class EnrollmentForm(forms.ModelForm):
              enrollment.save()
          return enrollment
 
+
+
 class SearchForm(forms.ModelForm):
     word = forms.CharField(label="검색")
 
     class Meta:
         model = User
         fields = ['user_id']
+
+
+class ExtendForm(forms.ModelForm):
+
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 300)"}))
+    #
+    class Meta:
+        model = Extend
+        fields = ['term','reason']
+        labels = {
+            'reason_label': 'reason_label'
+        }
+
+
+    def save(self, commit=True):
+         extend = Extend(**self.cleaned_data)
+         if commit:
+             extend.save()
+         return extend

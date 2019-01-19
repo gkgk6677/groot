@@ -109,7 +109,7 @@ class Update(models.Model):
 class Extend(models.Model):
     extend_idx = models.IntegerField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
-    term = models.IntegerField()
+    term = models.PositiveIntegerField(default=1)
     status = models.IntegerField()
     reason = models.TextField()
     accept_date = models.DateTimeField(blank=True, null=True)
