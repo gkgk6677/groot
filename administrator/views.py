@@ -63,10 +63,8 @@ def application_detail(request, idx):
             enrollment_info.enroll_status = 1
             enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
-<<<<<<< HEAD
+
             status_info.save()
-=======
->>>>>>> a76178cc6511ff807aa2c4c0d85b6d69c8cf9e90
 
             #     0          1        2         3        4        5       6          7            8          9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status

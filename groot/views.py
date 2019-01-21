@@ -403,7 +403,7 @@ def test(request):
 @csrf_exempt
 def issue(request):
     user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id)
+    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
     contract_infos = Contract.objects.all().filter(user_id=user_id)
 
     if request.method == 'POST' :
@@ -524,6 +524,9 @@ def show_cont(request, en_idx, cont_idx):
     print(cert_info.cert_idx)
 
     return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
+
+def groot_scan(request):
+    return render(request, 'groot/groot_scan.html', {})
 
 def read(request):
     return render(request, 'groot/read.html', {})

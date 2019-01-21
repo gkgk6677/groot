@@ -37,6 +37,7 @@ urlpatterns = [
     # path('issue/show_app/<int:idx>', views.Pdf.as_view(), name='show_app'),
     path('issue/show_app/<int:idx>', views.show_app, name='show_app'),
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
+    path('groot_scan/', views.groot_scan, name='groot_scan'),
     path('read', views.read, name='read'),
     path('validate', views.validate, name='validate'),
     path('news', views.news, name='news'),
