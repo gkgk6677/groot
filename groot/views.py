@@ -17,6 +17,9 @@ from django.utils import timezone
 from django.views.generic.edit import FormView
 from django.db.models import Q
 
+import calendar
+import pandas
+import random
 # # html2pdf 위한 라이브러리
 # from django.views.generic.base import View
 # from .render import Render
@@ -177,7 +180,6 @@ def application(request):
             u = User.objects.get(user_id=request.session.get('user_id'))
             enrollment.user_id = User()
             enrollment.title = form.cleaned_data['title']
-            sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
@@ -213,8 +215,8 @@ def extend(request,idx):
         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
         #    0          1        2
         # Technology   Term   Status
-        fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "-" \
-                 + enrollinfo.term + "-" + "3"
+        fabric = "http://210.107.78.150:8000/change_term/" + enrollinfo.title + "@" \
+                 + enrollinfo.term + "@" + "3"
         f = requests.get(fabric)
         print(f.text)  # cmd 창에 보여질 값
         return redirect('mypage')
@@ -339,12 +341,103 @@ def change_com(request):
 def test(request):
     return render(request, 'groot/test.html', {})
 
+@csrf_exempt
 def issue(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user_id=user_id)
     contract_infos = Contract.objects.all().filter(user_id=user_id)
 
-    return render(request, 'groot/issue.html', {'enroll_infos':enroll_infos, 'contract_infos': contract_infos})
+    if request.method == 'POST' :
+        enroll_idx = request.POST.get('enroll_id')
+        cont_idx = request.POST.get('cont_id')
+        enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
+
+        # Hyperledger-Fabric에서 데이터 받아오기
+        #    0          1        2         3        4        5       6          7            8          9
+        # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+        fabric = "http://210.107.78.150:8001/generate_cert/" + enroll_info.title
+        result = requests.get(fabric)
+
+        parses = result.json()  # JSON형식으로 parse(분석)
+        block = None
+        # [
+        #   {
+        #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
+        #       "Value":{
+        #                  "technology":"TEST2","sort":13,
+        #                   "company":"LG","com_num":156181987,"term":5,
+        #                   "content":["sldkfjs"],
+        #                   "client":{
+        #                       "dahee":3
+        #                   },
+        #                  "enroll_date":"2018.01.11",
+        #                  "status":1,
+        #       },
+        #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
+        #       "IsDelete":"false"
+        #   },
+        #   { ... }, { ... }, ...
+        #  ]
+
+        try :
+            # 임치 증명서 일 때
+            if cont_idx == "0" :
+                ck_val = 1
+                type = 0
+                for parse in parses:
+                    txid = parse.get('TxId')
+                    if txid == enroll_info.enroll_tx : # txid가 DB에 저장되어있는 enroll_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                        block = parse
+
+                cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=None)
+                if cert_info.end_date <= datetime.datetime.now():
+                    ck_val = 2  # 유효기간보다 날짜가 더 크면 만료
+
+            # 계약 증명서 일 때
+            elif cont_idx != "0" :
+                cont_info = Contract.objects.get(cont_idx=cont_idx)
+                ck_val = 1
+                type = 1
+
+                for parse in parses:
+                    txid = parse.get('TxId')
+                    if txid == cont_info.contract_tx : # txid가 DB에 저장되어있는 cont_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                        block = parse
+
+                cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=cont_idx)
+                if cert_info.end_date <= datetime.datetime.now():
+                    ck_val = 2
+
+        except Certificate.DoesNotExist:
+            ck_val = 0
+
+            certificate = Certificate()
+            certificate.enroll_idx = Enrollment.objects.get(enroll_idx=enroll_idx)  # foreign key이므로!
+            if cont_idx != "0" :
+                certificate.cont_idx = Contract.objects.get(cont_idx=cont_idx)  # foreign key이므로!
+            else :
+                pass
+            certificate.term = 7
+            certificate.c_date = datetime.datetime.now()
+            certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=7)
+
+            # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
+            unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
+            unix_time = [str(i) for i in str(unix_time)]
+            tx = block.get('TxId')
+            tx = [str(i) for i in str(tx)]
+            random_val = unix_time + tx
+            random_val = random.sample(random_val, len(random_val))
+            certificate.cert_idx = ''.join(random_val)
+
+            print(''.join(random_val))
+            certificate.save()
+
+        context = {'ck_val':ck_val, 'type':type}
+        return HttpResponse(json.dumps(context), content_type='application/json')
+
+    else :
+        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
 
 # class Pdf(View):
 def show_app(request, idx):
@@ -352,41 +445,14 @@ def show_app(request, idx):
 
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
     user = User.objects.get(user_id=user_id)
+    cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
 
-    # Hyperledger-Fabric에서 데이터 받아오기
-    #    0          1        2         3        4        5       6          7            8          9
-    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-    fabric = "http://210.107.78.150:8001/generate_cert/" + enroll_info.title
-    result = requests.get(fabric)
-
-    parse = result.json() # JSON형식으로 parse(분석)
-    # [
-    #   {
-    #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
-    #       "Value":{
-    #                  "technology":"TEST2","sort":13,
-    #                   "company":"LG","com_num":156181987,"term":5,
-    #                   "content":["sldkfjs"],
-    #                   "client":{
-    #                       "dahee":3
-    #                   },
-    #                  "enroll_date":"2018.01.11"
-    #       },
-    #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
-    #       "IsDelete":"false"
-    #   },
-    #   { ... }, { ... }, ...
-    #  ]
-    block = parse[0] # 임치증명서는 첫 transaction이므로
-
-    txid = block.get('TxId')
-    tech = block.get('Value').get('technology')
-    print(txid + '\n' + tech)
+    print(cert_info.cert_idx)
 
     # params = {'enroll_info': enroll_info, 'user':user, 'cc':block, 'request':request}
     # return Render.render('groot/show_app.html', params)
 
-    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cc':block})
+    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
 
 def show_cont(request, en_idx, cont_idx):
     user_id = request.session['user_id']
@@ -394,40 +460,11 @@ def show_cont(request, en_idx, cont_idx):
     enroll_info = Enrollment.objects.get(enroll_idx=en_idx)
     user = User.objects.get(user_id=user_id)
     contract = Contract.objects.get(cont_idx=cont_idx)
+    cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
 
-    # Hyperledger-Fabric에서 데이터 받아오기
-    #    0          1        2         3        4        5       6          7            8          9
-    # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-    fabric = "http://210.107.78.150:8000/generate_cert/" + enroll_info.title
-    result = requests.get(fabric)
+    print(cert_info.cert_idx)
 
-    parse = result.json() # JSON형식으로 parse(분석)
-    # [
-    #   {
-    #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
-    #       "Value":{
-    #                  "technology":"TEST2","sort":13,
-    #                   "company":"LG","com_num":156181987,"term":5,
-    #                   "content":["sldkfjs"],
-    #                   "client":{
-    #                       "dahee":3
-    #                   },
-    #                  "enroll_date":"2018.01.11"
-    #       },
-    #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
-    #       "IsDelete":"false"
-    #   },
-    #   { ... }, { ... }, ...
-    #  ]
-    for par in parse :
-        if par.get('Value').get('status') == 4 : # 상태가 4인 값(편입)
-            block = par
-
-    txid = block.get('TxId')
-    tech = block.get('Value').get('technology')
-    print(txid + '\n' + tech)
-
-    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cc': block})
+    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
 
 def read(request):
     return render(request, 'groot/read.html', {})

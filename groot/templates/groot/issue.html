@@ -37,9 +37,10 @@
                             <!--<td>{{enroll_info.enroll_date}}</td>-->
                             <td>{{enroll_info.end_date}}</td>
                             <td>
-                                <a href="show_app/{{enroll_info.enroll_idx}}">
-                                    <button type="button" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 임치 증명서 발급 </button>
-                                </a>
+                                {% csrf_token %}
+                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                            </td>
                             </td>
                         </tr>
                         {% for contract_info in contract_infos %}
@@ -54,9 +55,10 @@
                                     <td>{{contract_info.c_date}}</td>
                                     <td>{{contract_info.end_date}}</td>
                                     <td>
-                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                            <button type="button" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 계약 증명서 발급 </button>
-                                        </a>
+                                        <button type="submit" trid="{{contract_info.enroll_idx.enroll_idx}}" cont_id="{{contract_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                        <!--<a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">-->
+                                        <button type="submit" trid="{{contract_info.enroll_idx.enroll_idx}}" cont_id="{{contract_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                        <!--</a>-->
                                     </td>
                                 </tr>
                             {% endif %}
@@ -71,6 +73,40 @@
 
 {% block js %}
 <script>
+    $('button[type=submit]').click(function() {
+        let trid = $(this).attr('trid');
+        let cont_id = $(this).attr('cont_id');
+        $.ajax({
+            url: '/issue/',
+            type: 'POST',
+            data: {
+                'enroll_id': trid,
+                'cont_id': cont_id
+                <!--'csrfmiddlewaretoken':'{{ csrf_token }}',-->
+            },
+            success: function(result) {
+                if(result.ck_val == 0) { <!-- 증명서 미발급 -->
+                    alert('증명서 발급 완료');
+                    location.reload();
+                } else if(result.ck_val == 1) { <!-- 증명서 발급내역 존재 -->
+                    if(result.type == 0) { <!-- 임치증명서 -->
+                        location='/issue/show_app/' + trid;
+                    } else { <!-- 계약증명서 -->
+                        location='/issue/show_cont/' + trid + '-' + cont_id;
+                    }
+                } else if(result.ck_val == 2) { <!-- 증명서 발급 기한 만료 -->
+                    alert('증명서의 유효기간이 만료되었습니다.\n재발급 받아주세요.');
+                    location.reload()
+                }
+            },
+            error: function(request, status, error) {
+                alert("code = " + request.status + "\n\n message = " + request.responseText + "\n\n error = " + error);
+            }
+        });
+        return false;
+    });
+</script>
+<script>
     $(function() {
         $('.tr_link').click(function() {
             let trid = $(this).attr('trid');
@@ -78,7 +114,17 @@
         });
         <!--$('.tr'+trid').hide();-->
 
-        <!--$('.tr_link').hover(function() {-->
+        <!--임치목록 1부터 나타내기-->
+        <!--var tables = document.getElementsByTagName('tr');-->
+        <!--var table = tables[tables.length - 1];-->
+        <!--var rows = table.rows;-->
+        <!--for(var i = 0, td; i < rows.length; i++){-->
+            <!--td = document.createElement('td');-->
+            <!--td.appendChild(document.createTextNode(i+1));-->
+            <!--rows[i].insertBefore(td, rows[i].firstChild);-->
+        <!--}-->
+
+        <!--$('.tr_link').hover(function() { 돋보기 뜨는거-->
             <!--let trid = $(this).attr('trid');-->
             <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
                            <!--<i class="fa fa-search-plus"></i>-->

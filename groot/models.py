@@ -21,12 +21,12 @@ class User(models.Model):
 
 
 class Certificate(models.Model):
-    cert_idx = models.AutoField(primary_key=True)
+    cert_idx = models.CharField(primary_key=True, max_length=100)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
+    cont_idx = models.ForeignKey('Contract', models.DO_NOTHING, db_column='cont_idx', blank=True, null=True)
     term = models.IntegerField()
     end_date = models.DateTimeField()
-    cert_tx = models.CharField(max_length=100)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -36,11 +36,14 @@ class Certificate(models.Model):
 class Contract(models.Model):
     cont_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
-    term = models.IntegerField()
-    end_date = models.DateTimeField()
-    reason = models.TextField()
-    c_date = models.DateTimeField()
     user = models.ForeignKey('User', models.DO_NOTHING)
+    term = models.IntegerField()
+    reason = models.TextField()
+    status = models.IntegerField()
+    end_date = models.DateTimeField(blank=True, null=True)
+    accept_date = models.DateTimeField(blank=True, null=True)
+    contract_tx = models.CharField(max_length=100, blank=True, null=True)
+    c_date = models.DateTimeField()
 
     class Meta:
         managed = False
