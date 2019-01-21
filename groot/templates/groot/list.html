@@ -69,8 +69,13 @@
                                             <td>{{enroll_info.enroll_date}}</td>
                                             <td>{{enroll_info.end_date}}</td>
                                             <td>
-                                                <a href="extend/{{enroll_info.enroll_idx}}">
-                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 연장 </button>
+                                                <!--<a href="extend/{{enroll_info.enroll_idx}}">-->
+
+                                                <button type="button"
+                                                        class="btn ck_button btn-outline-warning extend" style="font-size:80%;"
+                                                        id="extend/{{enroll_info.enroll_idx}}"
+                                                        extend_id="{{enroll_info.enroll_idx}}"> 연장
+                                                </button>
                                                 </a>
                                             </td>
                                             <td>
@@ -103,7 +108,30 @@
 {% endblock content %}
 
 {% block js %}
-<script>
+    <script>
 
-</script>
+    $('.ck_button').click(function() {
+        let extend_id = $(this).attr('extend_id');
+        $.ajax({
+            url: '/login2',
+            type: 'POST',
+            data: {'idx' : extend_id },
+            success: function(result) {
+
+                if(result.ck_val == 0) {
+                    alert('경고')
+                    location.reload()
+                } else {
+                       location.href="extend/" + extend_id ;
+                }
+            },
+            error:function(request,status,error){
+                    alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+             }
+
+        });
+        return false
+    });
+    </script>
+
 {% endblock js %}

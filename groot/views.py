@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.urls import reverse
+from django.utils.formats import date_format
 from django.views.decorators.csrf import csrf_exempt
 from groot.forms import EnrollmentForm
 from groot.forms import *
@@ -91,9 +92,27 @@ def mypage(request):
 def list(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user=user_id)
+    extend_info = Extend.objects.all()
 
     # return HttpResponse(enroll_infos)
-    return render(request, 'groot/list.html', {'enroll_infos':enroll_infos})
+    return render(request, 'groot/list.html', {'enroll_infos':enroll_infos, 'extend_info':extend_info})
+
+@csrf_exempt
+def login2(request):
+    if request.method == "POST":
+        idxx = request.POST['idx']
+        extend_info = Extend.objects.get(enroll_idx = idxx)
+        if extend_info.status == 0 :
+            ck_val = 0
+            # 연장신청햇음
+        else :
+            ck_val = 1
+
+        context = {'ck_val': ck_val}
+        return HttpResponse(json.dumps(context), content_type='application/json')
+    if request.method =='GET':
+        return HttpResponse('get')
+
 
 
 rowsPerPage = 5
@@ -183,10 +202,10 @@ def application(request):
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user = u
-            enrollment.status = 0
+            enrollment.enroll_status = 0
             enrollment.c_date = datetime.datetime.now()
             enrollment.summary = form.cleaned_data['summary']
-            enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+            # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
             return HttpResponseRedirect(reverse('upload'))
@@ -198,11 +217,9 @@ def application(request):
     return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
 
 def extend(request,idx):
-
-    u = User.objects.get(user_id=request.session.get('user_id'))
     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
-    enrollinfo.user_id = User()
-    enrollinfo.user = u
+    edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
+
 
     if request.method == 'POST':
         e_date = enrollinfo.end_date
@@ -219,13 +236,55 @@ def extend(request,idx):
                  + enrollinfo.term + "@" + "3"
         f = requests.get(fabric)
         print(f.text)  # cmd 창에 보여질 값
+
+        form = ExtendForm(request.POST)
+
+        if form.is_valid():
+            extend = Extend()
+            extend.enroll_idx = enrollinfo
+            extend.term = form.cleaned_data['term']
+            extend.status = 0
+            extend.reason = form.cleaned_data['reason']
+            extend.c_date = datetime.datetime.now()
+
+            extend.save()
+
         return redirect('mypage')
+
     else:
         create_date = datetime.date.today()
 
-        user = User.objects.get(user_id=request.session.get('user_id'))
+        form = ExtendForm()
 
-    return render(request, 'groot/extend.html', {'user':user, 'enrollinfo': enrollinfo,'create_date':create_date})
+    return render(request, 'groot/extend.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
+#
+# def extend(request,idx):
+#
+#     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+#     extend_info= Extend()
+#     enrollinfo.user_id = User()
+#     enrollinfo.user = u
+#
+#     if request.method == 'POST':
+#         extend_info.term = str(request.POST['term'])
+#         extend_info.c_date = datetime.date.today()
+#
+#         # return HttpResponse(enrollment.end_date)
+#         Extend.save()
+#
+#         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
+#         #    0          1        2
+#         # # Technology   Term   Status
+#         # fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "-" \
+#         #          + enrollinfo.term + "-" + "3"
+#         # f = requests.get(fabric)
+#         # print(f.text)  # cmd 창에 보여질 값
+#         # return redirect('mypage')
+#     else:
+#
+#         # user = User.objects.get(user_id=request.session.get('user_id'))
+#
+#     return render(request, 'groot/extend.html', { 'enrollinfo': enrollinfo,'extend_info':extend_info})
 
 @csrf_exempt
 # @csrf_protect
@@ -522,15 +581,15 @@ class SearchFormView(FormView):
         return render(self.request, self.template_name, context)
 
 
+
+
 #########################TEST
-
-
 def search_list(request):
-
-    app_info = Status.objects.all().filter(status=0)
+    app_info = Status.objects.all().filter(enroll_status=1)
 
     if request.method == 'GET':
         return render(request, 'groot/search.html',{'app_info': app_info})
+
 
 
 def upload(request):
