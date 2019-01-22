@@ -21,9 +21,10 @@ from django.db.models import Q
 import calendar
 import pandas
 import random
+
 # # html2pdf 위한 라이브러리
-# from django.views.generic.base import View
-# from .render import Render
+from django.views.generic import View
+from .render import render_to_pdf
 # import os
 # from django.conf import settings
 # from django.template import Context
@@ -498,7 +499,11 @@ def issue(request):
     else :
         return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
 
-# class Pdf(View):
+# class GeneratePdf(View) :
+#     def change_pdf(self, request, path, data={}):
+#         pdf = render_to_pdf(path, data)
+#         return HttpResponse(pdf, content_type='application/pdf')
+import pdfkit
 def show_app(request, idx):
     user_id = request.session['user_id']
 
@@ -508,10 +513,37 @@ def show_app(request, idx):
 
     print(cert_info.cert_idx)
 
-    # params = {'enroll_info': enroll_info, 'user':user, 'cc':block, 'request':request}
-    # return Render.render('groot/show_app.html', params)
+    value = {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info}
 
-    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
+    options = {
+        'page-size': 'Legal',
+        'margin-top': '0.75in',
+        'margin-right': '0.75in',
+        'margin-bottom': '0.75in',
+        'margin-left': '0.75in',
+        'encoding': "UTF-8", #iso-2022-kr
+        'no-outline': None,
+        'disable-internal-links': True
+    }
+
+    template = get_template("groot/show_app.html")
+    html = template.render(value)
+    # pdf = pdfkit.from_file(r'C:\Users\어다희\work_django\groot-django\groot\templates\groot\show_app.html', False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
+    pdf = pdfkit.from_url('http://www.grootchain.com/issue/show_app/'+str(idx), False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
+    # pdf = open("test.pdf")
+    # response = HttpResponsse(pdf.read(), content_type='application/pdf')
+    # pdf.close()
+    # os.remove("test.pdf")
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=임치증명서.pdf'
+
+    return response
+
+
+    # html2pdf = GeneratePdf()
+    # html2pdf.change_pdf(request, 'groot/show_app.html', value)
+
+    # return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
 
 def show_cont(request, en_idx, cont_idx):
     user_id = request.session['user_id']
