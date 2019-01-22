@@ -15,16 +15,17 @@
                         </div>  
                         <div class="page-content">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Total {{request_count}} 건
+                                <div class="panel-heading" style="padding:20px 20px">
+                                    유사도가 높게 확인된 임치물이 {{request_count}} 건 검색되었습니다.
                                 </div>
                                 {% if result %}
                                     {% for item in result %}
                                         {% for key, value in item.items %}
-                                            <div class="panel-heading">
-                                                {{key}}
+                                            <div class="panel-heading" style="padding:12px 12px">
+                                                <span><b>임치명</b></span> : <span>{{key}}</span>
                                             </div>
                                             <div class="panel-body" style="margin-top:20px;">
+                                                <p><h4><b>요약글</b></h4></p><br>
                                                 <p>{{value}}</p>
                                                 <hr>
                                             </div>

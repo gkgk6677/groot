@@ -66,11 +66,24 @@ def application_detail(request, idx):
             return redirect('/administrator/index/application/check/'+str(enrollment_info.enroll_idx))
 
 
-def admin_insert(request):
+# def admin_insert(request):
 
-    insert_infos = Contract.objects.all().filter(status=0)
+#     insert_infos = Contract.objects.all().filter(status=0)
 
-    return render(request, 'administrator/admin-insert.html', {'insert_infos':insert_infos})
+#     return render(request, 'administrator/admin-insert.html', {'insert_infos':insert_infos})
+
+# def insert_detail(request, idx):
+
+#     insert_infos = Contract.objects.get(enroll_idx=idx, status=0)
+#     enroll_infos = Enrollment.objects.get(enroll_idx=idx) # 해당 임치물에 대한 정보(개발자 기업 idx)
+
+#     insert_date = insert_infos.c_date.date()
+#     enroll_enddate = enroll_infos.end_date.date()
+#     enroll_enrolldate = enroll_infos.enroll_date.date()
+
+#     if request.method == 'GET':
+#         return render(request, 'administrator/insert-detail.html', {'insert_infos':insert_infos, 'enroll_infos':enroll_infos, 'insert_date':insert_date, 'enroll_enddate':enroll_enddate, 'enroll_enrolldate':enroll_enrolldate})
+
 
 def admin_extend(request):
 
@@ -95,6 +108,7 @@ def extend_detail(request, idx):
             extend_infos.accept_date = datetime.datetime.now()
             extend_infos.status = 1
             extend_infos.save()
+            enroll_infos.term += extend_infos.term
             enroll_infos.end_date += datetime.timedelta(days=(365 * int(extend_infos.term)))
             enroll_infos.save()
             return redirect('admin_extend')
@@ -104,19 +118,66 @@ def extend_detail(request, idx):
             extend_infos.save()
             return redirect('admin_extend')
 
-            
-
 def admin_update(request):
 
     update_infos = Update.objects.all().filter(status=0)
 
     return render(request, 'administrator/admin-update.html', {'update_infos':update_infos})
 
+def update_detail(request, idx):
+
+    update_infos = Update.objects.get(enroll_idx=idx, status=0)
+    enroll_infos = Enrollment.objects.get(enroll_idx=idx)
+    update_date = update_infos.c_date.date()
+    enroll_enddate = enroll_infos.end_date.date()
+    enroll_enrolldate = enroll_infos.enroll_date.date()
+
+    if request.method == 'GET':
+        return render(request, 'administrator/update-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'expire_date':expire_date, 'update_infos':update_infos, 'enroll_infos':enroll_infos})
+    else: # 추후 파일 저장 및 해쉬 관련 코드 추가 요망
+        if request.POST.get('yes'):
+            update_infos.status = 1
+            update_infos.accept_date = datetime.datetime.now()
+            update_infos.save()
+        else:
+            update_infos.status = 2
+            update_infos.accept_date = datetime.datetime.now()
+            update_infos.save()
+
+
 def admin_expire(request):
 
     expire_infos = Expire.objects.all().filter(status=0)
 
     return render(request, 'administrator/admin-expire.html', {'expire_infos':expire_infos})
+
+def expire_detail(request, idx):
+
+    expire_infos = Expire.objects.get(enroll_idx=idx, status=0)
+    enroll_infos = Enrollment.objects.get(enroll_idx=idx)
+
+    expire_date = expire_infos.c_date.date()
+    enroll_enddate = enroll_infos.end_date.date()
+    enroll_enrolldate = enroll_infos.enroll_date.date()
+    if request.method == 'GET':
+        return render(request, 'administrator/expire-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'expire_date':expire_date, 'expire_infos':expire_infos, 'enroll_infos':enroll_infos})
+    else:
+        if request.POST.get('yes'):
+            expire_infos.accept_date = datetime.datetime.now()
+            expire_infos.status = 1
+            expire_infos.save()
+            enroll_infos.enroll_date = None
+            enroll_infos.end_date = None
+            enroll_infos.enroll_status = 3
+            enroll_infos.save()
+            return redirect('index')
+        else:
+            expire_infos.accept_date = datetime.datetime.now()
+            expire_infos.status = 2
+            expire_infos.save()
+            return redirect('index')
+
+
 
 def admin_log(request):
     return render(request, 'administrator/admin-log.html', {})
@@ -193,3 +254,17 @@ def check(request, idx):
             enrollment_info.enroll_date = datetime.datetime.now()
             enrollment_info.save()
             return redirect('index')
+
+def enrollments(request):
+
+    enroll_infos = Enrollment.objects.all().filter(enroll_status=1)
+
+    return render(request, 'administrator/enrollments.html', {'enroll_infos':enroll_infos})
+
+def enrollments_detail(request, idx):
+
+    enroll_infos = Enrollment.objects.get(enroll_idx=idx)
+    enroll_enddate = enroll_infos.end_date.date()
+    enroll_enrolldate = enroll_infos.enroll_date.date()
+
+    return render(request, 'administrator/enrollments-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'enroll_infos':enroll_infos})

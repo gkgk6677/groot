@@ -8,7 +8,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">임치물 갱신 신청목록</h1>
+            <h1 class="page-header">기술임치 현황</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -17,7 +17,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    요청 리스트
+                    임치 리스트
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -32,12 +32,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for update_info in update_infos %}
+                            {% for enroll_info in enroll_infos %}
                             <tr>
-                                <td><a href="{{update_info.enroll_idx.enroll_idx}}">{{update_info.enroll_idx.title}}</a></td>
-                                <td>{{update_info.enroll_idx.user.com_name}}</td>
-                                <td class="center">{{update_info.enroll_idx.user.user_id}}</td>
-                                <td class="center">{{update_info.c_date}}</td>
+                                <td><a href="/administrator/index/enrollments/{{enroll_info.enroll_idx}}">{{enroll_info.title}}</a></td>
+                                <td>{{enroll_info.user.com_name}}</td>
+                                <td class="center">{{enroll_info.user.user_id}}</td>
+                                <td class="center">{{enroll_info.c_date}}</td>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -52,7 +52,6 @@
     </div>
 </div>
 {% endblock content %}
-
 {% block js %}
 <script>
     var tables = document.getElementsByTagName('tbody');
