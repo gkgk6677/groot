@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import datetime, requests, json
 from groot.models import *
+from sklearn.feature_extraction.text import TfidfVectorizer
+from konlpy.tag import Kkma
+from konlpy.utils import pprint
 
 # Create your views here.
 
@@ -59,30 +62,9 @@ def application_detail(request, idx):
     if request.method == 'GET': 
         return render(request, 'administrator/application_detail.html', {'enrolldate':enrolldate, 'enrollment_info':enrollment_info})
     else:
-        if request.POST.get('yes'):
-            enrollment_info.enroll_status = 1
-            enrollment_info.enroll_date = datetime.datetime.now()
-            enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
+        if request.POST.get('check'):
+            return redirect('/administrator/index/application/check/'+str(enrollment_info.enroll_idx))
 
-            #     0          1        2         3        4        5       6          7            8          9
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
-                     + enrollment_info.user.com_name + "@" \
-                     + str(enrollment_info.user.com_num) + "@" \
-                     + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
-            f = requests.get(fabric)
-            print(f.text)  # cmd 창에 보여질 값
-            enrollment_info.enroll_tx = f.text[1:-1]
-            enrollment_info.save()
-
-            return redirect('index')
-        elif request.POST.get('check'):
-            return redirect('admin_application')
-        else:
-            enrollment_info.enroll_status = 2
-            enrollment_info.enroll_date = datetime.datetime.now()
-            enrollment_info.save()
-            return redirect('index')
 
 def admin_insert(request):
 
@@ -141,3 +123,73 @@ def admin_log(request):
 
 def admin_read(request):
     return render(request, 'administrator/admin-read.html', {})
+
+
+
+def check(request, idx):
+
+    old_summary_list = Enrollment.objects.all().filter(enroll_status=1)
+    enrollment_info = Enrollment.objects.get(enroll_idx=idx)
+
+    if request.method == 'GET':
+        mydoclist = []
+        titlelist = ['null']
+        mydoclist += [enrollment_info.summary]
+
+        for exist in old_summary_list:
+            mydoclist += [str(exist.summary)]
+            titlelist += [str(exist.title)]
+
+        kkma = Kkma()
+        doc_nouns_list = []
+
+        for doc in mydoclist:
+            nouns = kkma.nouns(doc)
+            doc_nouns = ''
+
+            for noun in nouns:
+                doc_nouns += noun + ' '
+
+            doc_nouns_list.append(doc_nouns)
+
+        tfidf_vectorizer = TfidfVectorizer(min_df=1)
+        tfidf_matrix = tfidf_vectorizer.fit_transform(doc_nouns_list)
+
+        document_distances =  (tfidf_matrix * tfidf_matrix.T)
+
+        result = document_distances.toarray()
+
+        one_row = result[0] # 유사도 분석 결과의 첫번째 배열 값 ex([1, 0.45, 0.75])
+
+        request_count = 0
+        result = []
+
+        for val in range(1,len(one_row)):
+            if (int(one_row[val] * 100) > 70 and int(one_row[val] * 100) != 100):
+                result.append({titlelist[val] : mydoclist[val]})
+                request_count += 1
+
+        return render(request, 'administrator/check.html', {'result':result, 'request_count':request_count, 'one_row':one_row})
+    else:
+        if request.POST.get('yes'):
+            enrollment_info.enroll_status = 1
+            enrollment_info.enroll_date = datetime.datetime.now()
+            enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
+
+            #     0          1        2         3        4        5       6          7            8          9
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+            fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
+                        + enrollment_info.user.com_name + "@" \
+                        + str(enrollment_info.user.com_num) + "@" \
+                        + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
+            f = requests.get(fabric)
+            print(f.text)  # cmd 창에 보여질 값
+            enrollment_info.enroll_tx = f.text[1:-1]
+            enrollment_info.save()
+
+            return redirect('index')
+        else:
+            enrollment_info.enroll_status = 2
+            enrollment_info.enroll_date = datetime.datetime.now()
+            enrollment_info.save()
+            return redirect('index')
