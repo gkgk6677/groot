@@ -45,7 +45,7 @@ urlpatterns = [
     path('qna', views.qna, name='qna'),
     path('bye', views.bye, name='bye'),
     path('extend/<int:idx>', views.extend, name='extend'),
-    path('insert', views.insert, name='insert'),
+    path('search/insert/<int:idx>', views.insert, name='insert'),
     path('expire', views.expire, name='expire'),
     path('upload', views.upload, name='upload'),
 

@@ -258,34 +258,7 @@ def extend(request,idx):
         form = ExtendForm()
 
     return render(request, 'groot/extend.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
-#
-# def extend(request,idx):
-#
-#     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
-#     extend_info= Extend()
-#     enrollinfo.user_id = User()
-#     enrollinfo.user = u
-#
-#     if request.method == 'POST':
-#         extend_info.term = str(request.POST['term'])
-#         extend_info.c_date = datetime.date.today()
-#
-#         # return HttpResponse(enrollment.end_date)
-#         Extend.save()
-#
-#         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
-#         #    0          1        2
-#         # # Technology   Term   Status
-#         # fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "-" \
-#         #          + enrollinfo.term + "-" + "3"
-#         # f = requests.get(fabric)
-#         # print(f.text)  # cmd 창에 보여질 값
-#         # return redirect('mypage')
-#     else:
-#
-#         # user = User.objects.get(user_id=request.session.get('user_id'))
-#
-#     return render(request, 'groot/extend.html', { 'enrollinfo': enrollinfo,'extend_info':extend_info})
+
 
 @csrf_exempt
 # @csrf_protect
@@ -300,29 +273,40 @@ def idcheck(request):
     context = {'ck_val': ck_val}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
-def insert(request):
-    user_id = request.session['user_id']
-    # enrollinfo = Enrollment.objects.get(user_id=user_id)
-
-    enrollinfo = Enrollment.objects.filter(name_id=user_id)
-    # .order_by('-update_date')
+def insert(request,idx):
+    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+    edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
+    contract = Contract()
 
     if request.method == 'POST':
-        form = EnrollmentForm(request.POST)
+        enrollinfo.term = request.POST['term']
+        u = User.objects.get(user_id=request.session.get('user_id'))
+        contract.user_id = User()
+        form = ContractForm(request.POST)
 
         if form.is_valid():
-            enrollment = Enrollment()
-            e_date = enrollinfo.end_date
+            contract = Contract()
+            contract.enroll_idx = enrollinfo
+            contract.user_id = User()
+            contract.user = u
+            contract.term = form.cleaned_data['term']
+            contract.status = 0
+            contract.reason = form.cleaned_data['reason']
+            contract.c_date = datetime.datetime.now()
 
-            enrollment.term = request.POST['term']
-            enrollment.end_date = e_date + datetime.timedelta(days=365+365 * int(request.POST['term']))
-
-            # return HttpResponse(enrollment.end_date)
-            # 업 데 이 트 하 는 방 법 이 필 요 해 !
-            form.save()
-            enrollment.save()
+            contract.save()
 
         return redirect('mypage')
+
+    else:
+        create_date = datetime.date.today()
+        user = User.objects.get(user_id=request.session.get('user_id'))
+
+        form = ContractForm()
+
+    return render(request, 'groot/insert.html', {'user':user,'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
+
+
 
 @csrf_exempt
 def com_num_check(request):
@@ -620,7 +604,7 @@ class SearchFormView(FormView):
 
 #########################TEST
 def search_list(request):
-    app_info = Status.objects.all().filter(enroll_status=1)
+    app_info = Enrollment.objects.all().filter(enroll_status=1)
 
     if request.method == 'GET':
         return render(request, 'groot/search.html',{'app_info': app_info})

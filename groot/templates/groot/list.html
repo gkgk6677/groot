@@ -53,7 +53,6 @@
                                             <th>등록 일자</th>
                                             <th>만료 일자</th>
                                             <th>연장</th>
-                                            <th>편입</th>
                                             <th>갱신</th>
                                             <th>폐지</th>
                                         </tr>
@@ -76,11 +75,6 @@
                                                         id="extend/{{enroll_info.enroll_idx}}"
                                                         extend_id="{{enroll_info.enroll_idx}}"> 연장
                                                 </button>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="insert">
-                                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 편입 </button>
                                                 </a>
                                             </td>
                                             <td>
@@ -119,7 +113,7 @@
             success: function(result) {
 
                 if(result.ck_val == 0) {
-                    alert('경고')
+                    alert('이미 연장신청이 진행 중 입니다.')
                     location.reload()
                 } else {
                        location.href="extend/" + extend_id ;
