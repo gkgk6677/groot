@@ -11,7 +11,7 @@
         <title>Groot Blockchain</title>
     
         <!-- Bootstrap Core CSS -->
-        <link href="{%static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{%static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
     
         <!-- MetisMenu CSS -->
         <link href="{%static 'metisMenu/metisMenu.min.css' %}" rel="stylesheet">
@@ -250,7 +250,7 @@
                             <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <li><a href="/administrator/index/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                             </li>
                         </ul>
                         <!-- /.dropdown-user -->
@@ -280,9 +280,6 @@
                                         <a href="/administrator/index/application">기술임치 신청 목록</a>
                                     </li>
                                     <li>
-                                        <a href="/administrator/index/insert">회사간 계약 신청 목록</a>
-                                    </li>
-                                    <li>
                                         <a href="/administrator/index/extend">임치기간 연장 목록</a>
                                     </li>
                                     <li>
@@ -293,6 +290,9 @@
                                     </li>
                                 </ul>
                                 <!-- /.nav-second-level -->
+                            </li>
+                            <li>
+                                <a href="/administrator/index/enrollments"><i class="fa fa-th-list fa-fw"></i>&nbsp;임치물 목록</a>
                             </li>
                             <li>
                                 <a href="/administrator/index/read"><i class="fa fa-table fa-fw"></i>&nbsp;문서 열람</a>

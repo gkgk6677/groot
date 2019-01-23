@@ -21,12 +21,12 @@ class User(models.Model):
 
 
 class Certificate(models.Model):
-    cert_idx = models.AutoField(primary_key=True)
+    cert_idx = models.CharField(primary_key=True, max_length=100)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
+    cont_idx = models.ForeignKey('Contract', models.DO_NOTHING, db_column='cont_idx', blank=True, null=True)
     term = models.IntegerField()
     end_date = models.DateTimeField()
-    cert_tx = models.CharField(max_length=100)
-    c_date = models.DateTimeField()
+    c_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -36,12 +36,14 @@ class Certificate(models.Model):
 class Contract(models.Model):
     cont_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
-    term = models.IntegerField()
-    end_date = models.DateTimeField()
-    reason = models.TextField()
-    status = models.IntegerField()
-    c_date = models.DateTimeField()
     user = models.ForeignKey('User', models.DO_NOTHING)
+    term = models.IntegerField()
+    reason = models.TextField()
+    end_date = models.DateTimeField(blank=True, null=True)
+    status = models.IntegerField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    contract_tx = models.CharField(max_length=100, blank=True, null=True)
+    c_date = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -79,7 +81,8 @@ class Enrollment(models.Model):
     title = models.CharField(max_length=100)
     term = models.PositiveIntegerField(default=1)
     summary = models.TextField(blank=True, null=True)
-    status = models.IntegerField(blank=True, null=True)
+    agree_status = models.IntegerField(blank=True, null=True)
+    enroll_status = models.IntegerField(null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
@@ -90,6 +93,44 @@ class Enrollment(models.Model):
         managed = False
         db_table = 'Enrollment'
         unique_together = (('enroll_idx', 'sort_idx'),)
+
+class Update(models.Model):
+    update_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Update'
+
+class Extend(models.Model):
+    extend_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    term = models.PositiveIntegerField(default=1)
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Extend'
+
+class Expire(models.Model):
+    expire_idx = models.IntegerField(primary_key=True)
+    enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
+    status = models.IntegerField()
+    reason = models.TextField()
+    accept_date = models.DateTimeField(blank=True, null=True)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'Expire'
+
 
 class Similarity(models.Model):
     similarity_idx = models.IntegerField(primary_key=True)
@@ -105,14 +146,14 @@ class Similarity(models.Model):
 
 
 class File(models.Model):
-    file_idx = models.IntegerField(primary_key=True)
+    file_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
-    pid = models.CharField(max_length=100)
+    pid = models.CharField(max_length=300)
     mid = models.CharField(max_length=100)
-    type = models.IntegerField()
-    o_name = models.CharField(max_length=100)
-    r_name = models.CharField(max_length=100)
-    c_date = models.DateTimeField()
+    type = models.IntegerField(null=True)
+    o_name = models.CharField(max_length=100, null=True)
+    r_name = models.CharField(max_length=100, null=True)
+    c_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False

@@ -28,7 +28,7 @@ SECRET_KEY = '82xt$ad6-y*jdir_p!j%vd!y1crt8h=)2u$fl(7q1%dqoabgg^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','210.107.78.149','www.grootchain.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','210.107.78.149','www.grootchain.com']
 
 
 # Application definition
@@ -43,11 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -125,7 +123,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

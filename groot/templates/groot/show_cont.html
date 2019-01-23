@@ -44,8 +44,8 @@
                             <thead>
                                <tr>
                                    <td colspan="2">
-                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/{{cc.Value.technology}}">
-                                           {{ cc.TxId }}
+                                       <a target="_blank" href="http://210.107.78.150:5984/_utils/#database/mychannel_groot-chaincode/{{cert_info.enroll_idx.title}}">
+                                           {{ cert_info.cert_idx }}
                                        </a>
                                    </td>
                                </tr>
@@ -56,15 +56,15 @@
                             <tbody>
                                <tr>
                                     <th scope="row">기술명</th>
-                                    <td> {{cc.Value.technology}} </td>
+                                    <td> {{cert_info.enroll_idx.title}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">기업명</th>
-                                    <td> {{cc.Value.company}} </td>
+                                    <td> {{cert_info.enroll_idx.user.com_name}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">사용기업명</th>
-                                    <td> {{cc.Value.client}} </td>
+                                    <td> {{contract.user.com_name}} </td>
                                </tr>
                                <tr>
                                     <th scope="row">계약기간</th>
@@ -74,7 +74,7 @@
                                     <td colspan="2">위의 사실을 증명합니다.</td>
                                </tr>
                                <tr>
-                                    <td colspan="2">2019년 01월 29일</td>
+                                    <td colspan="2"> {{cert_info.c_date | date:"Y년 m월 d일"}} </td>
                                </tr>
                                <tr>
                                     <td colspan="2">
