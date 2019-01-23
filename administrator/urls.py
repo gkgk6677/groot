@@ -19,4 +19,5 @@ urlpatterns = [
     path('index/update/', views.admin_update, name="admin_update"),
     path('index/update/<int:idx>', views.update_detail, name="update_detail"),
     path('index/application/check/<int:idx>', views.check, name="check"),
+    path('index/wrong', views.wrong, name="wrong"),
 ]
