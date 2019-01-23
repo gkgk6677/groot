@@ -1,0 +1,90 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block css %}
+<link href="{%static 'css/application_detail.css' %}" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <form class="enrollment-form" action="" method="POST" style="margin-left:200px; margin-top: 50px;">
+                    {% csrf_token %}
+                    <div id="table">
+                        <table>
+                            <caption>기술자료 임치 확인서</caption>
+                            <colgroup>
+                                <col style="width: 13.5554%">
+                                <col style="width: 13.3333%">
+                                <col style="width: 30%">
+                                <col style="width: 13.3333%">
+                                <col style="width: 30%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="5"><span>기술자료 임치 확인서</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="center">
+                                <tr>
+                                    <th rowspan="2">임치물</th>
+                                    <th>제호</th>
+                                    <td colspan="3">{{enroll_infos.title}}</td>
+                                </tr>
+                                <tr>
+                                    <th>종류</th>
+                                    <td colspan="3">{{enroll_infos.sort_idx}}</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="3">개발인</th>
+                                    <th>기업명</th>
+                                    <td>{{enroll_infos.user.com_name}}</td>
+                                    <th>사업자등록번호</th>
+                                    <td>{{enroll_infos.user.com_num}}</td>
+                                </tr>
+                                <tr>
+                                    <th>대표자</th>
+                                    <td>{{enroll_infos.user.com_head}}</td>
+                                    <th>전화번호</th>
+                                    <td>{{enroll_infos.user.phone_num}}</td>
+                                </tr>
+                                <tr>
+                                    <th>주소</th>
+                                    <td colspan="3">{{enroll_infos.user.address}}</td>
+                                </tr>
+                                <tr>
+                                    <th>임치기간</th>
+                                    <!-- (D) 가운데정렬은 center 클래스 추가 -->
+                                    <td class="center" colspan="5">{{enroll_enrolldate}} - {{enroll_enddate}} &nbsp; ({{enroll_infos.term}} 년)</td>
+                                </tr>
+                                <tr>
+                                    <th class="center" colspan="5">기술 요약</th>
+                                </tr>
+                                <tr>
+                                    <td class="center" colspan="5" style="padding:30px;">{{enroll_infos.summary}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="center" colspan="5" style="padding-top:30px;">「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라<br> 위와 같이 기술자료 임치가 되었음을 승인합니다.<br><br></td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" style="text-align: right; padding-right: 30px;">최종 승인 날짜 : {{enroll_enrolldate}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(개발인) :  {{enroll_infos.user.com_head}}  (인)</td>
+                                </tr>
+                                <tr>
+                                    <td class="center" colspan="5">그루트재단 사무총장  (인)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

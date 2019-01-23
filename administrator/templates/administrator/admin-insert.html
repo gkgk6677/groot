@@ -34,10 +34,10 @@
                         <tbody>
                             {% for insert_info in insert_infos %}
                             <tr>
-                                <td><a href="{{insert_info.enroll_idx}}">{{insert_info.enroll_idx.title}}</a></td>
+                                <td><a href="{{insert_info.enroll_idx.enroll_idx}}">{{insert_info.enroll_idx.title}}</a></td>
                                 <td>{{insert_info.enroll_idx.user.com_name}}</td>
                                 <td class="center">{{insert_info.enroll_idx.user.user_id}}</td>
-                                <td class="center">{{insert_info.enroll_idx.c_date}}</td>
+                                <td class="center">{{insert_info.c_date}}</td>
                                 </td>
                             </tr>
                             {% endfor %}

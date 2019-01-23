@@ -34,10 +34,10 @@
                         <tbody>
                             {% for expire_info in expire_infos %}
                             <tr>
-                                <td><a href="{{expire_info.enroll_idx}}">{{expire_info.enroll_idx.title}}</a></td>
+                                <td><a href="{{expire_info.enroll_idx.enroll_idx}}">{{expire_info.enroll_idx.title}}</a></td>
                                 <td>{{expire_info.enroll_idx.user.com_name}}</td>
                                 <td class="center">{{expire_info.enroll_idx.user.user_id}}</td>
-                                <td class="center">{{expire_info.enroll_idx.c_date}}</td>
+                                <td class="center">{{expire_info.c_date}}</td>
                                 </td>
                             </tr>
                             {% endfor %}
