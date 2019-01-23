@@ -228,20 +228,14 @@
         #table .input:after{content: ""; display: block; clear: both}
         #table .input .radio{float: left; width: calc(50% - 5px); text-align: center}
         #table .input .radio + .radio{margin-left: 10px}
-        #table #id_summary {min-height: 150px}
+        #table #id_reason {min-height: 150px; resize:none;}
         #table #id_term{width:50px;}
 
-#table .td span {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-}
-#counter {
-  background:rgba(255,0,0,0.5);
-  border-radius: 0.5em;
-  padding: 0 .5em 0 .5em;
-  font-size: 0.75em;
-}
+.submit_btn:hover {
+    background: #00c8a9;
+    color: #fff;
+    }
+
 
 </style>
 
@@ -257,9 +251,9 @@
               <div class="brand" style="padding-top:60px; padding-bottom:30px;">
 
 
-                <h1><img src="{% static 'img/safebox/s14.png' %}" style="width: 70px;padding-right: 13px;">기술 임치 신청</h1>
+                <h1><img src="{% static 'img/safebox/s14.png' %}" style="width: 70px;padding-right: 13px;">기술 사용 계약 신청</h1>
                       <br>
-                <h4>신청 양식을 작성해주세요!</h4>
+                <h4>계약 신청 양식을 작성해주세요!</h4>
 
               </div>
               <div id="sliderDouble" class="slider slider-info noUi-target noUi-ltr noUi-horizontal">
@@ -279,7 +273,7 @@
                      <form class="enrollment-form" action="" method="POST">{% csrf_token %}
                             <div id="table">
                                 <table>
-                                    <caption>기술자료 임치 신청서</caption>
+                                    <caption>기술자료 임치 연장 신청서</caption>
                                     <colgroup>
                                         <col style="width: 13.5554%">
                                         <col style="width: 13.3333%">
@@ -289,22 +283,44 @@
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th colspan="5"><span>기술자료 임치 신청서</span></th>
+                                            <th colspan="5"><span>임치 기술 계약 신청서</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th rowspan="2">임치물</th>
+                                            <th rowspan="2">기술</th>
                                             <th>제호</th>
-                                            <td colspan="3">{{form.title}}</td>
+                                            <td colspan="3">{{enrollinfo.title}}</td>
                                         </tr>
                                         <tr>
                                             <th>종류</th>
-                                            <td>{{form.sort_idx}}</td>
-                                            <td colspan="2" class="left">※ 산업기술분류체계를 참조하여 기재하여 주십시오.</td>
+                                            <td colspan="3">{{ enrollinfo.sort_idx }}</td>
                                         </tr>
                                         <tr>
-                                            <th rowspan="3">개발인</th>
+                                            <th rowspan="3">개발 기업</th>
+                                            <th>기업명</th>
+                                            <td>{{enrollinfo.user.com_name}}</td>
+                                            <th>사업자등록번호</th>
+                                            <td>{{enrollinfo.user.com_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>대표자</th>
+                                            <td>{{enrollinfo.user.com_head}}</td>
+                                            <th>전화번호</th>
+                                            <td>{{enrollinfo.user.phone_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>주소</th>
+                                            <td colspan="3">{{enrollinfo.user.address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>현재 임치 기간</th>
+                                            <!-- (D) 가운데정렬은 center 클래스 추가 -->
+                                            <td class="center" colspan="5">{{edate}} 까지
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                            <th rowspan="3">신청 기업</th>
                                             <th>기업명</th>
                                             <td>{{user.com_name}}</td>
                                             <th>사업자등록번호</th>
@@ -321,36 +337,19 @@
                                             <td colspan="3">{{user.address}}</td>
                                         </tr>
                                         <tr>
-                                            <th>임치기간</th>
+                                            <th>기술 사용 계약 기간</th>
                                             <!-- (D) 가운데정렬은 center 클래스 추가 -->
-                                            <td class="center" colspan="5">{{form.term}} 년</td>
-                                        </tr>
-                                        <tr>
-                                            <th>기본정보<br>공시동의</th>
-                                            <td class="input" colspan="2">
-                                               <!-- (D) input의 id랑 label의 for가 같아야 클릭해도 체크가 됨
-                                                           name이 같은 애들끼리 같은 영역?으로 알아서 name이 다르면 둘다 체크가 됨
-                                                -->
-                                                <div class="radio">
-                                                    <input type="radio" id="radio1" name="radio">
-                                                    <label for="radio1" name="radio">예</label>
-                                                </div>
-                                                <div class="radio">
-                                                    <input type="radio" id="radio2" name="radio">
-                                                    <label for="radio2" name="radio">아니오</label>
-                                                </div>
-                                            </td>
-                                            <td colspan="2">※ 공시내용 : 임치물 제호, 개발인·사용인 기업명 및 주소, 임치기술의 분류ㆍ종류ㆍ임치연월일</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="center" colspan="5">기술 요약</th>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5">{{form.summary}}<span id="counter">###</span></td>
+                                            <td class="center" colspan="5"> 현재 날짜로 부터  {{form.term}} 년 </td>
                                         </tr>
 
                                         <tr>
-                                            <td class="left" colspan="5">「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라<br> 위와 같이 기술자료 임치를 신청합니다.<br><br></td>
+                                            <th class="center" colspan="5">기술 계약 사유 및 사용 목적</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">{{form.reason}}<span id="counter">###</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="left" colspan="5">위와 같은 사유 및 목적에 따라<br>기술 계약을 신청합니다.<br><br></td>
                                             </td>
                                         </tr>
 
@@ -358,18 +357,17 @@
                                             <td colspan="5" style="text-align: right; padding-right: 30px;">신청일 : {{create_date}}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(개발인) :  {{user.com_head}}  (인)</td>
+                                            <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(사용기업) :  {{user.com_head}}  (인)</td>
                                         </tr>
                                         <tr>
-                                            <td class="center" colspan="5">대·중소기업·농어업협력재단 사무총장  귀하</td>
+                                            <td class="center" colspan="5">{{enrollinfo.user.com_name}}  귀하</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="button-group-area mt-40 col-md-6">
                                <button type="submit" value="submit" class="btn submit_btn submit_btn">취소</button>
-                               <button type="submit" value="submit" class="btn submit_btn">임시저장</button>
-                               <button type="submit" value="submit" class="btn submit_btn">제출</button>
+                               <button type="submit" value="submit" class="btn submit_btn" >제출</button>
                            </div>
                     </form>
                 </div>
@@ -386,7 +384,7 @@
     <script src="{% static 'js/jquery.validate.min.js' %}"></script>
     <script src="{% static 'js/contact.js' %}"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script type="text/javascript">
+   <script type="text/javascript">
     function chkword(obj, maxByte) {
 
         var strValue = obj.value;
@@ -417,7 +415,7 @@
     }
 
     $(function() {
-      $('#id_summary').keyup(function (e){
+      $('#id_reason').keyup(function (e){
           var content = $(this).val();
           $(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
           $('#counter').html(content.length + '/300');

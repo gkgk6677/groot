@@ -137,7 +137,7 @@
         </div> <!--first_wrap 끝-->
              <section class="first_wrap" >
             <div class="container" style="text-align:center;",  >
-                <h3 class="mb-30 title_color">임치 및 계약 목록</h3>
+                <h3 class="mb-30 title_color">임치 기술 목록</h3>
                 <div class="panel-body">
 
                     <table class="table table-hover" width="90%">
@@ -153,9 +153,9 @@
                         {% for app_infos in app_info %}
                         <tr>
                             <!--<td class="center">{{app_infos.enroll_idx.enroll_idx}}</td>-->
-                            <td><a href="#" class="tr_link">{{app_infos.enroll_idx.title}}</a></td>
-                            <td class="center">{{app_infos.enroll_idx.user.com_name}}</td>
-                            <td class="center">{{app_infos.enroll_idx.user.email}}</td>
+                            <td><a href="#" class="tr_link">{{app_infos.title}}</a></td>
+                            <td class="center">{{app_infos.user.com_name}}</td>
+                            <td class="center">{{app_infos.user.email}}</td>
                             <td class="center" style="text-align:center;">
                             </td>
                         </tr>
@@ -166,9 +166,9 @@
                                           <i class="fa fa-angle-right"></i>
                                         </span>
                                     </td>
-                                    <td>{{app_infos.enroll_idx.summary}}</td>
+                                    <td>{{app_infos.summary}}</td>
                                     <td>
-                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
+                                        <a href="insert/{{app_infos.enroll_idx}}">
                                             <button type="button" class="btn btn-outline-info"
                                                     style="font-size:80%; border-color:#00c8a9;"> 기술 계약 신청
                                             </button>
@@ -209,7 +209,7 @@
     }
 </script>
 
-<script><!--임치 요약 내용 보기-->
+<script>
     $(function() {
         $('.tr_link').click(function() {
             let trid = $(this).attr('trid');
@@ -217,7 +217,17 @@
         });
         <!--$('.tr'+trid').hide();-->
 
-        <!--$('.tr_link').hover(function() {-->
+        <!--임치목록 1부터 나타내기-->
+        <!--var tables = document.getElementsByTagName('tr');-->
+        <!--var table = tables[tables.length - 1];-->
+        <!--var rows = table.rows;-->
+        <!--for(var i = 0, td; i < rows.length; i++){-->
+            <!--td = document.createElement('td');-->
+            <!--td.appendChild(document.createTextNode(i+1));-->
+            <!--rows[i].insertBefore(td, rows[i].firstChild);-->
+        <!--}-->
+
+        <!--$('.tr_link').hover(function() { 돋보기 뜨는거-->
             <!--let trid = $(this).attr('trid');-->
             <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
                            <!--<i class="fa fa-search-plus"></i>-->

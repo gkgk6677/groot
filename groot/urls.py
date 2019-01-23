@@ -34,9 +34,10 @@ urlpatterns = [
     path('notice_write', views.notice_write, name='notice_write'),
     path('test', views.test, name='test'),
     path('issue/', views.issue, name='issue'),
-    # path('issue/show_app/<int:idx>', views.Pdf.as_view(), name='show_app'),
+    # path('issue/show_app/<int:idx>', views.GeneratePdf.as_view(), name='show_app'),
     path('issue/show_app/<int:idx>', views.show_app, name='show_app'),
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
+    path('groot_scan/', views.groot_scan, name='groot_scan'),
     path('read', views.read, name='read'),
     path('validate', views.validate, name='validate'),
     path('news', views.news, name='news'),
@@ -44,7 +45,7 @@ urlpatterns = [
     path('qna', views.qna, name='qna'),
     path('bye', views.bye, name='bye'),
     path('extend/<int:idx>', views.extend, name='extend'),
-    path('insert', views.insert, name='insert'),
+    path('search/insert/<int:idx>', views.insert, name='insert'),
     path('expire', views.expire, name='expire'),
     path('upload', views.upload, name='upload'),
 
@@ -58,6 +59,7 @@ urlpatterns = [
     path('a', views.a, name="a"),
     # path('search', SearchFormView.as_view(), name='search'),
     path('search/', views.search_list, name="search"),
+    path('login2', views.login2, name="login2"),
 
 
 ]
