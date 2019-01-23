@@ -202,7 +202,6 @@ def application(request):
             u = User.objects.get(user_id=request.session.get('user_id'))
 
             enrollment.title = form.cleaned_data['title']
-            sort_idx_tmp = request.POST['sort_idx'] # 숫자로 값을 넘기기 위해 임시로 저장
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
             enrollment.user_id = User()
@@ -211,7 +210,7 @@ def application(request):
             enrollment.agree_status = request.POST['agree_radio']
             enrollment.c_date = datetime.datetime.now()
             enrollment.summary = form.cleaned_data['summary']
-            enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+            # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
             user_foldername = request.session.get('user_id')

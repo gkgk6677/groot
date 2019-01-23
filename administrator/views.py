@@ -41,7 +41,7 @@ def index(request):
             return render(request, 'administrator/index.html', {'count_enroll':count_enroll, 'count_cont':count_cont, 'count_extend':count_extend, 'count_update':count_update, 'count_expire':count_expire})
     else:
         return redirect('wrong')
-
+        
 
 def wrong(request):
     return render(request, 'administrator/wrong.html',{})
@@ -50,7 +50,7 @@ def logout(request):
     del request.session['user_id']
     return redirect('main')
 
-def admin_application(request):
+def admin_application(request): 
     if request.session['user_id'] == 'admin':
         app_info = Enrollment.objects.all().filter(enroll_status=0)
 

@@ -64,31 +64,6 @@ class DocVf(models.Model):
         db_table = 'Doc_vf'
 
 
-class User(models.Model):
-    user_id = models.CharField(primary_key=True, max_length=100)
-    user_pw = models.CharField(max_length=100)
-    com_num = models.IntegerField()
-    com_name = models.CharField(max_length=100)
-    com_head = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
-    phone_num = models.IntegerField()
-    homepage = models.CharField(max_length=100)
-    c_date = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'User'
-
-class SortMst(models.Model):
-    sort_idx = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'Sort_MST'
-
-
 class Enrollment(models.Model):
     enroll_idx = models.AutoField(primary_key=True)
     sort_idx = models.ForeignKey('SortMst', models.DO_NOTHING, db_column='sort_idx')
@@ -191,6 +166,15 @@ class Similarity(models.Model):
         db_table = 'Similarity'
 
 
+class SortMst(models.Model):
+    sort_idx = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'Sort_MST'
+
+
 class Update(models.Model):
     update_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
@@ -203,6 +187,22 @@ class Update(models.Model):
         managed = False
         db_table = 'Update'
 
+
+class User(models.Model):
+    user_id = models.CharField(primary_key=True, max_length=100)
+    user_pw = models.CharField(max_length=100)
+    com_num = models.IntegerField()
+    com_name = models.CharField(max_length=100)
+    com_head = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    phone_num = models.IntegerField()
+    homepage = models.CharField(max_length=100)
+    c_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'User'
 
 
 class AuthGroup(models.Model):

@@ -1,0 +1,113 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-form">
+                        <div class="page-title">
+                            <h1 class="page-header">유사도 검사 결과</h1>
+                        </div>  
+                        <div class="page-content">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="padding:20px 20px">
+                                    유사도가 높게 확인된 임치물이 {{request_count}} 건 검색되었습니다.
+                                </div>
+                                {% if result %}
+                                    {% for item in result %}
+                                        {% for key, value in item.items %}
+                                            <div class="panel-heading" style="padding:12px 12px">
+                                                <span><b>임치명</b></span> : <span>{{key}}</span>
+                                            </div>
+                                            <div class="panel-body" style="margin-top:20px;">
+                                                <p><h4><b>요약글</b></h4></p><br>
+                                                <p>{{value}}</p>
+                                                <hr>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="panel-body" style="margin:35px;text-align: center;">
+                                        <p>요청된 임치물의 요약글에 대해 높은 유사도를 가진 내용이 없습니다.</p>
+                                    </div>
+                                    <hr style="margin-bottom:30px;">
+                                {% endif %}
+                                <div class="panel-footer" style="text-align:right">
+                                    Groot Admin
+                                </div>
+                            </div>
+                        </div>
+                        <form action="" method="POST" style="text-align:center;">
+                            {% csrf_token %}
+                            <div class="" style="margin-top:80px; text-align:center;">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn submit_btn" data-toggle="modal" data-target="#acceptModal">승인</button>
+                                    
+                                <!-- Modal -->
+                                <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Groot Chain</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="margin:20px;">
+                                        해당 요청에 대한 임치승인을 승인하시겠습니까?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                        <button type="submit" name="yes" value="yes" class="btn btn-primary" onclick="accept();">승인</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn submit_btn" data-toggle="modal" data-target="#deniedModal">반려</button>
+                                    
+                                <!-- Modal -->
+                                <div class="modal fade" id="deniedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Groot Chain</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="margin:20px;">
+                                        해당 요청에 대한 임치승인을 반려하시겠습니까?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                        <button type="submit" name="no" value="no" class="btn btn-primary" onclick="denied();">반려</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+
+{% block js %}
+<script>
+    function accept() {
+	alert("승인처리 되었습니다.");
+    }
+    function denied() {
+	alert("반려처리 되었습니다.");
+    }
+</script>
+{% endblock js %}
