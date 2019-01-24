@@ -637,7 +637,7 @@ def validate_intro(request):
 
 def validate_show(request):
     user_id = request.session['user_id']
-    idx=41
+    idx=122
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST' :
@@ -661,18 +661,20 @@ def validate_show(request):
             name = upload_file.name
             print(mid)
             dbfiles = File.objects.filter(enroll_idx=idx) # DB상 파일의 등록번호가 같은 object들 꺼내오기
+            template = get_template('groot/validate_complete.html')
 
             for dbfile in dbfiles :
                 if dbfile.r_name == name :
-                    # valfile = File.objects.get(enroll_idx=idx, r_name=name) # DB상 파일의 등록번호와 업로드한 파일명이 같은 object 꺼내오기
-                    if dbfile.mid == mid :
-                        return HttpResponse('업로드 된 문서는 원본이 맞습니다.')
-                    else :
-                        return HttpResponse('업로드 된 문서는 위변조 되었습니다.')
-                else :
-                    return HttpResponse('해당 문서는 임치되지 않았습니다. 파일명을 다시 확인해주세요')
-
-    else :
+                    if dbfile.mid == mid : # 원본 맞음
+                        value = {'file_name': dbfile.r_name, 'ck_val':0, 'true_hash':dbfile.mid, 'val_hash':mid }
+                        return HttpResponse(template.render(value))
+                    else : # 위변조 됨
+                        value = {'file_name': dbfile.r_name, 'ck_val':1, 'true_hash':dbfile.mid, 'val_hash':mid }
+                        return HttpResponse(template.render(value))
+                else : # 임치되지 않은 파일
+                    value = {'file_name':name, 'ck_val':2, 'true_hash':dbfile.mid, 'val_hash':mid }
+                    return HttpResponse(template.render(value))
+    else:
         return render(request, 'groot/validate_show.html', {})
 
 def news(request):

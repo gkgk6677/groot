@@ -253,7 +253,6 @@
     <div class="page-header header-filter clear-filter purple-filter" data-parallax="true">
         <div class="container">
           <div class="content">
-
               <div class="brand" style="padding-top:60px; padding-bottom:30px;">
                 <h1>
                     <img src="{% static 'img/verified1.png' %}" style="width: 70px;padding-right: 13px;">
@@ -264,6 +263,13 @@
                     단, 하나의 파일씩만 검증 가능합니다.
                 </h5>
               </div>
+          </div>
+          <div id="sliderDouble" class="slider slider-info noUi-target noUi-ltr noUi-horizontal">
+                <div class="noUi-base">
+                    <div class="noUi-origin" style="left: 20%;"></div>
+                    <div class="noUi-connect" style="left: 0%; right: 50%;"></div>
+                    <div class="noUi-origin" style="left: 15%;"></div>
+                </div>
           </div>
         </div>
     </div>
@@ -290,20 +296,20 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script type="text/javascript">
-    $('button[type=submit]').click(function() {
-        let formData = new FormData($('form')[0]) // form 객체를 불러와서 파라미터에 담아줌
-        $.ajax({
-            url: '{% url "validate_show" %}',
-            type: 'POST',
-            data: formData,
-            contentType: false, // 파일 주고받을 때 꼭 false 해줘야 함
-            processData: false, // query_string으로 안하게끔
-            success: function(result) {
-                alert(result);
-                location.reload();
-            }
-        });
-        return false;
-    });
+    <!--$('button[type=submit]').click(function() {-->
+        <!--let formData = new FormData($('form')[0]) // form 객체를 불러와서 파라미터에 담아줌-->
+        <!--$.ajax({-->
+            <!--url: '{% url "validate_show" %}',-->
+            <!--type: 'POST',-->
+            <!--data: formData,-->
+            <!--contentType: false, // 파일 주고받을 때 꼭 false 해줘야 함-->
+            <!--processData: false, // query_string으로 안하게끔-->
+            <!--success: function(result) {-->
+                <!--alert(result);-->
+                <!--location.reload();-->
+            <!--}-->
+        <!--});-->
+        <!--return false;-->
+    <!--});-->
 </script>
 {% endblock js %}
