@@ -254,12 +254,11 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-
-                fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
-                os.makedirs(fpath, exist_ok=True)
+                tpath = os.getcwd()
                 fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
-
+                #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
+                
                 flists = flist.split(";")
                 for i in range(len(flists) - 1):
                     rpath = fpath + '/' + flists[i]
@@ -269,23 +268,19 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-
-                    with open(rpath, 'r') as f:
-                        textdata = f.read()
-
                    # with open(rpath, 'r') as f:
                    #     textdata = f.read()
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
                     dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
-                    dbfile.r_name = files[i].name
-                    dbfile.save()
-
                     #dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
+                os.chdir(fpath)
+                #ffpath = '/home/groot/myenv/groot-django/'+fpath
+                fzip('.', enrollment.title+'.zip')
+                os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
@@ -295,6 +290,8 @@ def application(request):
             value = {'enroll_tech': user_enrollidx.title}
             template = get_template('groot/application_complete.html')
             output = template.render(value)
+
+
 
             #    0          1        2         3        4        5       6          7            8           9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
@@ -311,6 +308,7 @@ def application(request):
         form = EnrollmentForm(initial={'c_date':create_date})
         user = User.objects.get(user_id=request.session.get('user_id'))
     return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
+
 
 
 def extend(request,idx):
