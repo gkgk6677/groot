@@ -33,8 +33,7 @@
                                 </a>
                             </td>
                             <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
-                            <!--<td>{{enroll_info.enroll_date}}</td>-->
+                            <td>{{enroll_info.enroll_date}}</td>
                             <td>{{enroll_info.end_date}}</td>
                             <td>
                                 {% csrf_token %}
@@ -89,7 +88,7 @@
             </div>
 
     </section>
-    <br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br>
 {% endblock content %}
 
 {% block js %}
@@ -150,7 +149,7 @@
             <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
                            <!--<i class="fa fa-search-plus"></i>-->
                         <!--</span>`;-->
-            <!--$('#'+trid).html(icon);-->
+            <!--$('#'+trid).after(icon);-->
         <!--});-->
         <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
     });

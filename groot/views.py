@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import json
 from functools import wraps
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,7 +15,7 @@ from groot.forms import EnrollmentForm
 from groot.forms import *
 from .models import *
 from django.utils import timezone
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView
 from django.db.models import Q
 
@@ -22,13 +23,11 @@ import calendar
 import pandas
 import random
 
-# # html2pdf 위한 라이브러리
+# html2pdf 위한 라이브러리
 from django.views.generic import View
 from .render import render_to_pdf
-# import os
-# from django.conf import settings
-# from django.template import Context
-# from xhtml2pdf import pisa
+import pdfkit
+import os
 
 # Create your views here.
 
@@ -198,24 +197,74 @@ def application(request):
 
             enrollment = Enrollment()
             u = User.objects.get(user_id=request.session.get('user_id'))
-            enrollment.user_id = User()
+
             enrollment.title = form.cleaned_data['title']
             enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
             enrollment.term = form.cleaned_data['term']
+            enrollment.user_id = User()
             enrollment.user = u
             enrollment.enroll_status = 0
+            enrollment.agree_status = request.POST['agree_radio']
             enrollment.c_date = datetime.datetime.now()
             enrollment.summary = form.cleaned_data['summary']
             # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
             enrollment.save()
 
-            return HttpResponseRedirect(reverse('upload'))
+            user_foldername = request.session.get('user_id')
+            user_enrollidx = Enrollment.objects.filter(user_id=user_foldername).order_by('-pk')[0]
+            files = request.FILES.getlist('my_file')
+            flist = request.POST['listing']
+            hashSHA = hashlib.sha256
+
+            try:
+
+                fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
+                os.makedirs(fpath, exist_ok=True)
+                # os.chdir(fpath)
+
+                flists = flist.split(";")
+                for i in range(len(flists) - 1):
+                    rpath = fpath + '/' + flists[i]
+                    print(rpath, os.path.dirname(rpath))
+                    os.makedirs(os.path.dirname(rpath), exist_ok=True)
+
+                    with open(rpath, "wb") as f:
+                        for c in files[i].chunks():
+                            f.write(c)
+                    with open(rpath, 'r') as f:
+                        textdata = f.read()
+
+                    dbfile = File()
+                    dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
+                    dbfile.pid = rpath
+                    dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+                    dbfile.r_name = files[i].name
+                    dbfile.save()
+            except FileExistsError as e:
+                pass
+                # data = f.read()
+                # hashSHA(data).hexdigest()
+
+            value = {'enroll_tech': user_enrollidx.title}
+            template = get_template('groot/application_complete.html')
+            output = template.render(value)
+
+            #    0          1        2         3        4        5       6          7            8           9
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+            # fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
+            #          + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
+            #          + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
+            #          + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
+            # f = requests.get(fabric)
+            # print(f.text)  # cmd 창에 보여질 값
+            return HttpResponse(output)
 
     else:
         create_date = datetime.date.today()
         form = EnrollmentForm(initial={'c_date':create_date})
         user = User.objects.get(user_id=request.session.get('user_id'))
     return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
+
 
 def extend(request,idx):
     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
@@ -233,7 +282,7 @@ def extend(request,idx):
         # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
         #    0          1        2
         # Technology   Term   Status
-        fabric = "http://210.107.78.150:8000/change_term/" + enrollinfo.title + "@" \
+        fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "@" \
                  + enrollinfo.term + "@" + "3"
         f = requests.get(fabric)
         print(f.text)  # cmd 창에 보여질 값
@@ -385,11 +434,12 @@ def change_com(request):
 def test(request):
     return render(request, 'groot/test.html', {})
 
+@my_login_required
 @csrf_exempt
 def issue(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-    contract_infos = Contract.objects.all().filter(user_id=user_id)
+    contract_infos = Contract.objects.all().filter(user_id=user_id, status=1)
 
     if request.method == 'POST' :
         enroll_idx = request.POST.get('enroll_id')
@@ -484,10 +534,13 @@ def issue(request):
         return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
 
 # class GeneratePdf(View) :
-#     def change_pdf(self, request, path, data={}):
-#         pdf = render_to_pdf(path, data)
+#     def get(self, request, *args, **kwargs):
+#         template = get_template('groot/show_app.html')
+#         html = template.render(kwargs)
+#         # pdf = render_to_pdf('groot/show_app.html', kwargs)
 #         return HttpResponse(pdf, content_type='application/pdf')
-import pdfkit
+
+@csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']
 
@@ -497,37 +550,50 @@ def show_app(request, idx):
 
     print(cert_info.cert_idx)
 
-    value = {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info}
-
-    options = {
-        'page-size': 'Legal',
-        'margin-top': '0.75in',
-        'margin-right': '0.75in',
-        'margin-bottom': '0.75in',
-        'margin-left': '0.75in',
-        'encoding': "UTF-8", #iso-2022-kr
-        'no-outline': None,
-        'disable-internal-links': True
-    }
-
-    template = get_template("groot/show_app.html")
-    html = template.render(value)
-    # pdf = pdfkit.from_file(r'C:\Users\어다희\work_django\groot-django\groot\templates\groot\show_app.html', False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
-    pdf = pdfkit.from_url('http://www.grootchain.com/issue/show_app/'+str(idx), False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
-    # pdf = open("test.pdf")
-    # response = HttpResponsse(pdf.read(), content_type='application/pdf')
-    # pdf.close()
-    # os.remove("test.pdf")
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=임치증명서.pdf'
-
-    return response
-
-
+    # xhtml2pdf 이용
+    # # file = show_app.html
     # html2pdf = GeneratePdf()
-    # html2pdf.change_pdf(request, 'groot/show_app.html', value)
+    # html2pdf.get(request, **value)
+    # GeneratePdf.as_view()
+    # return render_to_pdf('groot/show_app.html', {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info})
 
-    # return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
+    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
+
+@csrf_exempt
+def pdf_app(request, idx) :
+    if request.method == 'POST' :
+        user_id = request.session['user_id']
+        idx = request.POST.get('idx')
+
+        enroll_info = Enrollment.objects.get(enroll_idx=idx)
+        user = User.objects.get(user_id=user_id)
+        cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
+
+        value = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+        options = {
+            'page-size': 'A4',
+            'margin-top': '0.75in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
+
+        # template = get_template("groot/show_app.html")
+        # html = template.render(value)
+        pdf = pdfkit.from_file(r'C:\Users\어다희\work_django\groot-django\groot\templates\groot\show_app.html', False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
+        # url = request.get_host() + '/issue/show_app/' + str(idx) + '/pdf'
+        # pdf = pdfkit.from_url(str(url), False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
+        # response = HttpResponse(pdf, content_type='application/pdf')
+        # response['Content-Disposition'] = 'attachment; filename=임치증명서.pdf'
+
+        return HttpResponse(pdf, content_type='application/pdf')
+
+        # return HttpResponse(json.dumps(context), content_type='application/json')
+
+    # if request.method == 'GET':
+    #     return HttpResponse('get')
 
 def show_cont(request, en_idx, cont_idx):
     user_id = request.session['user_id']
@@ -547,8 +613,52 @@ def groot_scan(request):
 def read(request):
     return render(request, 'groot/read.html', {})
 
-def validate(request):
-    return render(request, 'groot/validate.html', {})
+@my_login_required
+def validate_intro(request):
+    user_id = request.session['user_id']
+    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
+
+    return render(request, 'groot/validate_intro.html', {'enroll_infos': enroll_infos})
+
+def validate_show(request):
+    user_id = request.session['user_id']
+    idx=41
+    enroll_info = Enrollment.objects.get(enroll_idx=idx)
+
+    if request.method == 'POST' :
+        upload_file = request.FILES['validate_file']
+        hashSHA = hashlib.sha256
+
+        try:
+            path = 'validate\\' + user_id + '\\' + str(idx)
+            os.makedirs(path, exist_ok=True) # 다중파일 경로 생성(기존 파일이 존재해도 애러발생 안시킴)
+
+            with open(path + '\\' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
+                for chunk in upload_file.chunks():  # chunks가 호출되면 파일의 크기가 얼마든 다 쪼개냄
+                    file.write(chunk)  # 그걸 for문으로 청크청크해서 write해줌(장고 공식문서에 나와있는 파일 업로드 하는 코드)
+        except FileExistsError:
+            pass
+        else :
+            with open(path + '\\' + upload_file.name, 'r') as file: # 읽기모드로 파일 꺼내옴
+                textdata = file.read()
+
+            mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+            name = upload_file.name
+            print(mid)
+            dbfiles = File.objects.filter(enroll_idx=idx) # DB상 파일의 등록번호가 같은 object들 꺼내오기
+
+            for dbfile in dbfiles :
+                if dbfile.r_name == name :
+                    # valfile = File.objects.get(enroll_idx=idx, r_name=name) # DB상 파일의 등록번호와 업로드한 파일명이 같은 object 꺼내오기
+                    if dbfile.mid == mid :
+                        return HttpResponse('업로드 된 문서는 원본이 맞습니다.')
+                    else :
+                        return HttpResponse('업로드 된 문서는 위변조 되었습니다.')
+                else :
+                    return HttpResponse('해당 문서는 임치되지 않았습니다. 파일명을 다시 확인해주세요')
+
+    else :
+        return render(request, 'groot/validate_show.html', {})
 
 def news(request):
     return render(request, 'groot/news.html', {})
