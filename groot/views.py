@@ -19,6 +19,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView
 from django.db.models import Q
+import zipfile
 
 import calendar
 import pandas
@@ -223,6 +224,16 @@ def my_login_required(func):
                     return redirect ('login')
                 return func(request, *args, **kwargs)
         return wrap
+
+def fzip(src_path, dest_file):
+    with zipfile.ZipFile(dest_file, 'w') as zf:
+        rootpath = src_path
+        for (path, dir, files) in os.walk(src_path):
+            for file in files:
+                fullpath = os.path.join(path, file)
+                relpath = os.path.relpath(fullpath, rootpath);
+                zf.write(fullpath, relpath, zipfile.ZIP_DEFLATED)
+        zf.close()
 
 @my_login_required
 def application(request):
