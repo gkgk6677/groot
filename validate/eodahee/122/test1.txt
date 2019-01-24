@@ -1,0 +1,14 @@
+template = get_template(name)
+        context = data
+        html = template.render(context)
+        pdf = render_to_pdf(name, context)
+        if pdf :
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = name + ".pdf"
+            content = "inile; filename='%s'" % (filename)
+            download = request.GET.get("download")
+            if download :
+                content = "attachment; filename='%s'" % (filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
