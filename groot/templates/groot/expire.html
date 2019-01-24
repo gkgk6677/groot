@@ -251,9 +251,9 @@
               <div class="brand" style="padding-top:60px; padding-bottom:30px;">
 
 
-                <h1><img src="{% static 'img/safebox/s14.png' %}" style="width: 70px;padding-right: 13px;">기술 임치 연장 신청</h1>
+                <h1><img src="{% static 'img/safebox/s14.png' %}" style="width: 70px;padding-right: 13px;">기술 임치 해지 신청</h1>
                       <br>
-                <h4>연장 신청 양식을 작성해주세요!</h4>
+                <h4>해지 신청 양식을 작성해주세요!</h4>
 
               </div>
               <div id="sliderDouble" class="slider slider-info noUi-target noUi-ltr noUi-horizontal">
@@ -273,7 +273,7 @@
                      <form class="enrollment-form" action="" method="POST">{% csrf_token %}
                             <div id="table">
                                 <table>
-                                    <caption>기술자료 임치 연장 신청서</caption>
+                                    <caption>기술자료 임치 해지 신청서</caption>
                                     <colgroup>
                                         <col style="width: 13.5554%">
                                         <col style="width: 13.3333%">
@@ -283,7 +283,7 @@
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th colspan="5"><span>기술자료 임치 연장 신청서</span></th>
+                                            <th colspan="5"><span>기술자료 임치 해지 신청서</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -320,19 +320,13 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>임치 연장 기간</th>
-                                            <!-- (D) 가운데정렬은 center 클래스 추가 -->
-                                            <td class="center" colspan="5">{{form.term}} 년</td>
-                                        </tr>
-
-                                        <tr>
-                                            <th class="center" colspan="5">임치 연장 사유</th>
+                                            <th class="center" colspan="5">기술 임치 해지 사유</th>
                                         </tr>
                                         <tr>
                                             <td colspan="5">{{form.reason}}<span id="counter">###</span></td>
                                         </tr>
                                         <tr>
-                                            <td class="left" colspan="5">「대·중소기업 상생협력 촉진에 관한 법률」 제24조의2 내지 제24조의5에 따라<br> 위와 같이 기술자료 임치를 신청합니다.<br><br></td>
+                                            <td class="left" colspan="5"> 위 사유에 따라 기술 자료 임치 해지를 신청합니다.<br><br></td>
                                             </td>
                                         </tr>
 

@@ -48,7 +48,7 @@ urlpatterns = [
     path('bye', views.bye, name='bye'),
     path('extend/<int:idx>', views.extend, name='extend'),
     path('search/insert/<int:idx>', views.insert, name='insert'),
-    path('expire', views.expire, name='expire'),
+    path('expire/<int:idx>', views.expire, name='expire'),
     path('upload', views.upload, name='upload'),
 
 
@@ -62,6 +62,7 @@ urlpatterns = [
     # path('search', SearchFormView.as_view(), name='search'),
     path('search/', views.search_list, name="search"),
     path('login2', views.login2, name="login2"),
+    path('login3', views.login3, name="login3"),
 
 
 
