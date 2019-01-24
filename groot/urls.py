@@ -64,5 +64,6 @@ urlpatterns = [
     path('login2', views.login2, name="login2"),
 
 
+
 ]
 
