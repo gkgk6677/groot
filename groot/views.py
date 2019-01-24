@@ -190,7 +190,6 @@ def my_login_required(func):
                 return func(request, *args, **kwargs)
         return wrap
 
-
 @my_login_required
 def application(request):
     if request.method == 'POST':
@@ -214,6 +213,7 @@ def application(request):
             enrollment.save()
 
             user_foldername = request.session.get('user_id')
+            com_foldername = u.com_name
             user_enrollidx = Enrollment.objects.filter(user_id=user_foldername).order_by('-pk')[0]
             files = request.FILES.getlist('my_file')
             flist = request.POST['listing']
@@ -221,8 +221,7 @@ def application(request):
 
             try:
 
-                fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
-                os.makedirs(fpath, exist_ok=True)
+                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
 
                 flists = flist.split(";")
@@ -234,15 +233,16 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-                    with open(rpath, 'r') as f:
-                        textdata = f.read()
+                   # with open(rpath, 'r') as f:
+                   #     textdata = f.read()
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
                     dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+                    #dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
+                
             except FileExistsError as e:
                 pass
                 # data = f.read()
@@ -269,6 +269,8 @@ def application(request):
         form = EnrollmentForm(initial={'c_date':create_date})
         user = User.objects.get(user_id=request.session.get('user_id'))
     return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
+
+
 
 def extend(request,idx):
     enrollinfo = Enrollment.objects.get(enroll_idx=idx)
@@ -598,7 +600,17 @@ def groot_scan(request):
     return render(request, 'groot/groot_scan.html', {})
 
 def read(request):
-    return render(request, 'groot/read.html', {})
+    user_id = request.session['user_id']
+    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
+    contract_infos = Contract.objects.all().filter(user_id=user_id)
+
+    if request.method == 'POST' :
+        enroll_idx = request.POST.get('enroll_id')
+        cont_idx = request.POST.get('cont_id')
+        enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
+    else :
+        return render(request, 'groot/read.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
+
 
 def validate(request):
     return render(request, 'groot/validate.html', {})
