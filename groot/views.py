@@ -218,11 +218,11 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-
                 fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
                 os.makedirs(fpath, exist_ok=True)
                 fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
+                #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
 
                 flists = flist.split(";")
                 for i in range(len(flists) - 1):
@@ -233,7 +233,6 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-
                     with open(rpath, 'r') as f:
                         textdata = f.read()
 
@@ -243,6 +242,10 @@ def application(request):
                     dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
+                os.chdir(fpath)
+                #ffpath = '/home/groot/myenv/groot-django/'+fpath
+                fzip('.', enrollment.title+'.zip')
+                os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
@@ -634,7 +637,7 @@ def validate_intro(request):
 
 def validate_show(request):
     user_id = request.session['user_id']
-    idx=122
+    idx=41
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST' :
@@ -645,9 +648,9 @@ def validate_show(request):
             path = 'validate\\' + user_id + '\\' + str(idx)
             os.makedirs(path, exist_ok=True) # 다중파일 경로 생성(기존 파일이 존재해도 애러발생 안시킴)
 
-            with open(path + '\\' + upload_file.name, 'wb') as file: 
-                for chunk in upload_file.chunks(): 
-                    file.write(chunk) 
+            with open(path + '\\' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
+                for chunk in upload_file.chunks():  # chunks가 호출되면 파일의 크기가 얼마든 다 쪼개냄
+                    file.write(chunk)  # 그걸 for문으로 청크청크해서 write해줌(장고 공식문서에 나와있는 파일 업로드 하는 코드)
         except FileExistsError:
             pass
         else :
@@ -658,16 +661,15 @@ def validate_show(request):
             name = upload_file.name
             print(mid)
             dbfiles = File.objects.filter(enroll_idx=idx) # DB상 파일의 등록번호가 같은 object들 꺼내오기
-            
-            # 체인코드에 접속해서 값 가져오기
 
-            for dbfile in dbfiles : # enroll_idx에 업로드한 파일을 하나씩 가져옴
-                if dbfile.r_name == name : # 이름이 같은지 비교
-                    if dbfile.mid == mid : # 같으면 hash값 비교 후 결과 출력
+            for dbfile in dbfiles :
+                if dbfile.r_name == name :
+                    # valfile = File.objects.get(enroll_idx=idx, r_name=name) # DB상 파일의 등록번호와 업로드한 파일명이 같은 object 꺼내오기
+                    if dbfile.mid == mid :
                         return HttpResponse('업로드 된 문서는 원본이 맞습니다.')
                     else :
                         return HttpResponse('업로드 된 문서는 위변조 되었습니다.')
-                else : # 이름이 같지 않으면 반려
+                else :
                     return HttpResponse('해당 문서는 임치되지 않았습니다. 파일명을 다시 확인해주세요')
 
     else :

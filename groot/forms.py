@@ -51,6 +51,25 @@ class ExtendForm(forms.ModelForm):
              extend.save()
          return extend
 
+class ExpireForm(forms.ModelForm):
+
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 300)"}))
+    #
+    class Meta:
+        model = Expire
+        fields = ['reason']
+        labels = {
+            'reason_label': 'reason_label'
+        }
+
+
+    def save(self, commit=True):
+         expire = Expire(**self.cleaned_data)
+         if commit:
+             expire.save()
+         return expire
+
+
 
 class ContractForm(forms.ModelForm):
 
