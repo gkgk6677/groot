@@ -60,7 +60,8 @@ urlpatterns = [
     # path('search', SearchFormView.as_view(), name='search'),
     path('search/', views.search_list, name="search"),
     path('login2', views.login2, name="login2"),
-
-
+    path('application_list', views.application_list, name='application_list'),
+    path('request_list', views.request_list, name='request_list'),
+    path('contract_list', views.contract_list, name='contract_list'),
 ]
 

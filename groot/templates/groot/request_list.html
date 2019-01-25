@@ -1,0 +1,23 @@
+{% extends "mypage-base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block sidebar %}
+<div style="padding-left:40px;"><h1>서비스 신청 현황</h1></div><br><hr>
+<div style="padding-right:40px;text-align:right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/request_list">서비스 신청 현황</a>
+</div>    
+{% endblock sidebar %}
+
+{% block content %}
+    <div class="col-lg-9">
+        <div class="contents">
+            요청 사항 관리 페이지
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

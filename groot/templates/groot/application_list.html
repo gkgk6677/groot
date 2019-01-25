@@ -1,0 +1,65 @@
+{% extends "mypage-base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock css %}
+
+{% block sidebar %}
+<div style="padding-left:40px;"><h1>내 임치물 관리</h1></div><br><hr>
+<div style="padding-right:40px;text-align:right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/application_list">내 임치물 관리</a>
+</div>    
+{% endblock sidebar %}
+
+{% block content %}
+    <div class="col-lg-9">
+        <div class="contents">
+            <h3 class="mb-30 title_color" style="padding-left:40px">임치물 리스트</h3>
+            <table class="table table-hover" width="90%" style="text-align:center;">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>임치 기술명</th>
+                        <th>분류</th>
+                        <th>만료 날짜</th>
+                        <th>서비스</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for enroll_info in enroll_infos %}
+                    <tr>
+                        <!-- <td>
+                            <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
+                                {{enroll_info.enroll_idx}}
+                            </a>
+                        </td> -->
+                        <td>{{enroll_info.title}}</td>
+                        <td>{{enroll_info.sort_idx}}</td>
+                        <td>{{enroll_info.end_date}}</td>
+                        <td>
+                            {% csrf_token %}
+                            <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;"> 연장 </button>
+                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 해지 </button>
+                        </td>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
+{% endblock js %}

@@ -258,7 +258,7 @@ def check(request, idx):
             result = []
 
             for val in range(1,len(one_row)):
-                if (int(one_row[val] * 100) > 70 and int(one_row[val] * 100) != 100):
+                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
                     result.append({titlelist[val] : mydoclist[val]})
                     request_count += 1
 
@@ -271,7 +271,7 @@ def check(request, idx):
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
+                fabric = "http://210.107.78.150:8000/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
                             + enrollment_info.user.com_name + "@" \
                             + str(enrollment_info.user.com_num) + "@" \
                             + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"

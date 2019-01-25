@@ -70,10 +70,60 @@
 
         </header>
         <!--================Header Menu Area =================-->
+        <section class="p_120">
+            <div class="container">
+                    {% block sidebar %}
+                    {% endblock sidebar %}
+                <br>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget author_widget">
+                                <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                                <div><h4 style="color:#3189AE; margin: 20px;">{{ request.session.user_id }} 님</h4></div>
+                                <p><h6 style="margin-top: 20px;">GrootBlockchain company</h6></p>
+                                <hr style="margin-bottom:30px;">
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <ul class="list cat-list" >
+                                    <li>
+                                        <a href="application_list">
+                                            <p>내 임치물 관리</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="request_list">
+                                            <p>서비스 신청 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="contract_list">
+                                            <p>회사간 계약 현황</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="change">
+                                            <p>내정보 수정</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="bye">
+                                            <p>회원탈퇴</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
+                        </div>
+                    </div>
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+            </div>
+        </section>
 
-
-        {% block content %}
-        {% endblock content %}
+        
+        
 
 
         <!--================Footer Area =================-->

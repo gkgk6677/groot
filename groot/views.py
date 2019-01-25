@@ -23,8 +23,8 @@ import pandas
 import random
 
 # # html2pdf 위한 라이브러리
-from django.views.generic import View
-from .render import render_to_pdf
+# from django.views.generic import View
+# from .render import render_to_pdf
 # import os
 # from django.conf import settings
 # from django.template import Context
@@ -87,7 +87,45 @@ def join(request):
 def mypage(request):
     user_id = request.session['user_id']
     userinfo = User.objects.get(pk=user_id)
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo})
+
+    enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
+    
+    enroll_count = 0
+
+    for i in enroll_lists:
+        enroll_count += 1
+
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+
+    # 요청 대기중 리스트
+    # status0_count = 0
+
+    # for x in enroll_infos:
+    #     idx = x.enroll_idx
+    #     extend_infos = Extend.objects.get(enroll_idx=idx)
+    #     contract_infos = Contract.objects.all().filter(enroll_idx=idx)
+    #     expire_infos = Expire.objects.get(enroll_idx=idx)
+    #     if (x.enroll_status == 0):
+    #         status0_count += 1
+    #     if (extend_infos.status == 0):
+    #         status0_count += 1
+    #     if (expire_infos.status == 0):
+    #         status0_count += 1
+        # if (contract_infos.status ==0):
+        #     status0_count += 1
+            
+
+    # status_0 = 
+    #여긴 내가 신청한 것!(계약은 내가 다른 사람이 개발한 임치물에 대해 신청한거임!)
+    #요청 대기중 = 임치+연장+계약+해지
+    #승인 = 연장+계약+해지
+    #반려 = 연장+계약+해지
+
+    #계약 -> 나와 진행중인 계약
+    #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
+
+
+    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
 
 
 def list(request):
@@ -487,7 +525,7 @@ def issue(request):
 #     def change_pdf(self, request, path, data={}):
 #         pdf = render_to_pdf(path, data)
 #         return HttpResponse(pdf, content_type='application/pdf')
-import pdfkit
+# import pdfkit
 def show_app(request, idx):
     user_id = request.session['user_id']
 
@@ -613,3 +651,15 @@ def search_list(request):
 
 def upload(request):
     return render(request, 'groot/upload.html', {})
+
+def application_list(request):
+
+    enroll_infos = Enrollment.objects.all().filter(enroll_status=1, user=request.session['user_id'])
+
+    return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
+
+def request_list(request):
+    return render(request, 'groot/request_list.html', {})
+
+def contract_list(request):
+    return render(request, 'groot/contract_list.html', {})
