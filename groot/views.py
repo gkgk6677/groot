@@ -635,9 +635,10 @@ def validate_intro(request):
 
     return render(request, 'groot/validate_intro.html', {'enroll_infos': enroll_infos})
 
-def validate_show(request):
+@csrf_exempt
+def validate_show(request, idx):
     user_id = request.session['user_id']
-    idx=122
+    # idx=122
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST' :
@@ -675,7 +676,7 @@ def validate_show(request):
                     value = {'file_name':name, 'ck_val':2, 'true_hash':dbfile.mid, 'val_hash':mid }
                     return HttpResponse(template.render(value))
     else:
-        return render(request, 'groot/validate_show.html', {})
+        return render(request, 'groot/validate_show.html', {'enroll_info': enroll_info})
 
 def news(request):
     return render(request, 'groot/news.html', {})
