@@ -319,9 +319,9 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-                fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
+                fpath = 'uploaded_files/' + str(com_foldername) + '/' + str(user_enrollidx.enroll_idx)
                 os.makedirs(fpath, exist_ok=True)
-                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
+                # fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
                 #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
 
@@ -334,19 +334,19 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-                    with open(rpath, 'r') as f:
+                    with open(rpath, 'rb', encoding=None) as f:
                         textdata = f.read()
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
                     dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+                    dbfile.mid = hashSHA(textdata).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
-                os.chdir(fpath)
+                # os.chdir(fpath)
                 #ffpath = '/home/groot/myenv/groot-django/'+fpath
-                fzip('.', enrollment.title+'.zip')
-                os.chdir(tpath)
+                # fzip('.', enrollment.title+'.zip')
+                # os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
