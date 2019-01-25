@@ -19,16 +19,17 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView
 from django.db.models import Q
-
+import zipfile
 import calendar
 import pandas
 import random
 
 # html2pdf 위한 라이브러리
 from django.views.generic import View
-# from .render import render_to_pdf
-# import pdfkit
-# import os
+from .render import render_to_pdf
+import pdfkit
+import os
+import xhtml2pdf
 
 # Create your views here.
 
@@ -87,7 +88,45 @@ def join(request):
 def mypage(request):
     user_id = request.session['user_id']
     userinfo = User.objects.get(pk=user_id)
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo})
+
+    enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
+    
+    enroll_count = 0
+
+    for i in enroll_lists:
+        enroll_count += 1
+
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+
+    # 요청 대기중 리스트
+    # status0_count = 0
+
+    # for x in enroll_infos:
+    #     idx = x.enroll_idx
+    #     extend_infos = Extend.objects.get(enroll_idx=idx)
+    #     contract_infos = Contract.objects.all().filter(enroll_idx=idx)
+    #     expire_infos = Expire.objects.get(enroll_idx=idx)
+    #     if (x.enroll_status == 0):
+    #         status0_count += 1
+    #     if (extend_infos.status == 0):
+    #         status0_count += 1
+    #     if (expire_infos.status == 0):
+    #         status0_count += 1
+        # if (contract_infos.status ==0):
+        #     status0_count += 1
+            
+
+    # status_0 = 
+    #여긴 내가 신청한 것!(계약은 내가 다른 사람이 개발한 임치물에 대해 신청한거임!)
+    #요청 대기중 = 임치+연장+계약+해지
+    #승인 = 연장+계약+해지
+    #반려 = 연장+계약+해지
+
+    #계약 -> 나와 진행중인 계약
+    #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
+
+
+    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
 
 
 def list(request):
@@ -101,55 +140,19 @@ def list(request):
 @csrf_exempt
 def login2(request):
     if request.method == "POST":
-        s = request.POST['s']
-        try:
-            a = Extend.objects.get(enroll_idx=s)
-            if a.status == 0 :
-                # 연장 신청이 안되는 경우
-                ck_val = 0
-                context = {'ck_val': ck_val}
+        idxx = request.POST['idx']
+        extend_info = Extend.objects.get(enroll_idx = idxx)
+        if extend_info.status == 0 :
+            ck_val = 0
+            # 연장신청햇음
+        else :
+            ck_val = 1
 
-                return HttpResponse(json.dumps(context), content_type='application/json')
-            else :
-                ck_val =1
-                context = {'ck_val': ck_val}
+        context = {'ck_val': ck_val}
+        return HttpResponse(json.dumps(context), content_type='application/json')
+    if request.method =='GET':
+        return HttpResponse('get')
 
-                return HttpResponse(json.dumps(context), content_type='application/json')
-
-        except Extend.DoesNotExist:
-            ck_val= 1
-            context = {'ck_val': ck_val}
-            return HttpResponse(json.dumps(context), content_type='application/json')
-
-@csrf_exempt
-def login3(request):
-    if request.method == "POST":
-        s = request.POST['s']
-        try:
-            a = Expire.objects.get(enroll_idx=s)
-            if a.status == 0:
-                # 해지 신청이 진행중이므로 안되는 경우
-                ck_val = 0
-                context = {'ck_val': ck_val}
-
-                return HttpResponse(json.dumps(context), content_type='application/json')
-            else:
-                ck_val = 0
-                context = {'ck_val': ck_val}
-                # 해지 테이블에 값이 존재하므로 해지 신청 불가
-                return HttpResponse(json.dumps(context), content_type='application/json')
-        except Expire.DoesNotExist:
-            try:
-                b = Contract.objects.get(enroll_idx=s)
-                if b.status == 0 or b.status == 1:
-                    # 기술 계약이 진행중일때 해지 신청 불가
-                    ck_val = 3
-                    context = {'ck_val': ck_val}
-                    return HttpResponse(json.dumps(context), content_type='application/json')
-            except Contract.DoesNotExist:
-                ck_val = 1
-                context = {'ck_val': ck_val}
-                return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 rowsPerPage = 5
@@ -224,6 +227,16 @@ def my_login_required(func):
                 return func(request, *args, **kwargs)
         return wrap
 
+def fzip(src_path, dest_file):
+    with zipfile.ZipFile(dest_file, 'w') as zf:
+        rootpath = src_path
+        for (path, dir, files) in os.walk(src_path):
+            for file in files:
+                fullpath = os.path.join(path, file)
+                relpath = os.path.relpath(fullpath, rootpath);
+                zf.write(fullpath, relpath, zipfile.ZIP_DEFLATED)
+        zf.close()
+
 @my_login_required
 def application(request):
     if request.method == 'POST':
@@ -254,11 +267,11 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-
                 fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
                 os.makedirs(fpath, exist_ok=True)
                 fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
+                #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
 
                 flists = flist.split(";")
                 for i in range(len(flists) - 1):
@@ -269,12 +282,8 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-
                     with open(rpath, 'r') as f:
                         textdata = f.read()
-
-                   # with open(rpath, 'r') as f:
-                   #     textdata = f.read()
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
@@ -282,15 +291,13 @@ def application(request):
                     dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
-
-                    #dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
-                    dbfile.r_name = files[i].name
-                    dbfile.save()
+                os.chdir(fpath)
+                #ffpath = '/home/groot/myenv/groot-django/'+fpath
+                fzip('.', enrollment.title+'.zip')
+                os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
-                # data = f.read()
-                # hashSHA(data).hexdigest()
 
             value = {'enroll_tech': user_enrollidx.title}
             template = get_template('groot/application_complete.html')
@@ -586,7 +593,6 @@ def issue(request):
 #         html = template.render(kwargs)
 #         # pdf = render_to_pdf('groot/show_app.html', kwargs)
 #         return HttpResponse(pdf, content_type='application/pdf')
-
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']
@@ -679,7 +685,7 @@ def validate_intro(request):
 
 def validate_show(request):
     user_id = request.session['user_id']
-    idx=41
+    idx=122
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST' :
@@ -703,18 +709,20 @@ def validate_show(request):
             name = upload_file.name
             print(mid)
             dbfiles = File.objects.filter(enroll_idx=idx) # DB상 파일의 등록번호가 같은 object들 꺼내오기
+            template = get_template('groot/validate_complete.html')
 
             for dbfile in dbfiles :
                 if dbfile.r_name == name :
-                    # valfile = File.objects.get(enroll_idx=idx, r_name=name) # DB상 파일의 등록번호와 업로드한 파일명이 같은 object 꺼내오기
-                    if dbfile.mid == mid :
-                        return HttpResponse('업로드 된 문서는 원본이 맞습니다.')
-                    else :
-                        return HttpResponse('업로드 된 문서는 위변조 되었습니다.')
-                else :
-                    return HttpResponse('해당 문서는 임치되지 않았습니다. 파일명을 다시 확인해주세요')
-
-    else :
+                    if dbfile.mid == mid : # 원본 맞음
+                        value = {'file_name': dbfile.r_name, 'ck_val':0, 'true_hash':dbfile.mid, 'val_hash':mid }
+                        return HttpResponse(template.render(value))
+                    else : # 위변조 됨
+                        value = {'file_name': dbfile.r_name, 'ck_val':1, 'true_hash':dbfile.mid, 'val_hash':mid }
+                        return HttpResponse(template.render(value))
+                else : # 임치되지 않은 파일
+                    value = {'file_name':name, 'ck_val':2, 'true_hash':dbfile.mid, 'val_hash':mid }
+                    return HttpResponse(template.render(value))
+    else:
         return render(request, 'groot/validate_show.html', {})
 
 def news(request):
@@ -741,29 +749,8 @@ def bye(request):
         
         return redirect('main')
 
-def expire(request,idx):
-    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
-    edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
-    if request.method == 'POST':
-        e_date = enrollinfo.end_date
-        form = ExpireForm(request.POST)
-
-        if form.is_valid():
-            expire = Expire()
-            expire.enroll_idx = enrollinfo
-            expire.status = 0
-            expire.reason = form.cleaned_data['reason']
-            expire.c_date = datetime.datetime.now()
-
-            expire.save()
-
-        return redirect('mypage')
-
-    else:
-        create_date = datetime.date.today()
-        form = ExpireForm()
-
-    return render(request, 'groot/expire.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
+def expire(request):
+    return render(request, 'groot/expire.html', {})
 
 def a(request):
     return render(request, 'groot/a.html', {})
@@ -801,3 +788,15 @@ def search_list(request):
 
 def upload(request):
     return render(request, 'groot/upload.html', {})
+
+def application_list(request):
+
+    enroll_infos = Enrollment.objects.all().filter(enroll_status=1, user=request.session['user_id'])
+
+    return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
+
+def request_list(request):
+    return render(request, 'groot/request_list.html', {})
+
+def contract_list(request):
+    return render(request, 'groot/contract_list.html', {})

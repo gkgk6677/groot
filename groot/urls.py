@@ -40,7 +40,7 @@ urlpatterns = [
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
     path('groot_scan/', views.groot_scan, name='groot_scan'),
     path('read', views.read, name='read'),
-    path('validate/41', views.validate_show, name='validate_show'),
+    path('validate/122', views.validate_show, name='validate_show'),
     path('validate/', views.validate_intro, name='validate_intro'),
     path('news', views.news, name='news'),
     path('faq', views.faq, name='faq'),
@@ -62,7 +62,10 @@ urlpatterns = [
     # path('search', SearchFormView.as_view(), name='search'),
     path('search/', views.search_list, name="search"),
     path('login2', views.login2, name="login2"),
-    path('login3', views.login3, name="login3"),
+    path('application_list', views.application_list, name='application_list'),
+    path('request_list', views.request_list, name='request_list'),
+    path('contract_list', views.contract_list, name='contract_list'),
+    # path('login3', views.login3, name="login3"),
 
 
 

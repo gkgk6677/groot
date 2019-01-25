@@ -151,11 +151,12 @@ def update_detail(request, idx):
 
         if request.method == 'GET':
             return render(request, 'administrator/update-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'expire_date':expire_date, 'update_infos':update_infos, 'enroll_infos':enroll_infos})
-        else: # 추후 파일 저장 및 해쉬 관련 코드 추가 요망
+        else:
             if request.POST.get('yes'):
                 update_infos.status = 1
                 update_infos.accept_date = datetime.datetime.now()
                 update_infos.save()
+
             else:
                 update_infos.status = 2
                 update_infos.accept_date = datetime.datetime.now()
@@ -259,7 +260,7 @@ def check(request, idx):
             result = []
 
             for val in range(1,len(one_row)):
-                if (int(one_row[val] * 100) > 70 and int(one_row[val] * 100) != 100):
+                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
                     result.append({titlelist[val] : mydoclist[val]})
                     request_count += 1
 
@@ -271,9 +272,10 @@ def check(request, idx):
                 enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(
                     days=(365 * int(enrollment_info.term)))
                 contents_list = File.objects.filter(enroll_idx=idx)
+                content = ''
 
                 for content_list in contents_list :
-                    content += content_list.mid
+                    content += content_list.mid + ','
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
