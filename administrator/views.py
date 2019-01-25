@@ -260,7 +260,7 @@ def check(request, idx):
             result = []
 
             for val in range(1,len(one_row)):
-                if (int(one_row[val] * 100) > 70 and int(one_row[val] * 100) != 100):
+                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
                     result.append({titlelist[val] : mydoclist[val]})
                     request_count += 1
 

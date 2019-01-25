@@ -1,82 +1,51 @@
-{% extends "base.html" %}
+{% extends "mypage-base.html" %}
 {% load static %}
 
 {% block css %}
 {% endblock css %}
 
+{% block sidebar %}
+<div style="padding-left:40px;"><h1>회원탈퇴</h1></div><br><hr>
+<div style="padding-right:40px;text-align:right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/bye">회원탈퇴</a>
+</div>    
+{% endblock sidebar %}
+
 {% block content %}
-    <section class="p_120">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="blog_right_sidebar">
-                        <aside class="single_sidebar_widget author_widget">
-                            <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
-                            <h4>{{ request.session.user_id }}</h4>
-                            <p>GrootBlockchain company</p>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget post_category_widget">
-                            <ul class="list cat-list">
-                                <li>
-                                    <a href="change" class="d-flex justify-content-between">
-                                        <p>내정보 수정</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="list" class="d-flex justify-content-between">
-                                        <p>계약 현황</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="bye" class="d-flex justify-content-between">
-                                        <p>회원탈퇴</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="br"></div>
-                        </aside>
-                    </div>
-                </div>
-                <div class="col-lg-9 inner-container">
-                    <div style="text-align:center;">
-                        <h1>회원탈퇴</h1><br>
-                        <h6>그루트 홈페이지를 탈퇴하시려면 임치되어있는 계약을 먼저 해지해주세요.</h6>
-                        <br>
-                        <!-- <div class="bye-form-left" style="text-align:left" ><h5>계약 현황</h5></div>
-                        <hr><br>
-                        이용중인 계약이 없습니다.
-                        <br><br><br> -->
-                        <!-- <div class="bye-form-left" style="text-align:left" ><h5>그루트 회원 탈퇴</h5></div> -->
-                        <hr>
-                        그루트 홈페이지에서는 개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며<br>
-                        동일한 아이디로 재가입이 불가능합니다.
-                        <hr>
-                        <form id="bye_form" onsubmit="return check()" method="POST">
-                            {% csrf_token %}
-                            <div class="progress-table-wrap">
-                                <div class="progress-table" style="text-align:center;">
-                                    <div class="table-head">
-                                        <div style="width: 150px; padding-left: 20px">비밀번호</div>
-                                        <div style="padding-left: 40px" ><input type="password" id="pw1" name="pw1" ></div>
-                                    </div>
-                                    <br>
-                                    <div class="table-head">
-                                        <div style="width: 150px; padding-left: 20px">비밀번호 확인</div>
-                                        <div style="padding-left: 40px"><input type="password" id="pw2" name="pw2" ></div>
-                                    </div>
-                                </div>
+    <div class="col-lg-9">
+        <div class="contents" style="padding-bottom:110px;">
+            <div style="text-align:center;">
+                <h1>회원탈퇴</h1><br>
+                <h6>그루트 홈페이지를 탈퇴하시게 되면 임치문서 및 관련된 모든 계약이 해지됩니다</h6>
+                <h6>신중하게 결정하십시오.</h6>
+                <br>
+                <hr>
+                그루트 홈페이지에서는 개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며<br>
+                동일한 아이디로 재가입이 불가능합니다.
+                <hr>
+                <form id="bye_form" onsubmit="return check()" method="POST">
+                    {% csrf_token %}
+                    <div class="progress-table-wrap">
+                        <div class="progress-table" style="text-align:center;">
+                            <div class="table-head">
+                                <div style="width: 150px; padding-left: 20px">비밀번호</div>
+                                <div style="padding-left: 40px" ><input type="password" id="pw1" name="pw1" ></div>
                             </div>
-                            <hr>
-                            <div>
-                                <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow">
+                            <br>
+                            <div class="table-head">
+                                <div style="width: 150px; padding-left: 20px">비밀번호 확인</div>
+                                <div style="padding-left: 40px"><input type="password" id="pw2" name="pw2" ></div>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                    <hr>
+                    <div>
+                        <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow" style="margin-top:30px">
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
 {% endblock content %}
 
 {% block js %}

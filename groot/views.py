@@ -19,16 +19,17 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView
 from django.db.models import Q
-
+import zipfile
 import calendar
 import pandas
 import random
 
 # html2pdf 위한 라이브러리
 from django.views.generic import View
-from .render import render_to_pdf
-import pdfkit
-import os
+# from .render import render_to_pdf
+# import pdfkit
+# import os
+# import xhtml2pdf
 
 # Create your views here.
 
@@ -87,7 +88,45 @@ def join(request):
 def mypage(request):
     user_id = request.session['user_id']
     userinfo = User.objects.get(pk=user_id)
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo})
+
+    enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
+    
+    enroll_count = 0
+
+    for i in enroll_lists:
+        enroll_count += 1
+
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+
+    # 요청 대기중 리스트
+    # status0_count = 0
+
+    # for x in enroll_infos:
+    #     idx = x.enroll_idx
+    #     extend_infos = Extend.objects.get(enroll_idx=idx)
+    #     contract_infos = Contract.objects.all().filter(enroll_idx=idx)
+    #     expire_infos = Expire.objects.get(enroll_idx=idx)
+    #     if (x.enroll_status == 0):
+    #         status0_count += 1
+    #     if (extend_infos.status == 0):
+    #         status0_count += 1
+    #     if (expire_infos.status == 0):
+    #         status0_count += 1
+        # if (contract_infos.status ==0):
+        #     status0_count += 1
+            
+
+    # status_0 = 
+    #여긴 내가 신청한 것!(계약은 내가 다른 사람이 개발한 임치물에 대해 신청한거임!)
+    #요청 대기중 = 임치+연장+계약+해지
+    #승인 = 연장+계약+해지
+    #반려 = 연장+계약+해지
+
+    #계약 -> 나와 진행중인 계약
+    #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
+
+
+    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
 
 
 def list(request):
@@ -98,21 +137,60 @@ def list(request):
     # return HttpResponse(enroll_infos)
     return render(request, 'groot/list.html', {'enroll_infos':enroll_infos, 'extend_info':extend_info})
 
+
 @csrf_exempt
 def login2(request):
     if request.method == "POST":
-        idxx = request.POST['idx']
-        extend_info = Extend.objects.get(enroll_idx = idxx)
-        if extend_info.status == 0 :
-            ck_val = 0
-            # 연장신청햇음
-        else :
-            ck_val = 1
+        s = request.POST['s']
+        try:
+            a = Extend.objects.get(enroll_idx=s)
+            if a.status == 0 :
+                # 연장 신청이 안되는 경우
+                ck_val = 0
+                context = {'ck_val': ck_val}
 
-        context = {'ck_val': ck_val}
-        return HttpResponse(json.dumps(context), content_type='application/json')
-    if request.method =='GET':
-        return HttpResponse('get')
+                return HttpResponse(json.dumps(context), content_type='application/json')
+            else :
+                ck_val =1
+                context = {'ck_val': ck_val}
+
+                return HttpResponse(json.dumps(context), content_type='application/json')
+
+        except Extend.DoesNotExist:
+            ck_val= 1
+            context = {'ck_val': ck_val}
+            return HttpResponse(json.dumps(context), content_type='application/json')
+
+@csrf_exempt
+def login3(request):
+    if request.method == "POST":
+        s = request.POST['s']
+        try:
+            a = Expire.objects.get(enroll_idx=s)
+            if a.status == 0:
+                # 해지 신청이 진행중이므로 안되는 경우
+                ck_val = 0
+                context = {'ck_val': ck_val}
+
+                return HttpResponse(json.dumps(context), content_type='application/json')
+            else:
+                ck_val = 0
+                context = {'ck_val': ck_val}
+                # 해지 테이블에 값이 존재하므로 해지 신청 불가
+                return HttpResponse(json.dumps(context), content_type='application/json')
+
+        except Expire.DoesNotExist:
+            try:
+                b = Contract.objects.get(enroll_idx=s)
+                if b.status == 0 or b.status == 1:
+                    # 기술 계약이 진행중일때 해지 신청 불가
+                    ck_val = 3
+                    context = {'ck_val': ck_val}
+                    return HttpResponse(json.dumps(context), content_type='application/json')
+            except Contract.DoesNotExist:
+                ck_val = 1
+                context = {'ck_val': ck_val}
+                return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 
@@ -187,6 +265,16 @@ def my_login_required(func):
                     return redirect ('login')
                 return func(request, *args, **kwargs)
         return wrap
+
+def fzip(src_path, dest_file):
+    with zipfile.ZipFile(dest_file, 'w') as zf:
+        rootpath = src_path
+        for (path, dir, files) in os.walk(src_path):
+            for file in files:
+                fullpath = os.path.join(path, file)
+                relpath = os.path.relpath(fullpath, rootpath);
+                zf.write(fullpath, relpath, zipfile.ZIP_DEFLATED)
+        zf.close()
 
 @my_login_required
 def application(request):
@@ -544,7 +632,6 @@ def issue(request):
 #         html = template.render(kwargs)
 #         # pdf = render_to_pdf('groot/show_app.html', kwargs)
 #         return HttpResponse(pdf, content_type='application/pdf')
-
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']
@@ -635,10 +722,8 @@ def validate_intro(request):
 
     return render(request, 'groot/validate_intro.html', {'enroll_infos': enroll_infos})
 
-@csrf_exempt
 def validate_show(request, idx):
     user_id = request.session['user_id']
-    # idx=122
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
 
     if request.method == 'POST' :
@@ -702,8 +787,29 @@ def bye(request):
         
         return redirect('main')
 
-def expire(request):
-    return render(request, 'groot/expire.html', {})
+def expire(request,idx):
+    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+    edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
+    if request.method == 'POST':
+        e_date = enrollinfo.end_date
+        form = ExpireForm(request.POST)
+
+        if form.is_valid():
+            expire = Expire()
+            expire.enroll_idx = enrollinfo
+            expire.status = 0
+            expire.reason = form.cleaned_data['reason']
+            expire.c_date = datetime.datetime.now()
+
+            expire.save()
+
+        return redirect('mypage')
+
+    else:
+        create_date = datetime.date.today()
+        form = ExpireForm()
+
+    return render(request, 'groot/expire.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
 
 def a(request):
     return render(request, 'groot/a.html', {})
@@ -741,3 +847,15 @@ def search_list(request):
 
 def upload(request):
     return render(request, 'groot/upload.html', {})
+
+def application_list(request):
+
+    enroll_infos = Enrollment.objects.all().filter(enroll_status=1, user=request.session['user_id'])
+
+    return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
+
+def request_list(request):
+    return render(request, 'groot/request_list.html', {})
+
+def contract_list(request):
+    return render(request, 'groot/contract_list.html', {})

@@ -1,80 +1,59 @@
-{% extends "base.html" %}
+{% extends "mypage-base.html" %}
 {% load static %}
 
 {% block css %}
 {% endblock css %}
 
+{% block sidebar %}
+<div style="padding-left:40px;"><h1>기업정보 변경</h1></div><br><hr>
+<div style="padding-right:40px;text-align:right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/change">개인정보 수정</a> &nbsp; > &nbsp; <a href="/change_com">기업정보 변경</a>
+</div>    
+{% endblock sidebar %}
+
 {% block content %}
-    <section class="p_120">
-        <div class="container">
+    <div class="col-lg-9">
+        <div class="contents" style="padding-bottom:110px;">
+            <div style="text-align:center;">
+                <h1>기업정보 변경</h1><br>
+            </div>
+            <div style="text-align:left;padding-left: 20px;">
+                <h6>·&nbsp;변경하고자 하는 정보를 입력 후 변경 버튼을 누르세요.</h6>
+                <h6>·&nbsp;이메일주소, 회사 주소, 연락처에 대해 변경된 사항을 입력하여 정보를 수정할 수 있습니다.</h6>
+                <br><hr>
+            </div>
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="blog_right_sidebar">
-                        <aside class="single_sidebar_widget author_widget">
-                            <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
-                            <h4>{{ request.session.user_id }}</h4>
-                            <p>GrootBlockchain company</p>
-                            <div class="br"></div>
-                        </aside>
-                        <aside class="single_sidebar_widget post_category_widget">
-                            <ul class="list cat-list">
-                                <li>
-                                    <a href="change" class="d-flex justify-content-between">
-                                        <p>내정보 수정</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="list" class="d-flex justify-content-between">
-                                        <p>계약 현황</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="bye" class="d-flex justify-content-between">
-                                        <p>회원탈퇴</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="br"></div>
-                        </aside>
-                    </div>
-                </div>
                 <div class="col-lg-2"></div>
-                <div class="col-lg-5 inner-container">
-                    <br><br>
-                    <div id="header" class="join_membership" role="banner">
-                            <h3 class="title_color">회사정보 변경</h3>
-                    </div>
-                    <div >
-                        <form onsubmit="check()" action="#" method="POST" style="padding-top: 30px;padding-left: 20px; padding-right: 20px; border-radius: 1.0em; border: 2px solid rgb(129,129,129)">                           
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="mt-10">
-                                    <input type="text" id="email" name="email"  placeholder="변경할 이메일 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 이메일 주소를 입력하세요.'" class="form-control single-input">
-                                </div>
+                <div class="col-lg-8">
+                    <form onsubmit="check()" action="#" method="POST" style="padding-top: 30px;padding-left: 20px; padding-right: 20px;text-align: center;">                           
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="mt-10">
+                                <input type="text" id="email" name="email"  placeholder="변경할 이메일 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 이메일 주소를 입력하세요.'" class="form-control single-input">
                             </div>
-                            <div class="form-group">
-                                <div class="mt-10">
-                                    <input type="text" id="address" name="address"  placeholder="변경할 회사 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 회사 주소를 입력하세요.'" class="form-control single-input">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mt-10">
+                                <input type="text" id="address" name="address"  placeholder="변경할 회사 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 회사 주소를 입력하세요.'" class="form-control single-input">
                             </div>
-                            <div class="form-group">
-                                <div class="mt-10">
-                                    <input type="text" id="phone_num" name="phone_num"  placeholder="변경할 연락처를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 연락처를 입력해주세요.'" class="form-control single-input">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mt-10">
+                                <input type="text" id="phone_num" name="phone_num"  placeholder="변경할 연락처를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 연락처를 입력해주세요.'" class="form-control single-input">
                             </div>
-                            <div class="form-group">
-                                <div class="mt-10">
-                                    <button type="submit" class="genric-btn info circle" style="position: absolute; right: 60px;">변경</a>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mt-10">
+                                <button type="submit" class="genric-btn info circle" style="position:relative;top:80px;">변경</a>
                             </div>
-                            <br><br><br>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-lg-2"></div>
             </div>
+            <hr style="position: relative;top:-40px;">      
         </div>
-    </section>
+    </div>
 {% endblock content %}
 
 {% block js %}
