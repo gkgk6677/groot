@@ -65,6 +65,7 @@ urlpatterns = [
     path('application_list', views.application_list, name='application_list'),
     path('request_list', views.request_list, name='request_list'),
     path('contract_list', views.contract_list, name='contract_list'),
+    path('contract_list/<int:idx>', views.contract_list_detail, name="contract_list_detail"),
     # path('login3', views.login3, name="login3"),
 
 

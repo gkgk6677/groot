@@ -49,6 +49,7 @@
                     </tbody>
                 </table>
             </div>
+            <hr><br>
             <div style="min-height:300px;">
                 <h3 class="mb-30 title_color" style="padding-left:40px">내게 들어온 계약요청</h3>
                 <table class="table table-hover" width="90%" style="text-align:center;">
@@ -57,30 +58,22 @@
                             <th>번호</th>
                             <th>임치 기술명</th>
                             <th>회사명</th>
+                            <th>대표자</th>
                             <th>계약 기간</th>
                             <th>신청 날짜</th>
-                            <th> </th>
                         </tr>
                     </thead>
-
                     <tbody>
-                    {% for enroll_info in enroll_infos %}
-                        <tr>
-                            <!-- <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                    {{enroll_info.enroll_idx}}
-                                </a>
-                            </td> -->
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.sort_idx}}</td>
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                {% csrf_token %}
-                                <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;"> 연장 </button>
-                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 해지 </button>
-                            </td>
-                            </td>
-                        </tr>
+                    {% for list in contract_infos %}
+                        {% if list.enroll_idx.user.user_id == user_id %}
+                            <tr>
+                                <td><a href="/contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
+                                <td>{{list.user.com_name}}</td>
+                                <td>{{list.user.com_head}}</td>
+                                <td>{{list.term}}</td>
+                                <td>{{list.c_date}}</td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
@@ -90,4 +83,14 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
 {% endblock js %}

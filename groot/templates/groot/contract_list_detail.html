@@ -1,0 +1,160 @@
+{% extends "mypage-base.html" %}
+{% load static %}
+
+{% block css %}
+<style>  
+    #table {display:table; width:100%}
+    .cell {display:table-cell; padding:3px; border:1px solid #DDD;}
+    .nice-select ul.list{overflow-y: auto; height: 200px;}
+    *:after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+        font-weight: 400;
+        color: #2b3034;
+        list-style: none;
+    }
+        caption{display: none}
+        #table{width: 700px; height: 853px; margin: 5px auto; padding: 5px}
+        #table table{width: 100%; table-layout: fixed; border-collapse: collapse; border-spacing: 0}
+        #table thead th{height: 70px; font-size: 24px; font-weight: bold}
+        #table th{background: #fafafa; border: 1px solid #dee0e1; height: 50px; padding: 5px; text-align: center}
+        #table td{padding: 5px; border: 1px solid #dee0e1;}
+        #table .center{text-align: center}
+        #table .input:after{content: ""; display: block; clear: both}
+        #table .input .radio{float: left; width: calc(50% - 5px); text-align: center}
+        #table .input .radio + .radio{margin-left: 10px}
+        #table #id_reason {min-height: 150px; resize:none;}
+        #table #id_term{width:50px;}
+
+.submit_btn:hover {
+    background: #00c8a9;
+    color: #fff;
+    }
+
+
+</style>
+{% endblock css %}
+
+{% block sidebar %}
+<div style="padding-left:40px;"><h1>계약서 승인 페이지</h1></div><br><hr>
+<div style="padding-right:40px;text-align:right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/request_list">서비스 신청 현황</a>
+</div>    
+{% endblock sidebar %}
+
+{% block content %}
+    <div class="col-lg-9">
+        <div class="contents">
+            <div class="main main-raised">
+                <div class="section-basic">
+                    <div class="col-md-12 ml-auto mr-auto" style="padding-top:20px;">
+                        <form class="enrollment-form" action="" method="POST">{% csrf_token %}
+                            <div id="table">
+                                <table style="text-align:center">
+                                    <caption>기술자료 임치 연장 신청서</caption>
+                                    <colgroup>
+                                        <col style="width: 13.5554%">
+                                        <col style="width: 13.3333%">
+                                        <col style="width: 30%">
+                                        <col style="width: 13.3333%">
+                                        <col style="width: 30%">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5"><span>임치 기술 계약 신청서</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th rowspan="2">기술</th>
+                                            <th>제호</th>
+                                            <td colspan="3">{{contract_infos.enroll_idx.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>종류</th>
+                                            <td colspan="3">{{ contract_infos.enroll_idx.sort_idx }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="3">개발 기업</th>
+                                            <th>기업명</th>
+                                            <td>{{contract_infos.enroll_idx.user.com_name}}</td>
+                                            <th>사업자등록번호</th>
+                                            <td>{{contract_infos.enroll_idx.user.com_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>대표자</th>
+                                            <td>{{contract_infos.enroll_idx.user.com_head}}</td>
+                                            <th>전화번호</th>
+                                            <td>{{contract_infos.enroll_idx.user.phone_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>주소</th>
+                                            <td colspan="3">{{contract_infos.enroll_idx.user.address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>현재 <br>임치 기간</th>
+                                            <!-- (D) 가운데정렬은 center 클래스 추가 -->
+                                            <td class="center" colspan="5">{{enrolldate}} ~ {{enddate}}
+                                            </td>
+                                        </tr>
+                                            <tr>
+                                            <th rowspan="3">사용 기업</th>
+                                            <th>기업명</th>
+                                            <td>{{contract_infos.user.com_name}}</td>
+                                            <th>사업자등록번호</th>
+                                            <td>{{contract_infos.user.com_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>대표자</th>
+                                            <td>{{contract_infos.user.com_head}}</td>
+                                            <th>전화번호</th>
+                                            <td>{{contract_infos.user.phone_num}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>주소</th>
+                                            <td colspan="3">{{contract_infos.user.address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>기술 사용 계약 기간</th>
+                                            <!-- (D) 가운데정렬은 center 클래스 추가 -->
+                                            <td class="center" colspan="5"> 현재 날짜로 부터  {{contract_infos.term}} 년 </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th style="text-align:center;" colspan="5">기술 계약 사유 및 사용 목적</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">{{contract_infos.reason}}</td>
+                                        </tr>
+                                        <tr style="text-align:center;">
+                                            <td class="left" colspan="5">위와 같은 사유 및 목적에 따라<br>기술 계약을 신청합니다.<br><br></td>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="5" style="text-align: right; padding-right: 30px;">신청일 : {{cdate}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" style="text-align:right; padding-right:30px;"> 신청인(사용기업) :  {{contract_infos.user.com_head}}  (인)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="center" colspan="5">{{contract_infos.enroll_idx.user.com_name}}  귀하</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="button-group-area" style="position: relative;right:-370px;">
+                                <button type="submit" value="submit" class="btn btn-primary" >제출</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
