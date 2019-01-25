@@ -39,8 +39,8 @@
                         <td>{{enroll_info.end_date}}</td>
                         <td>
                             {% csrf_token %}
-                            <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;"> 연장 </button>
-                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 해지 </button>
+                            <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;" onclick="ck({{enroll_info.enroll_idx}})"> 연장 </button>
+                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;" onclick="ck2({{enroll_info.enroll_idx}})"> 해지 </button>
                         </td>
                         </td>
                     </tr>
@@ -61,5 +61,51 @@
         td.appendChild(document.createTextNode(i+1));
         rows[i].insertBefore(td, rows[i].firstChild);
     }
+</script>
+ <script>
+
+        function ck(s){
+         $.ajax({
+            url: '/login2',
+            type: 'POST',
+            dataType : 'json',
+            data: {'s' : s},
+            success: function(result) {
+            if(result.ck_val == 0) {
+                    alert('이미 연장신청이 진행 중 입니다.')
+                    location.reload()
+                }
+                else {
+                       location.href="extend/" + s ;
+                }
+            }
+        });
+    };
+
+</script>
+<script>
+
+        function ck2(s){
+         $.ajax({
+            url: '/login3',
+            type: 'POST',
+            dataType : 'json',
+            data: {'s' : s},
+            success: function(result) {
+            if(result.ck_val == 0) {
+                    alert('이미 해지신청이 진행 중 입니다. ')
+                    location.reload()
+                }else if(result.ck_val == 3) {
+                    alert('해당 임치물에 진행중인 계약이 있습니다. \n기술 계약 해지는 관리자에게 문의하세요.')
+                    location.reload()
+                }
+                else {
+                       location.href="expire/" + s ;
+
+                }
+            }
+        });
+    };
+
 </script>
 {% endblock js %}
