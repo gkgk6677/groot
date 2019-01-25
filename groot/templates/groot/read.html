@@ -1,17 +1,91 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block css %}
+    <style>
+			table {
+                table-layout:fixed;
+            }
+        .tr_link:hover{color:black; font-weight: bold;}
+        .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
+        .btn-outline-info:hover{color:white; background-color:#00c8a9;}
+    </style>
 {% endblock css %}
 
 {% block content %}
     <section class="contact_area p_200" >
-        <div class="container">
-            <br><br><br><br><br><br>
-            <center><h1>문서열람 페이지</h1></center>
-            <br><br><br><br><br><br><br><br>
-        </div>
+            <div class="container" style="text-align:center;">
+                <h3 class="mb-30 title_color">임치 목록</h3>
+                <table class="table table-hover" width="90%">
+                    {% if enroll_infos %}
+                    <thead>
+                        <tr>
+                            <th>번&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;호</th>
+                            <th>임치 기술명</th>
+                            <th>임치 문서</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for enroll_info in enroll_infos %}
+                            <tr>
+                                <td>
+                                    <a trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
+                                        {{enroll_info.enroll_idx}}
+                                    </a>
+                                </td>
+                                <td>{{enroll_info.title}}</td>
+                                <!--<td>{{enroll_info.enroll_date}}</td>-->
+                                <td>
+                                    {% csrf_token %}
+                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
+                                </td>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% else %}
+                        임치한 기술이 없습니다. <br><br><br><br><br><br>
+                    {% endif %}
+                </table>
+
+                <h3 class="mb-30 title_color">계약 목록</h3>
+                {% if contract_infos %}
+                <table class="table table-hover" width="90">
+                    <thead>
+                        <tr>
+                            <th>계약 회사</th>
+                            <th>계약 기술명</th>
+                            <th>계약 자료</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for contract_info in contract_infos %}
+                            <tr>
+                                <td>
+                                    <a trid="{{contract_info.enroll_idx}}" class="tr_link" id="{{contract_info.enroll_idx}}">
+                                        {{contract_info.user.com_name}}
+                                    </a>
+                                </td>
+                                <td>{{contract_info.enroll_idx.title}}</td>
+                                <td>
+                                    {% csrf_token %}
+                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
+                                </td>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    계약된 기술이 없습니다.<br><br><br><br><br>
+                {% endif %}
+            </div>
     </section>
 {% endblock content %}
 
 {% block js %}
 {% endblock js %}
+
+

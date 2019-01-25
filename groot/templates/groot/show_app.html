@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block css %}
-    <style>
+    <style type="text/css">
         *,
         *:before,
         *:after {
@@ -95,11 +95,30 @@
                             </tbody>
                         </table>
                     </div>
+                    <br><br>
+                    {% csrf_token %}
+                        <button type="submit" idx="{{cert_info.enroll_idx.enroll_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> PDF변환 </button>
                 </div>
             </div>
     </section>
-    <br><br><br><br>
+    <br><br>
 {% endblock content %}
 
 {% block js %}
+<script>
+    $('button[type=submit]').click(function() {
+        let idx = $(this).attr('idx');
+        $.ajax({
+            url: '/issue/show_app/' + idx + '/pdf',
+            type: 'POST',
+            data: { 'idx' : idx },
+            success: function(result) {
+                location='/issue/show_app/' + idx + '/pdf';
+            },
+            error: function(request, status, error) {
+                alert("code = " + request.status + "\n\n message = " + request.responseText + "\n\n error = " + error);
+            }
+        });
+    });
+</script>
 {% endblock js %}

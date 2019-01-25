@@ -35,18 +35,20 @@ urlpatterns = [
     path('test', views.test, name='test'),
     path('issue/', views.issue, name='issue'),
     # path('issue/show_app/<int:idx>', views.GeneratePdf.as_view(), name='show_app'),
-    path('issue/show_app/<int:idx>', views.show_app, name='show_app'),
+    path('issue/show_app/<int:idx>/', views.show_app, name='show_app'),
+    path('issue/show_app/<int:idx>/pdf', views.pdf_app, name='pdf_app'),
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
     path('groot_scan/', views.groot_scan, name='groot_scan'),
     path('read', views.read, name='read'),
-    path('validate', views.validate, name='validate'),
+    path('validate/122', views.validate_show, name='validate_show'),
+    path('validate/', views.validate_intro, name='validate_intro'),
     path('news', views.news, name='news'),
     path('faq', views.faq, name='faq'),
     path('qna', views.qna, name='qna'),
     path('bye', views.bye, name='bye'),
     path('extend/<int:idx>', views.extend, name='extend'),
     path('search/insert/<int:idx>', views.insert, name='insert'),
-    path('expire', views.expire, name='expire'),
+    path('expire/<int:idx>', views.expire, name='expire'),
     path('upload', views.upload, name='upload'),
 
 
@@ -63,5 +65,9 @@ urlpatterns = [
     path('application_list', views.application_list, name='application_list'),
     path('request_list', views.request_list, name='request_list'),
     path('contract_list', views.contract_list, name='contract_list'),
+    # path('login3', views.login3, name="login3"),
+
+
+
 ]
 

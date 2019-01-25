@@ -237,10 +237,19 @@
     right: 5px;
 }
 #counter {
-  background:rgba(255,0,0,0.5);
+  background:rgba(118, 115, 115, 0.22);
   border-radius: 0.5em;
   padding: 0 .5em 0 .5em;
   font-size: 0.75em;
+}
+
+.submit_btn {
+    background: #087684ad;
+    color: #fff;}
+
+.submit_btn:hover {
+    background: #28a767ba;
+    color: #f8f9fa;
 }
 
 </style>
@@ -265,7 +274,7 @@
               <div id="sliderDouble" class="slider slider-info noUi-target noUi-ltr noUi-horizontal">
                             <div class="noUi-base">
                                 <div class="noUi-origin" style="left: 20%;"></div>
-                                <div class="noUi-connect" style="left: 0%; right: 66%;"></div>
+                                <div class="noUi-connect" style="left: 0%; right: 50%;"></div>
                                 <div class="noUi-origin" style="left: 15%;"></div>
                             </div>
                         </div>
@@ -276,7 +285,7 @@
         <div class="section section-basic">
           <div class="container">
                 <div class="col-md-12 ml-auto mr-auto" style="padding-top:20px;">
-                     <form class="enrollment-form" action="" method="POST">{% csrf_token %}
+                     <form name="enrollment-form" action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
                             <div id="table">
                                 <table>
                                     <caption>기술자료 임치 신청서</caption>
@@ -326,17 +335,25 @@
                                             <td class="center" colspan="5">{{form.term}} 년</td>
                                         </tr>
                                         <tr>
+                                            <th>파일업로드</th>
+                                            <td class="center" colspan="5">
+
+    				                            <input type="file" id="file_input" name="my_file"  webkitdirectory=true directory multiple>
+    				                            <input type="hidden" id="listing" name="listing">
+
+                                        </tr>
+                                        <tr>
                                             <th>기본정보<br>공시동의</th>
                                             <td class="input" colspan="2">
                                                <!-- (D) input의 id랑 label의 for가 같아야 클릭해도 체크가 됨
                                                            name이 같은 애들끼리 같은 영역?으로 알아서 name이 다르면 둘다 체크가 됨
                                                 -->
                                                 <div class="radio">
-                                                    <input type="radio" id="radio1" name="radio">
+                                                    <input type="radio" id="radio1" name="agree_radio" value="1">
                                                     <label for="radio1" name="radio">예</label>
                                                 </div>
                                                 <div class="radio">
-                                                    <input type="radio" id="radio2" name="radio">
+                                                    <input type="radio" id="radio2" name="agree_radio" value="0">
                                                     <label for="radio2" name="radio">아니오</label>
                                                 </div>
                                             </td>
@@ -367,9 +384,9 @@
                                 </table>
                             </div>
                             <div class="button-group-area mt-40 col-md-6">
-                               <button type="submit" value="submit" class="btn submit_btn submit_btn">취소</button>
-                               <button type="submit" value="submit" class="btn submit_btn">임시저장</button>
-                               <button type="submit" value="submit" class="btn submit_btn">제출</button>
+                               <button id="cancel-btn" class="btn submit_btn" onclick="alert('취소되었습니다. 메인페이지로 이동합니다.')">취소</button>
+                               <button type="submit" value="submit" class="btn submit_btn" onclick="alert('신청서가 저장되었습니다.')">저장</button>
+                               <button type="submit" value="submit" class="btn submit_btn" onclick="alert('신청서가 저장되었습니다.')">저장</button>
                            </div>
                     </form>
                 </div>
@@ -384,8 +401,10 @@
 {% block js %}
     <script src="{% static 'js/jquery.form.js' %}"></script>
     <script src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'js/contact.js' %}"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
     <script type="text/javascript">
     function chkword(obj, maxByte) {
 
@@ -415,6 +434,28 @@
             chkword(obj, 4000);
         }
     }
+
+    $('#cancel-btn').click(function(){
+        location.href="main"
+    });
+
+    document.getElementById("file_input").addEventListener("change", function(event) {
+            let output = document.getElementById("listing");
+             let files = event.target.files;
+
+              for (let i=0; i<files.length; i++) {
+                let item = document.createElement("li");
+                item.innerHTML = files[i].webkitRelativePath;
+                output.appendChild(item);
+                document.getElementById("listing").value += files[i].webkitRelativePath + ";";
+              };
+    }, false);
+
+
+    $('form[name="enrollment-form"]').submit(function(){
+        $(this).find('button[type="submit"]').prop('disabled', true);
+        $(this).find('button[type="submit"]').prop('disabled', true);
+    });
 
     $(function() {
       $('#id_summary').keyup(function (e){

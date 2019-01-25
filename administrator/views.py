@@ -38,20 +38,23 @@ def index(request):
             for val in expire_status:
                 if val.status == 0:
                     count_expire += 1
-            return render(request, 'administrator/index.html', {'count_enroll':count_enroll, 'count_cont':count_cont, 'count_extend':count_extend, 'count_update':count_update, 'count_expire':count_expire})
+
+            return render(request, 'administrator/index.html',
+                          {'count_enroll': count_enroll, 'count_cont': count_cont, 'count_extend': count_extend,
+                           'count_update': count_update, 'count_expire': count_expire})
     else:
         return redirect('wrong')
         
 
 def wrong(request):
-    return render(request, 'administrator/wrong.html',{})   
+    return render(request, 'administrator/wrong.html',{})
 
 def logout(request):
     del request.session['user_id']
     return redirect('main')
 
 def admin_application(request): 
-    if request.session['user_id'] == 'admin':  
+    if request.session['user_id'] == 'admin':
         app_info = Enrollment.objects.all().filter(enroll_status=0)
 
         if request.method == 'GET':
@@ -65,7 +68,7 @@ def application_detail(request, idx):
     enrollment_info = Enrollment.objects.get(enroll_idx=idx)
     enrolldate = enrollment_info.c_date.date()
 
-    if request.method == 'GET': 
+    if request.method == 'GET':
         return render(request, 'administrator/application_detail.html', {'enrolldate':enrolldate, 'enrollment_info':enrollment_info})
     else:
         if request.POST.get('check'):
@@ -92,7 +95,6 @@ def application_detail(request, idx):
 
 
 def admin_extend(request):
-
     if request.session['user_id'] == 'admin':
         extend_info = Extend.objects.all().filter(status=0)
 
@@ -131,7 +133,6 @@ def extend_detail(request, idx):
         return redirect('wrong')
 
 def admin_update(request):
-
     if request.session['user_id'] == 'admin':
         update_infos = Update.objects.all().filter(status=0)
 
@@ -150,17 +151,18 @@ def update_detail(request, idx):
 
         if request.method == 'GET':
             return render(request, 'administrator/update-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'expire_date':expire_date, 'update_infos':update_infos, 'enroll_infos':enroll_infos})
-        else: # 추후 파일 저장 및 해쉬 관련 코드 추가 요망
+        else:
             if request.POST.get('yes'):
                 update_infos.status = 1
                 update_infos.accept_date = datetime.datetime.now()
                 update_infos.save()
+
             else:
                 update_infos.status = 2
                 update_infos.accept_date = datetime.datetime.now()
                 update_infos.save()
     else:
-        return redirect('wrong')    
+        return redirect('wrong')
 
 
 def admin_expire(request):
@@ -211,7 +213,7 @@ def admin_log(request):
 
 def admin_read(request):
 
-    if request.session['user_id'] == 'admin':    
+    if request.session['user_id'] == 'admin':
         return render(request, 'administrator/admin-read.html', {})
     else:
         return redirect('wrong')
@@ -267,14 +269,22 @@ def check(request, idx):
             if request.POST.get('yes'):
                 enrollment_info.enroll_status = 1
                 enrollment_info.enroll_date = datetime.datetime.now()
-                enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(days=(365 * int(enrollment_info.term)))
+                enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(
+                    days=(365 * int(enrollment_info.term)))
+                contents_list = File.objects.filter(enroll_idx=idx)
+                content = ''
+
+                for content_list in contents_list :
+                    content += content_list.mid + ','
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8000/add_cont/" + enrollment_info.title + "@" + str(enrollment_info.sort_idx.sort_idx) + "@" \
-                            + enrollment_info.user.com_name + "@" \
-                            + str(enrollment_info.user.com_num) + "@" \
-                            + str(enrollment_info.term) + "@" + "Content" + "@" + str(enrollment_info.enroll_date) + "@" + "1"
+                fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" \
+                         + str(enrollment_info.sort_idx.sort_idx) + "@" \
+                         + enrollment_info.user.com_name + "@" \
+                         + str(enrollment_info.user.com_num) + "@" \
+                         + str(enrollment_info.term) + "@" + content + "@" \
+                         + str(enrollment_info.enroll_date) + "@" + "1"
                 f = requests.get(fabric)
                 print(f.text)  # cmd 창에 보여질 값
                 enrollment_info.enroll_tx = f.text[1:-1]

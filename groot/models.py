@@ -80,9 +80,9 @@ class Enrollment(models.Model):
     user = models.ForeignKey('User', models.DO_NOTHING)
     title = models.CharField(max_length=100)
     term = models.PositiveIntegerField(default=1)
-    enroll_status = models.IntegerField()
-    agree_status = models.IntegerField()
     summary = models.TextField(blank=True, null=True)
+    agree_status = models.IntegerField(blank=True, null=True)
+    enroll_status = models.IntegerField(null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
@@ -146,14 +146,14 @@ class Similarity(models.Model):
 
 
 class File(models.Model):
-    file_idx = models.IntegerField(primary_key=True)
+    file_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
-    pid = models.CharField(max_length=100)
+    pid = models.CharField(max_length=300)
     mid = models.CharField(max_length=100)
-    type = models.IntegerField()
-    o_name = models.CharField(max_length=100)
-    r_name = models.CharField(max_length=100)
-    c_date = models.DateTimeField()
+    type = models.IntegerField(null=True)
+    o_name = models.CharField(max_length=100, null=True)
+    r_name = models.CharField(max_length=100, null=True)
+    c_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
