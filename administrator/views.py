@@ -286,8 +286,8 @@ def check(request, idx):
                 file_hash = ''
 
                 for content_list in contents_list :
-                    file_name += content_list.r_name + ','
-                    file_hash += content_list.mid + ','
+                    file_name += content_list.file_name + ','
+                    file_hash += content_list.file_hash + ','
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
