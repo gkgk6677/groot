@@ -321,19 +321,19 @@ def application(request):
                     with open(rpath, "wb") as f:
                         for c in files[i].chunks():
                             f.write(c)
-                    with open(rpath, 'r') as f:
+                    with open(rpath, 'rb', encoding=None) as f:
                         textdata = f.read()
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
                     dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+                    dbfile.mid = hashSHA(textdata).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
                 os.chdir(fpath)
                 #ffpath = '/home/groot/myenv/groot-django/'+fpath
-                fzip('.', enrollment.title+'.zip')
-                os.chdir(tpath)
+                # fzip('.', enrollment.title+'.zip')
+                # os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
@@ -342,14 +342,6 @@ def application(request):
             template = get_template('groot/application_complete.html')
             output = template.render(value)
 
-            #    0          1        2         3        4        5       6          7            8           9
-            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            # fabric = "http://210.107.78.150:8000/add_cont/" + enrollment.title + "-" + sort_idx_tmp + "-" \
-            #          + User.objects.get(user_id=request.session.get('user_id')).com_name + "-" \
-            #          + str(User.objects.get(user_id=request.session.get('user_id')).com_num) + "-" \
-            #          + enrollment.term + "-" + "Content" + "-" + "2019.01.14.1500" + "-" + "1"
-            # f = requests.get(fabric)
-            # print(f.text)  # cmd 창에 보여질 값
             return HttpResponse(output)
 
     else:
@@ -371,14 +363,6 @@ def extend(request,idx):
         enrollinfo.end_date = e_date + datetime.timedelta(days=365 * int(request.POST['term']))
         # return HttpResponse(enrollment.end_date)
         enrollinfo.save()
-
-        # Hyperledger-Fabric으로 데이터 전송@@@@@@@@@@@@
-        #    0          1        2
-        # Technology   Term   Status
-        fabric = "http://210.107.78.150:8001/change_term/" + enrollinfo.title + "@" \
-                 + enrollinfo.term + "@" + "3"
-        f = requests.get(fabric)
-        print(f.text)  # cmd 창에 보여질 값
 
         form = ExtendForm(request.POST)
 
@@ -740,26 +724,28 @@ def validate_show(request, idx):
         except FileExistsError:
             pass
         else :
-            with open(path + '\\' + upload_file.name, 'r') as file: # 읽기모드로 파일 꺼내옴
+            with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
                 textdata = file.read()
 
-            mid = hashSHA(textdata.encode('utf-8')).hexdigest()
+            file_hash = hashSHA(textdata).hexdigest()
             name = upload_file.name
-            print(mid)
-            dbfiles = File.objects.filter(enroll_idx=idx) # DB상 파일의 등록번호가 같은 object들 꺼내오기
+            print(file_hash)
             template = get_template('groot/validate_complete.html')
+            os.remove(path + '\\' + upload_file.name)
 
-            for dbfile in dbfiles :
-                if dbfile.r_name == name :
-                    if dbfile.mid == mid : # 원본 맞음
-                        value = {'file_name': dbfile.r_name, 'ck_val':0, 'true_hash':dbfile.mid, 'val_hash':mid }
-                        return HttpResponse(template.render(value))
-                    else : # 위변조 됨
-                        value = {'file_name': dbfile.r_name, 'ck_val':1, 'true_hash':dbfile.mid, 'val_hash':mid }
-                        return HttpResponse(template.render(value))
-                else : # 임치되지 않은 파일
-                    value = {'file_name':name, 'ck_val':2, 'true_hash':dbfile.mid, 'val_hash':mid }
+            try :
+                dbfile = File.objects.get(enroll_idx=idx, file_name=name)  # DB상 파일의 등록번호가 같은 object들 꺼내오기
+
+                if dbfile.file_hash == file_hash:  # 원본 맞음
+                    value = {'file_name': dbfile.file_name, 'ck_val':0, 'true_hash':dbfile.file_hash, 'val_hash':file_hash, 'enroll_idx':idx }
                     return HttpResponse(template.render(value))
+                else : # 위변조 됨
+                    value = {'file_name': dbfile.file_name, 'ck_val':1, 'true_hash':dbfile.file_hash, 'val_hash':file_hash, 'enroll_idx':idx }
+                    return HttpResponse(template.render(value))
+            except File.DoesNotExist :
+                value = {'file_name': name, 'ck_val': 2, 'enroll_idx':idx }
+                return HttpResponse(template.render(value))
+
     else:
         return render(request, 'groot/validate_show.html', {'enroll_info': enroll_info})
 

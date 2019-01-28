@@ -229,10 +229,10 @@
                     {% else %}
                         <h3 style="color:red;"> ' {{file_name}} '은 임치되지 않은 문서입니다.<br>
                             다시 한 번 확인 후 검증해주시기 바랍니다. </h3><br>
-                        <div class="wrap"></div>
+                        <!--<div class="wrap"></div>-->
                     {% endif %}
                     <br><br>
-                    <button onclick="location='/validate/122';" class="submit_btn">다른 문서 검증하기</button>
+                    <button onclick="location='/validate/{{enroll_idx}}';" class="submit_btn">다른 문서 검증하기</button>
                     <button onclick="location='/validate/';" class="submit_btn">다른 기술 검증하기</button>
                 </div>
             </div>
@@ -262,9 +262,7 @@
         else if({{ck_val}} == 1) {
             $('.wrap').append(table_html);
         }
-        else {
-            $('.wrap').append(table_html);
-        }
+        else {}
     });
 </script>
 {% endblock js %}
