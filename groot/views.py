@@ -319,11 +319,9 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-                fpath = 'uploaded_files/' + str(com_foldername) + '/' + str(user_enrollidx.enroll_idx)
+                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                
                 os.makedirs(fpath, exist_ok=True)
-                # fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
-                #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
 
                 flists = flist.split(";")
                 for i in range(len(flists) - 1):
@@ -343,10 +341,6 @@ def application(request):
                     dbfile.mid = hashSHA(textdata).hexdigest()
                     dbfile.r_name = files[i].name
                     dbfile.save()
-                # os.chdir(fpath)
-                #ffpath = '/home/groot/myenv/groot-django/'+fpath
-                # fzip('.', enrollment.title+'.zip')
-                # os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
