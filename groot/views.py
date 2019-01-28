@@ -531,9 +531,9 @@ def issue(request):
         enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
 
         # Hyperledger-Fabric에서 데이터 받아오기
-        #    0          1        2         3        4        5       6          7            8          9
-        # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-        fabric = "http://210.107.78.150:8001/generate_cert/" + enroll_info.title
+        #    0          1        2         3        4        5           6         7          8           9           10
+        # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
+        fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
         result = requests.get(fabric)
 
         parses = result.json()  # JSON형식으로 parse(분석)
@@ -734,23 +734,34 @@ def validate_show(request, idx):
             with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
                 textdata = file.read()
 
-            file_hash = hashSHA(textdata).hexdigest()
+            hash = hashSHA(textdata).hexdigest()
             name = upload_file.name
-            print(file_hash)
+            print(hash)
             template = get_template('groot/validate_complete.html')
-            os.remove(path + '\\' + upload_file.name)
+            os.remove(path + '\\' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
 
-            try :
-                dbfile = File.objects.get(enroll_idx=idx, file_name=name)  # DB상 파일의 등록번호가 같은 object들 꺼내오기
+            # Hyperledger-Fabric에서 데이터 받아오기
+            #    0          1        2         3        4        5           6         7          8           9           10
+            # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
+            fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+            result = requests.get(fabric)
 
-                if dbfile.file_hash == file_hash:  # 원본 맞음
-                    value = {'file_name': dbfile.file_name, 'ck_val':0, 'true_hash':dbfile.file_hash, 'val_hash':file_hash, 'enroll_idx':idx }
+            parses = result.json() # JSON형식으로 parse(분석)
+
+            for parse in parses:
+                txid = parse.get('TxId')
+                if txid == enroll_info.enroll_tx : # 파일등록시 쌓인 content 값 가져오기
+                    content = parse.get('Value').get('content')
+
+            try: # 블록에 접근해서 값 비교하기 
+                if content[name] == hash : # 해쉬 같으면 원본 맞음
+                    value = {'file_name': name, 'ck_val': 0, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx}
                     return HttpResponse(template.render(value))
-                else : # 위변조 됨
-                    value = {'file_name': dbfile.file_name, 'ck_val':1, 'true_hash':dbfile.file_hash, 'val_hash':file_hash, 'enroll_idx':idx }
+                else : # 해쉬 다르면 위변조 됨
+                    value = {'file_name': name, 'ck_val': 1, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx}
                     return HttpResponse(template.render(value))
-            except File.DoesNotExist :
-                value = {'file_name': name, 'ck_val': 2, 'enroll_idx':idx }
+            except KeyError : # KeyError는 없는 문서
+                value = {'file_name': name, 'ck_val': 2, 'enroll_idx': idx}
                 return HttpResponse(template.render(value))
 
     else:
