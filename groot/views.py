@@ -90,11 +90,24 @@ def mypage(request):
     userinfo = User.objects.get(pk=user_id)
 
     enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
-    
     enroll_count = 0
 
     for i in enroll_lists:
         enroll_count += 1
+    contract_infos = Contract.objects.all().filter(status=0)
+    contract_count = 0
+
+    for contract_info in contract_infos:
+        if (contract_info.enroll_idx.user.user_id == user_id):
+            contract_count += 1
+    
+    contract_is_value = 0
+
+    for x in contract_infos:
+        if ((x.enroll_idx.user.user_id == user_id and x.status == 1) or (x.user.user_id == user_id and x.status == 1)):
+            contract_is_value += 1
+    # if (contract_infos.enroll_idx.user.user_id == user_id):
+    #     contract_count += 1
 
     enroll_infos = Enrollment.objects.all().filter(user=user_id)
 
@@ -126,7 +139,7 @@ def mypage(request):
     #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
 
 
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
+    return render(request, 'groot/mypage.html', {'contract_is_value':contract_is_value, 'user_id':user_id, 'contract_list':contract_list, 'contract_count':contract_count, 'contract_infos':contract_infos, 'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
 
 
 def list(request):
@@ -306,11 +319,9 @@ def application(request):
             hashSHA = hashlib.sha256
 
             try:
-                fpath = 'uploaded_files/' + str(user_foldername) + '/' + str(user_enrollidx.enroll_idx)
+                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                
                 os.makedirs(fpath, exist_ok=True)
-                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                os.makedirs(fpath, exist_ok=True)
                 # os.chdir(fpath)
-                #zippath = 'upload_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(con_foldername) + '/' + str(enrollment.title)
 
                 flists = flist.split(";")
                 for i in range(len(flists) - 1):
@@ -326,14 +337,10 @@ def application(request):
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
-                    dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata).hexdigest()
-                    dbfile.r_name = files[i].name
+                    dbfile.folder_path = os.path.dirname(rpath)
+                    dbfile.file_hash = hashSHA(textdata).hexdigest()
+                    dbfile.file_name = files[i].name
                     dbfile.save()
-                os.chdir(fpath)
-                #ffpath = '/home/groot/myenv/groot-django/'+fpath
-                # fzip('.', enrollment.title+'.zip')
-                # os.chdir(tpath)
 
             except FileExistsError as e:
                 pass
@@ -844,4 +851,24 @@ def request_list(request):
     return render(request, 'groot/request_list.html', {})
 
 def contract_list(request):
-    return render(request, 'groot/contract_list.html', {})
+
+    user_id = request.session['user_id']
+    contract_infos = Contract.objects.all().filter(status=0)
+
+    return render(request, 'groot/contract_list.html', {'user_id':user_id, 'contract_infos':contract_infos})
+
+def contract_list_detail(request, idx):
+
+    contract_infos = Contract.objects.get(cont_idx=idx)
+    enrolldate = contract_infos.enroll_idx.enroll_date.date()
+    enddate = contract_infos.enroll_idx.end_date.date()
+    cdate = contract_infos.c_date.date()
+
+    if request.method == 'GET':
+        return render(request, 'groot/contract_list_detail.html', {'cdate':cdate, 'enddate':enddate, 'enrolldate':enrolldate, 'contract_infos':contract_infos})
+    else:
+        if request.POST.get('submit'):
+            contract_infos.status = 1
+            contract_infos.save()
+        return redirect('mypage')
+
