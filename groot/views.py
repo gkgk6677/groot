@@ -337,9 +337,9 @@ def application(request):
 
                     dbfile = File()
                     dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
-                    dbfile.pid = rpath
-                    dbfile.mid = hashSHA(textdata).hexdigest()
-                    dbfile.r_name = files[i].name
+                    dbfile.folder_path = os.path.dirname(rpath)
+                    dbfile.file_hash = hashSHA(textdata).hexdigest()
+                    dbfile.file_name = files[i].name
                     dbfile.save()
 
             except FileExistsError as e:

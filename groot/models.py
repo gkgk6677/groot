@@ -148,11 +148,9 @@ class Similarity(models.Model):
 class File(models.Model):
     file_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
-    pid = models.CharField(max_length=300)
-    mid = models.CharField(max_length=100)
-    type = models.IntegerField(null=True)
-    o_name = models.CharField(max_length=100, null=True)
-    r_name = models.CharField(max_length=100, null=True)
+    folder_path = models.CharField(max_length=300)
+    file_hash= models.CharField(max_length=100)
+    file_name = models.CharField(max_length=100, null=True)
     c_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
