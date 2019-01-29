@@ -21,32 +21,36 @@
                         <tr>
                             <th>번호</th>
                             <th>임치 기술명</th>
-                            <th>회사명</th>
-                            <th>대표자</th>
-                            <th>만료날짜</th>
+                            <th>임치기업</th>
+                            <th>계약기업</th>
+                            <th>계약기간</th>
+                            <th>상태</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                    {% for enroll_info in enroll_infos %}
-                        <tr>
-                            <!-- <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                    {{enroll_info.enroll_idx}}
-                                </a>
-                            </td> -->
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.sort_idx}}</td>
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                {% csrf_token %}
-                                <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;"> 연장 </button>
-                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 해지 </button>
-                            </td>
-                            </td>
-                        </tr>
+                    {% for accepted_list in contract_lists %}
+                        {% if accepted_list.enroll_idx.user.user_id == user_id or accepted_list.user.user_id == user_id %}
+                            <tr>
+                                <td>{{accepted_list.enroll_idx.title}}</td>
+                                <td>{{accepted_list.enroll_idx.user.com_name}}</td>
+                                <td>{{accepted_list.user.com_name}}</td>
+                                <td>{{accepted_list.term}} 년</td>
+                                {{accepted_list.status | safe}}
+                            </tr>    
+                        {% endif %}
                     {% endfor %}
                     </tbody>
+                    <script>
+                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                        var tables = document.getElementsByTagName('tbody');
+                        var table = tables[tables.length - 1];
+                        var rows = table.rows;
+                        for(var i = 0, td; i < rows.length; i++){
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(i+1));
+                            rows[i].insertBefore(td, rows[i].firstChild);
+                        }
+                    </script>
                 </table>
             </div>
             <hr><br>
@@ -65,9 +69,9 @@
                     </thead>
                     <tbody>
                     {% for list in contract_infos %}
-                        {% if list.enroll_idx.user.user_id == user_id %}
+                        {% if list.enroll_idx.user.user_id == user_id and list.status == 0 %}
                             <tr>
-                                <td><a href="/contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
+                                <td><a href="contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
                                 <td>{{list.user.com_name}}</td>
                                 <td>{{list.user.com_head}}</td>
                                 <td>{{list.term}}</td>
@@ -76,6 +80,17 @@
                         {% endif %}
                     {% endfor %}
                     </tbody>
+                    <script>
+                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                        var tables = document.getElementsByTagName('tbody');
+                        var table = tables[tables.length - 1];
+                        var rows = table.rows;
+                        for(var i = 0, td; i < rows.length; i++){
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(i+1));
+                            rows[i].insertBefore(td, rows[i].firstChild);
+                        }
+                    </script>
                 </table>
             </div>
         </div>
@@ -83,14 +98,4 @@
 {% endblock content %}
 
 {% block js %}
-<script>
-    var tables = document.getElementsByTagName('tbody');
-    var table = tables[tables.length - 1];
-    var rows = table.rows;
-    for(var i = 0, td; i < rows.length; i++){
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(i+1));
-        rows[i].insertBefore(td, rows[i].firstChild);
-    }
-</script>
 {% endblock js %}

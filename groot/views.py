@@ -96,7 +96,7 @@ def mypage(request):
     contract_infos = Contract.objects.all()
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
-
+    
     enroll_count = 0
     extend_count = 0
     contract_count = 0
@@ -125,7 +125,7 @@ def mypage(request):
     for expire_info in expire_infos:
         if (expire_info.enroll_idx.user.user_id == user_id and expire_info.enroll_idx.enroll_status == 1 and expire_info.status == 0):
             expire_count += 1
-
+    
     # 계약 현황 카운트
 
     for contract_info in contract_infos:
