@@ -89,23 +89,46 @@ def mypage(request):
     user_id = request.session['user_id']
     userinfo = User.objects.get(pk=user_id)
 
+    # 임치 현황 값 DB에서 불러오기
     enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
-    enroll_count = 0
+    contract_infos = Contract.objects.all().filter(status=0)
+    extend_infos = Extend.objects.all()
+    expire_infos = Expire.objects.all()
+    
+    enroll_count = 0 
+    contract_count = 0
+    contract_is_value = 0
+    extend_count = 0
+    expire_count = 0
 
+    # 임치 계약 수 계산
     for i in enroll_lists:
         enroll_count += 1
-    contract_infos = Contract.objects.all().filter(status=0)
-    contract_count = 0
 
+    # 계약 요청 수 계산
     for contract_info in contract_infos:
         if (contract_info.enroll_idx.user.user_id == user_id):
             contract_count += 1
     
-    contract_is_value = 0
+    # 연장 현황 카운트
+
+    for extend_info in extend_infos:
+        if (extend_info.enroll_idx.user.user_id == user_id and extend_info.enroll_idx.enroll_status == 1):
+            extend_count += 1
+
+    # 해지 현황 카운트
+
+    for expire_info in expire_infos:
+        if (expire_info.enroll_idx.user.user_id == user_id):
+            expire_count += 1
+
+    
+    # 계약 현황 카운트
 
     for x in contract_infos:
         if ((x.enroll_idx.user.user_id == user_id and x.status == 1) or (x.user.user_id == user_id and x.status == 1)):
             contract_is_value += 1
+
     # if (contract_infos.enroll_idx.user.user_id == user_id):
     #     contract_count += 1
 
@@ -139,7 +162,7 @@ def mypage(request):
     #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
 
 
-    return render(request, 'groot/mypage.html', {'contract_is_value':contract_is_value, 'user_id':user_id, 'contract_list':contract_list, 'contract_count':contract_count, 'contract_infos':contract_infos, 'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
+    return render(request, 'groot/mypage.html', {'expire_count':expire_count, 'extend_count':extend_count, 'contract_is_value':contract_is_value, 'user_id':user_id, 'contract_list':contract_list, 'contract_count':contract_count, 'contract_infos':contract_infos, 'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
 
 
 def list(request):
@@ -867,15 +890,17 @@ def application_list(request):
 
     return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
 
-def request_list(request):
+def request_list(request):#큰일남
     return render(request, 'groot/request_list.html', {})
 
 def contract_list(request):
 
     user_id = request.session['user_id']
     contract_infos = Contract.objects.all().filter(status=0)
+    contract_accepted = Contract.objects.all().filter(status=1)
 
-    return render(request, 'groot/contract_list.html', {'user_id':user_id, 'contract_infos':contract_infos})
+
+    return render(request, 'groot/contract_list.html', {'contract_accepted':contract_accepted, 'user_id':user_id, 'contract_infos':contract_infos})
 
 def contract_list_detail(request, idx):
 
@@ -887,8 +912,10 @@ def contract_list_detail(request, idx):
     if request.method == 'GET':
         return render(request, 'groot/contract_list_detail.html', {'cdate':cdate, 'enddate':enddate, 'enrolldate':enrolldate, 'contract_infos':contract_infos})
     else:
-        if request.POST.get('submit'):
+        if request.POST.get('yes'):
             contract_infos.status = 1
+            contract_infos.accept_date = datetime.datetime.now()
+            contract_infos.end_date = contract_infos.accept_date + datetime.timedelta(days=365 * contract_infos.term)
             contract_infos.save()
         return redirect('mypage')
 

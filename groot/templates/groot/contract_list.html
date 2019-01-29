@@ -21,30 +21,23 @@
                         <tr>
                             <th>번호</th>
                             <th>임치 기술명</th>
-                            <th>회사명</th>
-                            <th>대표자</th>
-                            <th>만료날짜</th>
+                            <th>임치기업</th>
+                            <th>계약기업</th>
+                            <th>계약기간</th>
+                            <th>상태</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                    {% for enroll_info in enroll_infos %}
-                        <tr>
-                            <!-- <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                    {{enroll_info.enroll_idx}}
-                                </a>
-                            </td> -->
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.sort_idx}}</td>
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                {% csrf_token %}
-                                <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="font-size:80%; border-color:#39bfd6;"> 연장 </button>
-                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 해지 </button>
-                            </td>
-                            </td>
-                        </tr>
+                    {% for accepted_list in contract_accepted %}
+                        {% if accepted_list.enroll_idx.user.user_id == user_id or accepted_list.user.user_id == user_id %}
+                            <tr>
+                                <td>{{accepted_list.enroll_idx.title}}</td>
+                                <td>{{accepted_list.enroll_idx.user.com_name}}</td>
+                                <td>{{accepted_list.user.com_name}}</td>
+                                <td>{{accepted_list.term}} 년</td>
+                                <td class="status" date="{{accepted_list.end_date}}"></td>
+                            </tr>    
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
@@ -84,6 +77,7 @@
 
 {% block js %}
 <script>
+    // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
     var tables = document.getElementsByTagName('tbody');
     var table = tables[tables.length - 1];
     var rows = table.rows;

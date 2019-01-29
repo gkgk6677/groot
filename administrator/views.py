@@ -275,7 +275,7 @@ def check(request, idx):
                 content = ''
 
                 for content_list in contents_list :
-                    content += content_list.mid + ','
+                    content += content_list.file_hash + ','
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
