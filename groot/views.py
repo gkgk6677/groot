@@ -12,6 +12,8 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils.formats import date_format
 from django.views.decorators.csrf import csrf_exempt
+
+from blockchain import settings
 from groot.forms import EnrollmentForm
 from groot.forms import *
 from .models import *
@@ -89,57 +91,54 @@ def mypage(request):
     user_id = request.session['user_id']
     userinfo = User.objects.get(pk=user_id)
 
+    # 임치 현황 값 DB에서 불러오기
     enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
-    enroll_count = 0
+    contract_infos = Contract.objects.all()
+    extend_infos = Extend.objects.all()
+    expire_infos = Expire.objects.all()
 
+    enroll_count = 0
+    extend_count = 0
+    contract_count = 0
+    expire_count = 0
+    contract_is_value = 0
+    contract_count_for_me = 0
+
+    # 임치 계약 수 계산
     for i in enroll_lists:
         enroll_count += 1
-    contract_infos = Contract.objects.all().filter(status=0)
-    contract_count = 0
+
+    # 연장 현황 카운트
+
+    for extend_info in extend_infos:
+        if (extend_info.enroll_idx.user.user_id == user_id and extend_info.enroll_idx.enroll_status == 1 and extend_info.status == 0):
+            extend_count += 1
+
+    # 계약 요청 수 계산
 
     for contract_info in contract_infos:
-        if (contract_info.enroll_idx.user.user_id == user_id):
+        if (contract_info.user.user_id == user_id and contract_info.status == 0):
             contract_count += 1
-    
-    contract_is_value = 0
 
-    for x in contract_infos:
-        if ((x.enroll_idx.user.user_id == user_id and x.status == 1) or (x.user.user_id == user_id and x.status == 1)):
+    # 해지 현황 카운트
+
+    for expire_info in expire_infos:
+        if (expire_info.enroll_idx.user.user_id == user_id and expire_info.enroll_idx.enroll_status == 1 and expire_info.status == 0):
+            expire_count += 1
+
+    # 계약 현황 카운트
+
+    for contract_info in contract_infos:
+        if ((contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1) or (contract_info.user.user_id == user_id and contract_info.status == 1)):
             contract_is_value += 1
-    # if (contract_infos.enroll_idx.user.user_id == user_id):
-    #     contract_count += 1
 
-    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+    # 내게 들어온 계약 요청 현황 카운트
 
-    # 요청 대기중 리스트
-    # status0_count = 0
+    for contract_info in contract_infos:
+        if (contract_info.enroll_idx.user.user_id == user_id and contract_info.enroll_idx.enroll_status == 1 and contract_info.status == 0):
+            contract_count_for_me += 1
 
-    # for x in enroll_infos:
-    #     idx = x.enroll_idx
-    #     extend_infos = Extend.objects.get(enroll_idx=idx)
-    #     contract_infos = Contract.objects.all().filter(enroll_idx=idx)
-    #     expire_infos = Expire.objects.get(enroll_idx=idx)
-    #     if (x.enroll_status == 0):
-    #         status0_count += 1
-    #     if (extend_infos.status == 0):
-    #         status0_count += 1
-    #     if (expire_infos.status == 0):
-    #         status0_count += 1
-        # if (contract_infos.status ==0):
-        #     status0_count += 1
-            
-
-    # status_0 = 
-    #여긴 내가 신청한 것!(계약은 내가 다른 사람이 개발한 임치물에 대해 신청한거임!)
-    #요청 대기중 = 임치+연장+계약+해지
-    #승인 = 연장+계약+해지
-    #반려 = 연장+계약+해지
-
-    #계약 -> 나와 진행중인 계약
-    #요청건 -> 나에게 신청 들어온 요청(나 Enroll_idx에 들어온 status=0값)
-
-
-    return render(request, 'groot/mypage.html', {'contract_is_value':contract_is_value, 'user_id':user_id, 'contract_list':contract_list, 'contract_count':contract_count, 'contract_infos':contract_infos, 'userinfo':userinfo, 'enroll_lists':enroll_lists,'enroll_count':enroll_count})
+    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
 
 
 def list(request):
@@ -279,15 +278,38 @@ def my_login_required(func):
                 return func(request, *args, **kwargs)
         return wrap
 
-def fzip(src_path, dest_file):
-    with zipfile.ZipFile(dest_file, 'w') as zf:
-        rootpath = src_path
-        for (path, dir, files) in os.walk(src_path):
-            for file in files:
-                fullpath = os.path.join(path, file)
-                relpath = os.path.relpath(fullpath, rootpath);
-                zf.write(fullpath, relpath, zipfile.ZIP_DEFLATED)
-        zf.close()
+
+@csrf_exempt
+def download(request, idx):
+    def folder_zip(src_path, dest_file):
+        with zipfile.ZipFile(dest_file, 'w') as zf:
+            rootpath = src_path
+            for (path, dir, files) in os.walk(src_path):
+                for file in files:
+                    fullpath = os.path.join(path, file)
+                    relpath = os.path.relpath(fullpath, rootpath)
+                    zf.write(fullpath, relpath, compress_type=zipfile.ZIP_DEFLATED)
+            zf.close()
+
+    enroll_id = idx
+    enrollment = Enrollment.objects.get(enroll_idx=enroll_id)
+    tpath = os.getcwd()
+
+    filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
+                            enrollment.user.com_name, enrollment.title)
+    dest = filepath + '/' + enrollment.title + '.zip'
+    folder_zip(filepath, dest)
+    os.chdir(tpath)
+
+    filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
+                            enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
+    filename = enrollment.title
+
+    with open(filepath, 'rb') as f:
+        response = HttpResponse(f, content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename="download.zip"'
+    return response
+
 
 @my_login_required
 def application(request):
@@ -859,14 +881,73 @@ def application_list(request):
     return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
 
 def request_list(request):
-    return render(request, 'groot/request_list.html', {})
+    user_id = request.session['user_id']
+    extend_infos = Extend.objects.all()
+    expire_infos = Expire.objects.all()
+    contract_infos = Contract.objects.all()
+    extend_lists = []
+    expire_lists = []
+    contract_lists = []
+
+    for extend_info in extend_infos:
+        status = ''
+        if (extend_info.enroll_idx.user.user_id == user_id):
+            if extend_info.status == 0:
+                extend_info.status = "<td style='color:green'>대기중</td>"
+            elif extend_info.status == 1:
+                extend_info.status = "<td style='color:blue'>승인</td>"
+            else:
+                extend_info.status = "<td style='color:red'>반려</td>"
+            extend_lists.append(extend_info)
+
+    for contract_info in contract_infos:
+        status = ''
+        if (contract_info.user.user_id == user_id):
+            if contract_info.status == 0:
+                contract_info.status = "<td style='color:green'>대기중</td>"
+            elif contract_info.status == 1:
+                contract_info.status = "<td style='color:blue'>승인</td>"
+            else:
+                contract_info.status = "<td style='color:red'>반려</td>"
+            contract_lists.append(contract_info)
+
+    for expire_info in expire_infos:
+        status = ''
+        if expire_info.enroll_idx.user.user_id == user_id:
+            if expire_info.status == 0:
+                expire_info.status = "<td style='color:green'>대기중</td>"
+            elif expire_info.status == 1:
+                expire_info.status = "<td style='color:blue'>승인</td>"
+            else:
+                expire_info.status = "<td style='color:red'>반려</td>"
+            expire_lists.append(expire_info)
+
+
+    return render(request, 'groot/request_list.html', {'contract_lists':contract_lists, 'expire_lists':expire_lists, 'status':status, 'extend_lists':extend_lists})
 
 def contract_list(request):
 
     user_id = request.session['user_id']
-    contract_infos = Contract.objects.all().filter(status=0)
+    contract_infos = Contract.objects.all()
+    contract_accepted = Contract.objects.all().filter(status=1)
+    contract_lists = []
+    now_date = datetime.datetime.now()
+    for contract_info in contract_accepted:
+        if contract_info.end_date > now_date:
+            contract_info.status = "<td style='color:blue'>계약중</td>"
+        else:
+            contract_info.status = "<td style='color:red'>계약만료</td>"
+        contract_lists.append(contract_info)
 
-    return render(request, 'groot/contract_list.html', {'user_id':user_id, 'contract_infos':contract_infos})
+    # 날짜 비교
+    # end_date와 now_date()비교
+    # end_date > now_date 이면 계약중
+    # end_date < now_date 이면 계약 만료 문구 출력
+    # contract_list의 end_date 뽑아냄
+    # now_date 새로운 변수 만들어서 할당
+
+
+    return render(request, 'groot/contract_list.html', {'contract_lists':contract_lists, 'user_id':user_id, 'contract_infos':contract_infos})
 
 def contract_list_detail(request, idx):
 
@@ -878,8 +959,14 @@ def contract_list_detail(request, idx):
     if request.method == 'GET':
         return render(request, 'groot/contract_list_detail.html', {'cdate':cdate, 'enddate':enddate, 'enrolldate':enrolldate, 'contract_infos':contract_infos})
     else:
-        if request.POST.get('submit'):
+        if request.POST.get('yes'):
             contract_infos.status = 1
+            contract_infos.accept_date = datetime.datetime.now()
+            contract_infos.end_date = contract_infos.accept_date + datetime.timedelta(days=365 * contract_infos.term)
+            contract_infos.save()
+        else:
+            contract_infos.status = 2
+            contract_infos.accept_date = datetime.datetime.now()
             contract_infos.save()
         return redirect('mypage')
 
