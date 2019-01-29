@@ -123,12 +123,22 @@ def extend_detail(request, idx):
                 enroll_infos.term += extend_infos.term
                 enroll_infos.end_date += datetime.timedelta(days=(365 * int(extend_infos.term)))
                 enroll_infos.save()
-                return redirect('admin_extend')
+
+                #     0          1        2         3        4        5       6          7            8          9
+                # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+                fabric = "http://210.107.78.150:8001/change_term/" + enroll_infos.title + "@" \
+                         + str(extend_infos.term) + "@" + "3"
+                f = requests.get(fabric)
+                print(f.text)  # cmd 창에 보여질 값
+                # extend_infos.extend_tx = f.text[1:-1]
+                # extend_infos.save()
+
+                return redirect('index')
             else:
                 extend_infos.accept_date = datetime.datetime.now()
                 extend_infos.status = 2
                 extend_infos.save()
-                return redirect('admin_extend')
+                return redirect('index')
     else:
         return redirect('wrong')
 
@@ -272,10 +282,12 @@ def check(request, idx):
                 enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(
                     days=(365 * int(enrollment_info.term)))
                 contents_list = File.objects.filter(enroll_idx=idx)
-                content = ''
+                file_name = ''
+                file_hash = ''
 
                 for content_list in contents_list :
-                    content += content_list.file_hash + ','
+                    file_name += content_list.file_name + ','
+                    file_hash += content_list.file_hash + ','
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
@@ -283,7 +295,8 @@ def check(request, idx):
                          + str(enrollment_info.sort_idx.sort_idx) + "@" \
                          + enrollment_info.user.com_name + "@" \
                          + str(enrollment_info.user.com_num) + "@" \
-                         + str(enrollment_info.term) + "@" + content + "@" \
+                         + str(enrollment_info.term) + "@" \
+                         + file_name + "@" + file_hash + "@" \
                          + str(enrollment_info.enroll_date) + "@" + "1"
                 f = requests.get(fabric)
                 print(f.text)  # cmd 창에 보여질 값

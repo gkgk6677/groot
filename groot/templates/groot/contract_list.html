@@ -28,18 +28,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for accepted_list in contract_accepted %}
+                    {% for accepted_list in contract_lists %}
                         {% if accepted_list.enroll_idx.user.user_id == user_id or accepted_list.user.user_id == user_id %}
                             <tr>
                                 <td>{{accepted_list.enroll_idx.title}}</td>
                                 <td>{{accepted_list.enroll_idx.user.com_name}}</td>
                                 <td>{{accepted_list.user.com_name}}</td>
                                 <td>{{accepted_list.term}} 년</td>
-                                <td class="status" date="{{accepted_list.end_date}}"></td>
+                                {{accepted_list.status | safe}}
                             </tr>    
                         {% endif %}
                     {% endfor %}
                     </tbody>
+                    <script>
+                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                        var tables = document.getElementsByTagName('tbody');
+                        var table = tables[tables.length - 1];
+                        var rows = table.rows;
+                        for(var i = 0, td; i < rows.length; i++){
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(i+1));
+                            rows[i].insertBefore(td, rows[i].firstChild);
+                        }
+                    </script>
                 </table>
             </div>
             <hr><br>
@@ -58,9 +69,9 @@
                     </thead>
                     <tbody>
                     {% for list in contract_infos %}
-                        {% if list.enroll_idx.user.user_id == user_id %}
+                        {% if list.enroll_idx.user.user_id == user_id and list.status == 0 %}
                             <tr>
-                                <td><a href="/contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
+                                <td><a href="contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
                                 <td>{{list.user.com_name}}</td>
                                 <td>{{list.user.com_head}}</td>
                                 <td>{{list.term}}</td>
@@ -69,6 +80,17 @@
                         {% endif %}
                     {% endfor %}
                     </tbody>
+                    <script>
+                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                        var tables = document.getElementsByTagName('tbody');
+                        var table = tables[tables.length - 1];
+                        var rows = table.rows;
+                        for(var i = 0, td; i < rows.length; i++){
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(i+1));
+                            rows[i].insertBefore(td, rows[i].firstChild);
+                        }
+                    </script>
                 </table>
             </div>
         </div>
@@ -76,15 +98,4 @@
 {% endblock content %}
 
 {% block js %}
-<script>
-    // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
-    var tables = document.getElementsByTagName('tbody');
-    var table = tables[tables.length - 1];
-    var rows = table.rows;
-    for(var i = 0, td; i < rows.length; i++){
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(i+1));
-        rows[i].insertBefore(td, rows[i].firstChild);
-    }
-</script>
 {% endblock js %}
