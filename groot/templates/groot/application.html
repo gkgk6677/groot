@@ -338,7 +338,7 @@
                                             <th>파일업로드</th>
                                             <td class="center" colspan="5">
 
-    				                            <input type="file" id="file_input" name="my_file"  webkitdirectory=true directory multiple>
+    				                            <input type="file" id="file_input" name="my_file" required  webkitdirectory=true directory multiple>
     				                            <input type="hidden" id="listing" name="listing">
 
                                         </tr>
@@ -349,7 +349,7 @@
                                                            name이 같은 애들끼리 같은 영역?으로 알아서 name이 다르면 둘다 체크가 됨
                                                 -->
                                                 <div class="radio">
-                                                    <input type="radio" id="radio1" name="agree_radio" value="1">
+                                                    <input type="radio" id="radio1" name="agree_radio" required value="1">
                                                     <label for="radio1" name="radio">예</label>
                                                 </div>
                                                 <div class="radio">
@@ -385,7 +385,7 @@
                             </div>
                             <div class="button-group-area mt-40 col-md-6">
                                <button id="cancel-btn" class="btn submit_btn" onclick="alert('취소되었습니다. 메인페이지로 이동합니다.')">취소</button>
-                               <button type="submit" value="submit" class="btn submit_btn" onclick="alert('신청서가 저장되었습니다.')">저장</button>
+                               <button type="submit" value="submit" class="btn submit_btn">저장</button>
                            </div>
                     </form>
                 </div>
