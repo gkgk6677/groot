@@ -96,7 +96,7 @@ def mypage(request):
     contract_infos = Contract.objects.all()
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
-    
+    now_date = datetime.datetime.now()
     enroll_count = 0
     extend_count = 0
     contract_count = 0
@@ -106,7 +106,8 @@ def mypage(request):
 
     # 임치 계약 수 계산
     for i in enroll_lists:
-        enroll_count += 1
+        if i.end_date > now_date:
+            enroll_count += 1
 
     # 연장 현황 카운트
 
@@ -876,9 +877,25 @@ def upload(request):
 
 def application_list(request):
 
-    enroll_infos = Enrollment.objects.all().filter(enroll_status=1, user=request.session['user_id'])
+    user_id = request.session['user_id']
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+    extend_infos = Extend.objects.all().filter(status=0)
+    expire_infos = Expire.objects.all().filter(status=0)
+    now_date = datetime.datetime.now()
+    enroll_lists = []
 
-    return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
+    for enroll_info in enroll_infos:
+        if enroll_info.enroll_status == 0:
+            enroll_info.enroll_status = "<div style='color:green'>대기중</div>"
+        elif enroll_info.enroll_status == 2:
+            enroll_info.enroll_status = "<div style='color:red'>반려</div>"
+        elif enroll_info.end_date < now_date:
+            enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
+        enroll_lists.append(enroll_info)
+
+
+
+    return render(request, 'groot/application_list.html', {'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
 
 def request_list(request):
     user_id = request.session['user_id']
