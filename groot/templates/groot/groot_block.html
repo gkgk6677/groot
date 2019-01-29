@@ -1,0 +1,115 @@
+{% extends "groot_scan-base.html" %}
+{% load static %}
+{% block css %}
+<style type="text/css">/* Chart.js */
+    @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
+</style>
+<style type="text/css">
+    .table-typeE td { color:#000; }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="wrap sub">
+    <div class="content-wrap">
+    <div class="screen0" style="background:#fff;">
+        <div class="wrap-holder" style="margin-top:-8%;">
+            <p class="title" style="color:#000;">Blocks
+                <span class="right">
+                    <em>4,311,119</em> total blocks
+                </span>
+            </p>
+            <div class="contents">
+                <table class="table-typeE">
+                    <thead>
+                        <tr>
+                            <th>Block</th>
+                            <th>Age</th>
+                            <th>No of Txns</th>
+                            <th>Block Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="on">
+                                <a class="on " title="4311118" href="/block/4311118">4,311,118</a>
+                            </td>
+                            <td class="break">26 minutes ago</td>
+                            <td>1</td>
+                            <td>
+                                <a class="on ellipsis" title="4311118" href="/block/4311118">
+                                    0x9b5521dd859fc15650da328814755e8c65431ad965b50b01ffe0be0281113112
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="on">
+                                <a class="on " title="4311117" href="/block/4311117">
+                                    4,311,117
+                                </a>
+                            </td>
+                            <td class="break">26 minutes ago</td>
+                            <td>2</td>
+                            <td>
+                                <a class="on ellipsis" title="4311117" href="/block/4311117">
+                                    0x52580b3a8bb67669f09d5fff8aca47ab7447850f813b205fec71e41e0461bec4
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="sort-holder">
+                    <p>25<span>(Show)</span>
+                        <em class="img"></em>
+                    </p>
+                    <ul style="display: none;">
+                        <li>
+                            <span>10</span>
+                        </li>
+                        <li>
+                            <span>25</span>
+                        </li>
+                        <li>
+                            <span>50</span>
+                        </li>
+                        <li>
+                            <span>100</span>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="page">
+                    <li>
+                        <span class="start disabled">
+                            <em class="img"></em>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="prev disabled">
+                            <em class="img"></em>
+                        </span>
+                    </li>
+                    <li class="pageNum">
+                        <p>Page</p>
+                        <input type="text" class="txt-type-page over" placeholder="" value="1">
+                        <p> / 172445</p>
+                    </li>
+                    <li>
+                        <span name="next" class="next ">
+                            <em class="img"></em>
+                        </span>
+                    </li>
+                    <li>
+                        <span name="end" class="end ">
+                            <em class="img"></em>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

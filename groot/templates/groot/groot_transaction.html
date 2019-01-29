@@ -1,0 +1,116 @@
+{% extends "groot_scan-base.html" %}
+{% load static %}
+{% block css %}
+<style type="text/css">/* Chart.js */
+    @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
+    .table-typeJ td { color:#000; }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="wrap sub">
+    <div class="content-wrap">
+        <div class="screen0" style="background:#fff;">
+            <div class="wrap-holder" style="margin-top:-8%;">
+                <p class="title" style="color:#000;">Transactions
+                    <span class="right">
+                        <em>5,000,000</em> total transactions
+                    </span>
+                </p>
+                <div class="contents">
+                    <table class="table-typeJ">
+                        <thead>
+                            <tr>
+                                <th>TxHash</th>
+                                <th>Block</th>
+                                <th>Age</th>
+                                <th>From</th>
+                                <th class="table-sign"></th>
+                                <th>To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class=" on">
+                                    <a title="0xb6a0829a6b8bb1ef543456a4dca8da9d3b961caf040138c1319cf1b8fec25b39" href="/transaction/0xb6a0829a6b8bb1ef543456a4dca8da9d3b961caf040138c1319cf1b8fec25b39">
+                                        <span class="ellipsis">
+                                          0xb6a0829a6b8bb1ef543456a4dca8da9d3b961caf040138c1319cf1b8fec25b39
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="on">
+                                    <a class="on " title="4318529" href="/block/4318529">4,318,529</a>
+                                </td>
+                                <td class="break">1 minute ago</td>
+                                <td class=" on">
+                                    <span class="ellipsis">
+                                        <a class="on" title="hx60dd7caeb663f8676177d5c3aa0f461b23e4785f" href="/address/hx60dd7caeb663f8676177d5c3aa0f461b23e4785f">
+                                            hx60dd7caeb663f8676177d5c3aa0f461b23e4785f
+                                        </a>
+                                    </span>
+                                </td>
+                                <td class="table-sign">
+                                    <i class="img"></i>
+                                </td>
+                                <td class="icon on">
+                                    <i class="img"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="sort-holder">
+                        <p>25<span>(Show)</span>
+                            <em class="img"></em>
+                        </p>
+                        <ul>
+                            <li>
+                                <span>10</span>
+                            </li>
+                            <li>
+                                <span>25</span>
+                            </li>
+                            <li>
+                                <span>50</span>
+                            </li>
+                            <li>
+                                <span>100</span>
+                            </li>
+                        </ul>
+                    </div>
+                        <ul class="page">
+                            <li>
+                                <span class="start disabled">
+                                    <em class="img"></em>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="prev disabled">
+                                <em class="img"></em>
+                            </span>
+                        </li>
+                        <li class="pageNum">
+                            <p>Page</p>
+                            <input type="text" class="txt-type-page over" placeholder="" value="1">
+                            <p> / 172445</p>
+                        </li>
+                        <li>
+                            <span name="next" class="next ">
+                                <em class="img"></em>
+                            </span>
+                        </li>
+                        <li>
+                            <span name="end" class="end ">
+                                <em class="img"></em>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

@@ -1,0 +1,118 @@
+<!doctype html>
+{%load static%}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#000000">
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv="Cache-Control" content="max-age=0">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="stylesheet" href="{%static 'css/grootscan_main.css' %}">
+
+        <link rel="icon" href="{%static 'img/favicon.ico' %}" type="image/ico">
+        <title>Groot Blockchain</title>
+
+        <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
+        <script type="text/javascript" src="/js/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript" src="/js/mainFx.js"></script>
+        <script type="text/javascript" src="/js/customFx.js"></script>
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-124432750-2"></script>
+        <script>
+            function gtag(){
+                dataLayer.push(arguments)
+            }
+            window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-124432750-2")
+        </script>
+        <link href="/static/css/main.7ac0f9d9.css" rel="stylesheet">
+        <style type="text/css">/* Chart.js */
+            @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
+            .hov { color: #839294; font-size: large; }
+            .hov:hover { color:#fff; }
+        </style>
+        {% block css %}
+        {% endblock css %}
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root">
+            <div id="app-root">
+                <div class="root">
+                    <div class="wrap home">
+                        <!--================Header Menu Area =================-->
+                        <div class="header-wrap">
+                            <div class="wrap-holder" style="background: #17354c;">
+                                <div class="content">
+                                    <a class="navbar-brand logo_h" href="/main">
+                                        <img src="{%static 'img/rsz_grootlogo.png' %}" alt="">
+                                        <!--<img src="{%static 'img/rsz_grootlogo2.png' %}" alt="" style="width:92px; height:35px; margin-top:0.8%">-->
+                                    </a>
+                                    <div class="link">
+                                        <ul>
+                                            <li>
+                                                <span class="">
+                                                    <a href="/groot_scan/" class="hov">Groot_Scan</a>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="">
+                                                    <a href="/groot_scan/block/" class="hov">Block</a>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="">
+                                                    <a href="/groot_scan/transaction/" class="hov">Transaction</a>
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        <div class="search-group">
+                                            <input type="text" class="txt-type-normal" placeholder="Address, TxHash, Block" value="">
+                                            <span><em class="img"></em></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--================Header Menu Area =================-->
+                        {% block content %}
+                        {% endblock content %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blank"></div>
+
+        <!--================Footer Area =================-->
+        <div class="footer-wrap">
+            <div class="screen0">
+                <div class="wrap-holder">
+                    <p>
+                    <center><p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by <b>Team Groot</b></p></center>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-wrap qr">
+            <div class="dimmed"></div>
+            <div class="popup">
+                <span class="close">
+                    <em class="img"></em>
+                </span>
+            </div>
+        </div>
+        <div class="popup-wrap detail">
+            <div class="dimmed"></div>
+            <div class="popup contract">
+               <span class="close">
+                <em class="img"></em>
+               </span>
+            </div>
+        </div>
+        <!--================End Footer Area =================-->
+
+        {% block js %}
+        {% endblock js %}
+    </body>
+</html>

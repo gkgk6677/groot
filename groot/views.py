@@ -691,7 +691,77 @@ def show_cont(request, en_idx, cont_idx):
     return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
 
 def groot_scan(request):
-    return render(request, 'groot/groot_scan.html', {})
+
+    # Hyperledger-Fabric에서 전체 결과 받아오기
+    fabric = "http://210.107.78.150:8001/get_all_tech"
+    result = requests.get(fabric)
+
+    # titles = []
+    # block_parses = result.json()  # JSON형식으로 parse(분석)
+    # # [
+    # #     {
+    # #         "Key": "testtt",
+    # #         "Record": {
+    # #                       "client": {"dayoung": 4, "fowofi": 3, "sunyou": 5},
+    # #                       "com_num": 123456789, "company": "GROOT",
+    # #                       "content": {
+    # #                             ".DS_Store":"99a697877975794602867c62e076f901972ec79d541c3400f3aa791380b957e9",
+    # # 		                      "01.html":"3230f0f03a0d8c3185c76b9fcd545f62c5793e189202b637af4006effa78d2af"
+    # #                       },
+    # #                       "enroll_date": "2019.01.28", "sort": 33, "status": 4,
+    # #                       "technology": "testtt", "term": 5
+    # #                   }
+    # #     },
+    # #     { ... }, { ... }
+    # # ]
+    # for block_parse in block_parses :
+    #     titles += block_parse.get('Key')
+    #
+    # for title in titles :
+    #     # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
+    #     fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
+    #     result2 = str(requests.get(fabric))
+    #
+    # print(result2)
+    # #     txid = []
+    # #     timestamp = []
+    # #     transaction_parses = result2.json()  # JSON형식으로 parse(분석)
+    # #     # [
+    # #     #     {
+    # #     #       "TxId": "93fd07b0727289df08b75c0b0059e19dead5793c53cb9d53915f1cbe328c1aee",
+    # #     #       "Value": {
+    # #     #                    "technology": "testtt", "sort": 33, "company": "GROOT", "com_num": 123456789, "term": 5,
+    # #     #                    "content": {
+    # #     #                                   "test1.txt":"6246f69ac47f80f5ecb5a840bfd72dee1db7bc650091a4b773fd366632d8a40b",
+    # #     #                                   "test2.txt":"922e49fa1b9bbd9881420cf985bbb442f714868e28d0e8254f341a7de22337cf"
+    # #     #                               },
+    # #     #                    "enroll_date": "2019.01.28", "status": 1
+    # #     #       },
+    # #     #       "Timestamp": "2019-01-28 02:08:00.88 +0000 UTC",
+    # #     #       "IsDelete": "false"
+    # #     #     },
+    # #     #     { ... }, { ... }
+    # #     # ]
+    # #     for transaction_parse in transaction_parses:
+    # #         txid += transaction_parse.get('TxId')
+    # #         timestamp += transaction_parse.get('Timestamp')
+    # #
+    # # context = {'txids': txid, 'times': timestamp}
+    # # return HttpResponse(json.dumps(context), content_type='application/json')
+
+    return render(request, 'groot/groot_scan.html')
+
+def groot_block(request):
+    return render(request, 'groot/groot_block.html', {})
+
+def groot_block_detail(request, height):
+    return render(request, 'groot/groot_block_detail.html', {})
+
+def groot_transaction(request):
+    return render(request, 'groot/groot_transaction.html', {})
+
+def groot_transaction_detail(request, txid):
+    return render(request, 'groot/groot_transaction_detail.html', {})
 
 def read(request):
     user_id = request.session['user_id']
