@@ -43,21 +43,21 @@
                                     <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
                                 </td>
                             </tr>
-                            {% for contract_info in contract_infos %}
-                                {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                    <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                            {% for cont_info in cont_infos %}
+                                {% if cont_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                    <tr id="tr_show" class="tr{{cont_info.enroll_idx.enroll_idx}}" style="{display:none}">
                                         <td style="padding-left:9%;">
                                             <span style="font-size: 20px; color: Dodgerblue;">
                                               <i class="fa fa-angle-right"></i>
                                             </span>
                                         </td>
-                                        <td>{{contract_info.user.com_name}}</td>
-                                        <td>{{contract_info.c_date}}</td>
-                                        <td>{{contract_info.end_date}}</td>
+                                        <td>{{cont_info.user.com_name}}</td>
+                                        <td>{{cont_info.c_date}}</td>
+                                        <td>{{cont_info.end_date}}</td>
                                         <td>
-                                            <button type="submit" trid="{{contract_info.enroll_idx.enroll_idx}}" cont_id="{{contract_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
                                             <!--<a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">-->
-                                            <button type="submit" trid="{{contract_info.enroll_idx.enroll_idx}}" cont_id="{{contract_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
                                             <!--</a>-->
                                         </td>
                                     </tr>

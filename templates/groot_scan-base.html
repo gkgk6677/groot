@@ -38,8 +38,8 @@
         <div id="root">
             <div id="app-root">
                 <div class="root">
-                    <div class="wrap home">
-                        <!--================Header Menu Area =================-->
+                    <div class="wrap sub">
+                        <!--================Header Area =================-->
                         <div class="header-wrap">
                             <div class="wrap-holder" style="background: #17354c;">
                                 <div class="content">
@@ -74,43 +74,44 @@
                                 </div>
                             </div>
                         </div>
-                        <!--================Header Menu Area =================-->
+                        <!--================End Header Area =================-->
+
+                        <!--================Content Area =================-->
                         {% block content %}
                         {% endblock content %}
+                        <!--================End Content Area =================-->
+                    </div>
+                    <div class="blank"></div>
+                </div>
+                <!--================Footer Area =================-->
+                <div class="footer-wrap">
+                    <div class="screen0">
+                        <div class="wrap-holder">
+                            <p>
+                            <center><p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by <b>Team Groot</b></p></center>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="blank"></div>
-
-        <!--================Footer Area =================-->
-        <div class="footer-wrap">
-            <div class="screen0">
-                <div class="wrap-holder">
-                    <p>
-                    <center><p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by <b>Team Groot</b></p></center>
-                    </p>
+                <div class="popup-wrap qr">
+                    <div class="dimmed"></div>
+                    <div class="popup">
+                        <span class="close">
+                            <em class="img"></em>
+                        </span>
+                    </div>
                 </div>
+                <div class="popup-wrap detail">
+                    <div class="dimmed"></div>
+                    <div class="popup contract">
+                       <span class="close">
+                        <em class="img"></em>
+                       </span>
+                    </div>
+                </div>
+                <!--================End Footer Area =================-->
             </div>
         </div>
-
-        <div class="popup-wrap qr">
-            <div class="dimmed"></div>
-            <div class="popup">
-                <span class="close">
-                    <em class="img"></em>
-                </span>
-            </div>
-        </div>
-        <div class="popup-wrap detail">
-            <div class="dimmed"></div>
-            <div class="popup contract">
-               <span class="close">
-                <em class="img"></em>
-               </span>
-            </div>
-        </div>
-        <!--================End Footer Area =================-->
 
         {% block js %}
         {% endblock js %}
