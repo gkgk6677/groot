@@ -829,50 +829,24 @@ def a(request):
     return render(request, 'groot/a.html', {})
 
 
-######################TEST
-# class SearchFormView(FormView):
-#     form_class = SearchForm
-#     template_name = 'groot/search.html'
+# def search_form(request):
+#     error = False
+#     if 'q' in request.GET:
+#         q = request.GET['q']
+#         if not q:
+#             error = True
+#         else:
 #
-#     def form_valid(self, form):
-#         Word = '%s' % self.request.POST['search_word']
+#              result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
+#              resultt = result.agree_status
+#              if resultt == 1:
+#                  return render(request, 'groot/search_result.html', {'result': result, 'query': q})
 #
-#         return HttpResponse('Word')
-#         # enroll_list = Enrollment.objects.filter(Q(title__icontains=Word) | Q(summary__icontains=Word)).distinct()
-#         #
-#         # context = {}
-#         # # context['form'] = form
-#         # context['search_word'] = Word
-#         # context['object_list'] = enroll_list
-#         #
-#         # return context
-#         #
-#         # # return render(self.request, self.template_name, context)
-#
-# @csrf_exempt
-# def login2(request):
-#     if request.method == "POST":
-#         s = request.POST['s']
-#         try:
-#             a = Extend.objects.get(enroll_idx=s)
-#             if a.status == 0 :
-#                 # 연장 신청이 안되는 경우
-#                 ck_val = 0
-#                 context = {'ck_val': ck_val}
-#
-#                 return HttpResponse(json.dumps(context), content_type='application/json')
-#             else :
-#                 ck_val =1
-#                 context = {'ck_val': ck_val}
-#
-#                 return HttpResponse(json.dumps(context), content_type='application/json')
-#
-#         except Extend.DoesNotExist:
-#             ck_val= 1
-#             context = {'ck_val': ck_val}
-#             return HttpResponse(json.dumps(context), content_type='application/json')
-#
+#         return render(request, 'groot/search.html', {'error': error})
 
+
+
+#######################TEST
 def search_form(request):
     error = False
     if 'q' in request.GET:
@@ -882,19 +856,12 @@ def search_form(request):
         else:
              result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
 
-
         return render(request,'groot/search_result.html',{'result':result, 'query':q})
 
     return render(request, 'groot/search.html', {'error': error})
 
-
-
 #########################TEST
-# def search_list(request):
-#     app_info = Enrollment.objects.all().filter(enroll_status=1)
-#
-#     if request.method == 'GET':
-#         return render(request, 'groot/search.html',{'app_info': app_info})
+
 
 
 

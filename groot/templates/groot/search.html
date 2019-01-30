@@ -1,20 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
 
-<body>
-    <section class="first_search_body">
+{% block css %}
+
+<style>
+.green_window {
+    display: inline-block;
+    width: 570px;
+    height: 50px;
+    border: 2px solid #2f89ae;
+    border-radius: 15px;
+    background-color: #fff;
+}
+.sch_smit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: visible;
+    width: 49px;
+    height: 49px;
+    border: 0;
+    background: #03cf5d;
+}
+
+.search .input_text {
+    margin: 12px 0 0 9px;
+    width: 455px;
+    height: 23px;
+    outline: 0;
+    border: 0;
+
+    background-color: transparent;
+    color: #222222;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 23px;
+    *ime-mode: active;
+}
+.blind {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+}
+.fa-search {  font-size: 1.4rem;  color: #29abe2;  z-index: 3;  top: 25%;
+
+
+}
+
+</style>
+
+{% endblock css %}
+
+{% block content %}
 
 
 
-        <form action="" method="get">
-            <input type="text" name="q">
-            <input type="submit" value="검색">
-        </form>
-        <br><br>
+    <section class="p_120" >
+        <div class="container" style="text-align:center">
+
+            <div class><br>
+
+
+                <img src="{%static '/img/GrootSearch.png' %}">
+                <br><br> <br><br>
+                <h6 class=""> 기술을 검색하고 계약을 맺어 활용해보세요! </h6>
+                <br><br>
+                <div class="search">
+                    <form action="" method="get">
+                        <fieldset>
+            <span class="green_window" >
+            <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
+                <i class="fa fa-search" ></i>
+            </span>
+                        <input class="blind" type="submit" value="Groot 검색">
+                    </fieldset>
+                </form>
+
+            </div>
+
+
+</div>
+</div>
+</section>
+
+
+{% endblock content %}
+
+{% block js %}
+<script>
+
+</script>
 
 
 
-    </section>
-    <br><br><br><br><br><br><br><br><br>
-</body>
 
-
-
+{% endblock js %}
