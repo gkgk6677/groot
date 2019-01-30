@@ -26,7 +26,7 @@ import zipfile
 import calendar
 import pandas
 import random
-
+from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 # from .render import render_to_pdf
@@ -281,6 +281,7 @@ def my_login_required(func):
         return wrap
 
 
+# -*- coding: utf-8 -*-
 @csrf_exempt
 def download(request, idx):
     def folder_zip(src_path, dest_file):
@@ -299,17 +300,25 @@ def download(request, idx):
 
     filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
                             enrollment.user.com_name, enrollment.title)
-    dest = filepath + '/' + enrollment.title + '.zip'
+    dest = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp') + '/' + enrollment.title + '.zip'
     folder_zip(filepath, dest)
     os.chdir(tpath)
 
-    filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
-                            enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
-    filename = enrollment.title
+    # filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx) , enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
 
-    with open(filepath, 'rb') as f:
+    zippath = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp', enrollment.title + '.zip')
+    fileName = os.path.basename(zippath)
+    with open(zippath, 'rb') as f:
         response = HttpResponse(f, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="download.zip"'
+        # fileName = fileName.encode("utf-8")
+        # try:
+        #     fileName.encode('ascii')
+        #     file_expr = 'filename="{}"'.format(fileName)
+        # except UnicodeEncodeError:
+        #     # Handle a non-ASCII filename
+        file_expr = "filename*=utf-8''{}".format(quote(fileName))
+        response['Content-Disposition'] = 'attachment; {}'.format(file_expr)
+    os.remove(zippath)
     return response
 
 
