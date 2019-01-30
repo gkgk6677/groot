@@ -1,10 +1,11 @@
 import datetime
 import hashlib
 import json
+import operator
 import os
-from functools import wraps
+from functools import wraps, reduce
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 import requests
 from django.shortcuts import render, redirect
 from django.template import RequestContext
@@ -25,7 +26,7 @@ import zipfile
 import calendar
 import pandas
 import random
-
+from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 # from .render import render_to_pdf
@@ -96,7 +97,7 @@ def mypage(request):
     contract_infos = Contract.objects.all()
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
-    
+    now_date = datetime.datetime.now()
     enroll_count = 0
     extend_count = 0
     contract_count = 0
@@ -106,7 +107,8 @@ def mypage(request):
 
     # 임치 계약 수 계산
     for i in enroll_lists:
-        enroll_count += 1
+        if i.end_date > now_date:
+            enroll_count += 1
 
     # 연장 현황 카운트
 
@@ -279,6 +281,7 @@ def my_login_required(func):
         return wrap
 
 
+# -*- coding: utf-8 -*-
 @csrf_exempt
 def download(request, idx):
     def folder_zip(src_path, dest_file):
@@ -297,17 +300,25 @@ def download(request, idx):
 
     filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
                             enrollment.user.com_name, enrollment.title)
-    dest = filepath + '/' + enrollment.title + '.zip'
+    dest = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp') + '/' + enrollment.title + '.zip'
     folder_zip(filepath, dest)
     os.chdir(tpath)
 
-    filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
-                            enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
-    filename = enrollment.title
+    # filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx) , enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
 
-    with open(filepath, 'rb') as f:
+    zippath = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp', enrollment.title + '.zip')
+    fileName = os.path.basename(zippath)
+    with open(zippath, 'rb') as f:
         response = HttpResponse(f, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="download.zip"'
+        # fileName = fileName.encode("utf-8")
+        # try:
+        #     fileName.encode('ascii')
+        #     file_expr = 'filename="{}"'.format(fileName)
+        # except UnicodeEncodeError:
+        #     # Handle a non-ASCII filename
+        file_expr = "filename*=utf-8''{}".format(quote(fileName))
+        response['Content-Disposition'] = 'attachment; {}'.format(file_expr)
+    os.remove(zippath)
     return response
 
 
@@ -477,20 +488,6 @@ def com_num_check(request):
     #     form = EnrollmentForm()
     # return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
 
-#
-# class SearchFormView():
-#     form_class= SearchForm
-#     template_name = 'groot/insert.html'
-#
-#     def form_valid(self, form):
-#         word = '%s' %self.request.POST['word']
-#         com_list = Enrollment.objects.filter(
-#             Q(com_name__icontains=word)
-#         ).distinct()
-#         context = {}
-#         context['object_list']= com_list
-#         context['search_word']=word
-#         return context
 
 def change(request):
     return render(request, 'groot/change.html', {})
@@ -944,33 +941,39 @@ def a(request):
     return render(request, 'groot/a.html', {})
 
 
-######################TEST
-class SearchFormView(FormView):
-    form_class = SearchForm
-    template_name = 'groot/search.html'
-
-    def form_valid(self, form):
-        schWord = self.request.POST['search_word']
-        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
-
-        context = {}
-        context['form'] = form
-        context['search_term'] = schWord
-        context['object_list'] = user_list
-
-
-
-        return render(self.request, self.template_name, context)
+# def search_form(request):
+#     error = False
+#     if 'q' in request.GET:
+#         q = request.GET['q']
+#         if not q:
+#             error = True
+#         else:
+#
+#              result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
+#              resultt = result.agree_status
+#              if resultt == 1:
+#                  return render(request, 'groot/search_result.html', {'result': result, 'query': q})
+#
+#         return render(request, 'groot/search.html', {'error': error})
 
 
 
+#######################TEST
+def search_form(request):
+    error = False
+    if 'q' in request.GET:
+        q = request.GET['q']
+        if not q:
+            error = True
+        else:
+             result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
+
+        return render(request,'groot/search_result.html',{'result':result, 'query':q})
+
+    return render(request, 'groot/search.html', {'error': error})
 
 #########################TEST
-def search_list(request):
-    app_info = Enrollment.objects.all().filter(enroll_status=1)
 
-    if request.method == 'GET':
-        return render(request, 'groot/search.html',{'app_info': app_info})
 
 
 
@@ -979,9 +982,25 @@ def upload(request):
 
 def application_list(request):
 
-    enroll_infos = Enrollment.objects.all().filter(enroll_status=1, user=request.session['user_id'])
+    user_id = request.session['user_id']
+    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+    extend_infos = Extend.objects.all().filter(status=0)
+    expire_infos = Expire.objects.all().filter(status=0)
+    now_date = datetime.datetime.now()
+    enroll_lists = []
 
-    return render(request, 'groot/application_list.html', {'enroll_infos':enroll_infos})
+    for enroll_info in enroll_infos:
+        if enroll_info.enroll_status == 0:
+            enroll_info.enroll_status = "<div style='color:green'>대기중</div>"
+        elif enroll_info.enroll_status == 2:
+            enroll_info.enroll_status = "<div style='color:red'>반려</div>"
+        elif enroll_info.end_date < now_date:
+            enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
+        enroll_lists.append(enroll_info)
+
+
+
+    return render(request, 'groot/application_list.html', {'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
 
 def request_list(request):
     user_id = request.session['user_id']

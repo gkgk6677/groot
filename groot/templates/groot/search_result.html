@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+
+<style>
+.green_window {
+    display: inline-block;
+    width: 570px;
+    height: 50px;
+    border: 2px solid #2f89ae;
+    border-radius: 15px;
+    background-color: #fff;
+}
+.sch_smit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: visible;
+    width: 49px;
+    height: 49px;
+    border: 0;
+    background: #03cf5d;
+}
+
+.search .input_text {
+    margin: 12px 0 0 9px;
+    width: 455px;
+    height: 23px;
+    outline: 0;
+    border: 0;
+
+    background-color: transparent;
+    color: #222222;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 23px;
+    *ime-mode: active;
+}
+.blind {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+}
+.fa-search {  font-size: 1.4rem;  color: #29abe2;  z-index: 3;  top: 25%;
+
+
+}
+
+
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<section class="p_120">
+    <div class="container" style="text-align:center">
+        <div class="search">
+
+
+            <form action="" method="get">
+                <fieldset>
+                    <img src="{%static '/img/GrootSearch2.png' %}">
+                    <span class="green_window">
+            <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
+                <i class="fa fa-search"></i>
+            </span>
+                    <input class="blind" type="submit" value="Groot 검색">
+                </fieldset>
+            </form>
+
+        </div>
+
+        <div class><br>
+
+            <div class="panel-body">
+
+                <table class="table table-hover" style="text-align:center">
+                    <thead>
+                    <tr>
+                        <th style="width:5%;">번호</th>
+                        <th style="width:12%">기술 분류</th>
+                        <th style="width:14%">임치 기술명</th>
+                      <th style="width:40%">기술 요약</th>
+                    <th style="width:10%">회사명</th>
+                     <th style="width:10%">홈페이지 주소</th>
+                    <th style="width:10%">계약 신청</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% if result %}
+                    <p>검색 키워드 : <strong>{{ query }}</strong></p>
+
+                    <p> 관련 기술 총 {{ result|length }} 건 검색 되었습니다.</p>
+                    <!--<p> 관련 기술 총 {{ result|length }} 건 검색 되었습니다. {{ result|pluralize }}.</p>-->
+                    {% for r in result %}
+                    {% if r.agree_status == 1 %}
+
+                    <tr>
+                        <!--<td class="center">{{app_infos.enroll_idx.enroll_idx}}</td>-->
+                        <td class="center" style=" vertical-align: middle;">{{r.sort_idx}}</td>
+                        <td class="center" style=" vertical-align: middle;">{{ r.title }}</a></td>
+                        <td class="center" style=" vertical-align: middle;">{{ r.summary }}</td>
+                        <td class="center" style=" vertical-align: middle;">{{r.user.com_name}}</td>
+                        <td class="center" style=" vertical-align: middle;"><a href="https://{{r.user.homepage}}">{{ r.user.homepage }}</a></td>
+
+                        <td style=" vertical-align: middle;">
+                            <a href="insert/{{r.enroll_idx}}">
+                                <button type="button" class="btn btn-outline-info"
+                                        style="font-size:80%; border-color:#00c8a9;"> 기술 계약 신청
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% endif %}
+                    {% endfor %}
+
+                    {% else %}
+                    <p>" {{ query }} " 에 대한 검색 결과가 없습니다.</p>
+                    {% endif %}
+
+
+                    </tbody>
+
+
+                </table>
+            </div>
+            </div>
+        </div>
+</section>
+
+
+{% endblock content %}
+
+{% block js %}
+                    <script>
+                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                        var tables = document.getElementsByTagName('tbody');
+                        var table = tables[tables.length - 1];
+                        var rows = table.rows;
+                        for(var i = 0, td; i < rows.length; i++){
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(i+1));
+                            td.style ="vertical-align: middle;"
+                            rows[i].insertBefore(td, rows[i].firstChild);
+                        }
+
+                    </script>
+
+
+{% endblock js %}
+
+
+<!--<body>-->
+<!--<p>You searched for: <strong>{{ query }}</strong></p>-->
+
+<!--{% if result %}-->
+<!--<p>Found {{ result|length }} book{{ result|pluralize }}.</p>-->
+<!--<ul>-->
+<!--{% for r in result %}-->
+<!--{{ r.title }}{{ r.user_id.com_name }}{{ r.summary }}-->
+<!--{% endfor %}-->
+<!--</ul>-->
+<!--{% else %}-->
+<!--<p>No result matched your search criteria.</p>-->
+<!--{% endif %}-->
+</body>
+</html>

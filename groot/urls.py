@@ -19,7 +19,6 @@ from django.urls import path
 from groot import views
 # from groot.views import SearchFormView
 
-
 urlpatterns = [
     path('', views.groot),
     path('login', views.login, name='login'),
@@ -64,7 +63,10 @@ urlpatterns = [
     path('change_com', views.change_com, name="change_com"),
     path('a', views.a, name="a"),
     # path('search', SearchFormView.as_view(), name='search'),
-    path('search/', views.search_list, name="search"),
+    # path('search/', views.search_list, name="search"),
+    path('search/', views.search_form, name="search"),
+    # path('search/', views.search_result, name="search"),
+
     path('login2', views.login2, name="login2"),
     path('login3', views.login3, name="login3"),
     path('application_list', views.application_list, name='application_list'),
@@ -72,6 +74,7 @@ urlpatterns = [
     path('contract_list', views.contract_list, name='contract_list'),
     path('contract_list/<int:idx>', views.contract_list_detail, name="contract_list_detail"),
     # path('login3', views.login3, name="login3"),
+    path('download/<int:idx>', views.download, name='download'),
 
 
 
