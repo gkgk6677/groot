@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block css %}
+    <!-- 탭 관련 CSS 파일 -->
+    <link href="{%static 'css/tab.css' %}" rel="stylesheet">
 {% endblock css %}
 
 {% block sidebar %}
@@ -14,10 +16,133 @@
 {% block content %}
     <div class="col-lg-9">
         <div class="contents">
-            요청 사항 관리 페이지
+            <!-- 소제목 -->
+            <h3 class="mb-30 title_color" style="padding-left:40px">서비스 신청 현황</h3>
+
+            <!-- Tab Menu -->
+            <ul class="nav nav-tabs" role="tablist" style="font-weight:500;">
+            <li class="nav-item">
+                <a class="nav-link active" href="#extend" role="tab" data-toggle="tab">연장신청 현황</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contract" role="tab" data-toggle="tab">계약신청 현황</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#expire" role="tab" data-toggle="tab">해지신청 현황</a>
+            </li>
+            </ul>
+
+            <!-- Tab Contents -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="extend">
+                    <table class="table table-hover" width="90%" style="text-align:center;">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>임치 기술명</th>
+                                <th>년 수</th>
+                                <th>신청날짜</th>
+                                <th>신청상태</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        {% for list in extend_lists %}
+                            <tr>
+                                <td>{{list.enroll_idx.title}}</td>
+                                <td>{{list.term}} 년</td>
+                                <td>{{list.c_date}}</td>
+                                {{list.status | safe}}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <script>
+                            var tables = document.getElementsByTagName('tbody');
+                            var table = tables[tables.length - 1];
+                            var rows = table.rows;
+                            for(var i = 0, td; i < rows.length; i++){
+                                td = document.createElement('td');
+                                td.appendChild(document.createTextNode(i+1));
+                                rows[i].insertBefore(td, rows[i].firstChild);
+                            }
+                        </script>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane " id="contract">
+                    <table class="table table-hover" width="90%" style="text-align:center;">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>임치 기술명</th>
+                                <th>임치기업</th>
+                                <th>계약기업</th>
+                                <th>계약기간</th>
+                                <th>신청날짜</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        {% for list in contract_lists %}
+                            <tr>
+                                <td>{{list.enroll_idx.title}}</td>
+                                <td>{{list.enroll_idx.user.com_name}}</td>
+                                <td>{{list.user.com_name}}</td>
+                                <td>{{list.term}}</td>
+                                <td>{{list.c_date}}</td>
+                                {{list.status | safe}}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <script>
+                            var tables = document.getElementsByTagName('tbody');
+                            var table = tables[tables.length - 1];
+                            var rows = table.rows;
+                            for(var i = 0, td; i < rows.length; i++){
+                                td = document.createElement('td');
+                                td.appendChild(document.createTextNode(i+1));
+                                rows[i].insertBefore(td, rows[i].firstChild);
+                            }
+                        </script>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane " id="expire">
+                    <table class="table table-hover" width="90%" style="text-align:center;">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>임치 기술명</th>
+                                <th>신청날짜</th>
+                                <th>신청상태</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        {% for list in expire_lists %}
+                            <tr>
+                                <td>{{list.enroll_idx.title}}</td>
+                                <td>{{list.c_date}}</td>
+                                {{list.status | safe}}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <script>
+                            var tables = document.getElementsByTagName('tbody');
+                            var table = tables[tables.length - 1];
+                            var rows = table.rows;
+                            for(var i = 0, td; i < rows.length; i++){
+                                td = document.createElement('td');
+                                td.appendChild(document.createTextNode(i+1));
+                                rows[i].insertBefore(td, rows[i].firstChild);
+                            }
+                        </script>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
 
 {% block js %}
+
 {% endblock js %}

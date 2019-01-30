@@ -10,6 +10,7 @@
         .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
         .btn-outline-info:hover{color:white; background-color:#00c8a9;}
     </style>
+
 {% endblock css %}
 
 {% block content %}
@@ -38,7 +39,7 @@
                                 <!--<td>{{enroll_info.enroll_date}}</td>-->
                                 <td>
                                     {% csrf_token %}
-                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
+                                    <button type="submit" onclick="location.href='download/{{enroll_info.enroll_idx}}'"  trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
                                 </td>
                                 </td>
                             </tr>
@@ -71,7 +72,7 @@
                                 <td>{{contract_info.enroll_idx.title}}</td>
                                 <td>
                                     {% csrf_token %}
-                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
+                                    <button type="submit" onclick="download({{enroll_info.enroll_idx}})" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> Download </button>
                                 </td>
                                 </td>
                             </tr>

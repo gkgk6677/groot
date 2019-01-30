@@ -3,17 +3,19 @@ from .models import *
 
 class EnrollmentForm(forms.ModelForm):
 
-    sort_idx = forms.ModelChoiceField(queryset = SortMst.objects.all(), empty_label="산업분류", required=True, widget=forms.Select(attrs={'class':'dropdown1'}) )
-    title= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '100자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 100)"}))
-    summary = forms.CharField(widget=forms.Textarea(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 300)"}))
-    #
+    sort_idx = forms.ModelChoiceField(queryset = SortMst.objects.all(), empty_label=None, required=True, widget=forms.Select(attrs={'class':'dropdown1'}) )
+    title= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '100자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 100)"}), required=True)
+    summary = forms.CharField(widget=forms.Textarea(attrs={'class ': 'form-control', 'placeholder': '300자 이내로 입력해주세요.', 'onkeyup':"chkword(this, 300)"}), required=True)
+    term = forms.IntegerField(widget=forms.NumberInput(attrs={'max':'10', 'min':'0', 'value':'1'}), required=True)
+
     class Meta:
         model = Enrollment
         fields = ['sort_idx', 'title', 'term','summary']
         labels = {
             'title': 'title_label',
             'sort_idx': 'sort_idx_label',
-            'summary_label': 'summary_label'
+            'summary_label': 'summary_label',
+            'term': 'term_label'
         }
 
 
