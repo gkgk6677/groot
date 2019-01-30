@@ -25,12 +25,9 @@ class EnrollmentForm(forms.ModelForm):
 
 
 
-class SearchForm(forms.ModelForm):
-    word = forms.CharField(label="검색")
+class SearchForm(forms.Form):
+    Word = forms.CharField(label="검색")
 
-    class Meta:
-        model = User
-        fields = ['user_id']
 
 
 class ExtendForm(forms.ModelForm):

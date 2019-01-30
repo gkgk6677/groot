@@ -1,10 +1,11 @@
 import datetime
 import hashlib
 import json
+import operator
 import os
-from functools import wraps
+from functools import wraps, reduce
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 import requests
 from django.shortcuts import render, redirect
 from django.template import RequestContext
@@ -455,20 +456,6 @@ def com_num_check(request):
     #     form = EnrollmentForm()
     # return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
 
-#
-# class SearchFormView():
-#     form_class= SearchForm
-#     template_name = 'groot/insert.html'
-#
-#     def form_valid(self, form):
-#         word = '%s' %self.request.POST['word']
-#         com_list = Enrollment.objects.filter(
-#             Q(com_name__icontains=word)
-#         ).distinct()
-#         context = {}
-#         context['object_list']= com_list
-#         context['search_word']=word
-#         return context
 
 def change(request):
     return render(request, 'groot/change.html', {})
@@ -820,32 +807,71 @@ def a(request):
 
 
 ######################TEST
-class SearchFormView(FormView):
-    form_class = SearchForm
-    template_name = 'groot/search.html'
+# class SearchFormView(FormView):
+#     form_class = SearchForm
+#     template_name = 'groot/search.html'
+#
+#     def form_valid(self, form):
+#         Word = '%s' % self.request.POST['search_word']
+#
+#         return HttpResponse('Word')
+#         # enroll_list = Enrollment.objects.filter(Q(title__icontains=Word) | Q(summary__icontains=Word)).distinct()
+#         #
+#         # context = {}
+#         # # context['form'] = form
+#         # context['search_word'] = Word
+#         # context['object_list'] = enroll_list
+#         #
+#         # return context
+#         #
+#         # # return render(self.request, self.template_name, context)
+#
+# @csrf_exempt
+# def login2(request):
+#     if request.method == "POST":
+#         s = request.POST['s']
+#         try:
+#             a = Extend.objects.get(enroll_idx=s)
+#             if a.status == 0 :
+#                 # 연장 신청이 안되는 경우
+#                 ck_val = 0
+#                 context = {'ck_val': ck_val}
+#
+#                 return HttpResponse(json.dumps(context), content_type='application/json')
+#             else :
+#                 ck_val =1
+#                 context = {'ck_val': ck_val}
+#
+#                 return HttpResponse(json.dumps(context), content_type='application/json')
+#
+#         except Extend.DoesNotExist:
+#             ck_val= 1
+#             context = {'ck_val': ck_val}
+#             return HttpResponse(json.dumps(context), content_type='application/json')
+#
 
-    def form_valid(self, form):
-        schWord = self.request.POST['search_word']
-        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
+def search_form(request):
+    error = False
+    if 'q' in request.GET:
+        q = request.GET['q']
+        if not q:
+            error = True
+        else:
+             result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
 
-        context = {}
-        context['form'] = form
-        context['search_term'] = schWord
-        context['object_list'] = user_list
 
+        return render(request,'groot/search_result.html',{'result':result, 'query':q})
 
-
-        return render(self.request, self.template_name, context)
-
+    return render(request, 'groot/search.html', {'error': error})
 
 
 
 #########################TEST
-def search_list(request):
-    app_info = Enrollment.objects.all().filter(enroll_status=1)
-
-    if request.method == 'GET':
-        return render(request, 'groot/search.html',{'app_info': app_info})
+# def search_list(request):
+#     app_info = Enrollment.objects.all().filter(enroll_status=1)
+#
+#     if request.method == 'GET':
+#         return render(request, 'groot/search.html',{'app_info': app_info})
 
 
 
