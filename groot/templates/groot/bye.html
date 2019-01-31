@@ -5,41 +5,43 @@
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>회원탈퇴</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/bye">회원탈퇴</a>
-</div>    
+<div class="contents-header">
+    <div class="contents-header-left">마이페이지</div>
+    <div class="contents-header-right">
+        <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a class="header-right-last" href="/bye">회원탈퇴</a>
+    </div>
+</div>
+<hr class="contents-header-hr">     
 {% endblock sidebar %}
 
 {% block content %}
     <div class="col-lg-9">
-        <div class="contents" style="padding-bottom:110px;">
-            <div style="text-align:center;">
-                <h1>회원탈퇴</h1><br>
-                <h6>그루트 홈페이지를 탈퇴하시게 되면 임치문서 및 관련된 모든 계약이 해지됩니다</h6>
-                <h6>신중하게 결정하십시오.</h6>
-                <br>
-                <hr>
-                그루트 홈페이지에서는 개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며<br>
-                동일한 아이디로 재가입이 불가능합니다.
-                <hr>
+        <div class="contents">
+            <div>
+                <h3 class="mb-30" style="padding-left:50px;color:rgb(88, 88, 88)">회원탈퇴</h3>
+                <hr><br>
+                <div style="text-align:left;padding-left: 20px;">
+                    <h6>·&nbsp;그루트 홈페이지를 탈퇴하시게 되면 임치문서 및 관련된 모든 계약이 해지됩니다.</h6>
+                    <h6>·&nbsp;개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며 동일한 아이디로 재가입이 불가능합니다.</h6>
+                    <br><hr>
+                </div>
                 <form id="bye_form" onsubmit="return check()" method="POST">
                     {% csrf_token %}
                     <div class="progress-table-wrap">
                         <div class="progress-table" style="text-align:center;">
                             <div class="table-head">
-                                <div style="width: 150px; padding-left: 20px">비밀번호</div>
+                                <div style="font-weight:500;width: 150px; padding-left: 20px">비밀번호</div>
                                 <div style="padding-left: 40px" ><input type="password" id="pw1" name="pw1" ></div>
                             </div>
                             <br>
                             <div class="table-head">
-                                <div style="width: 150px; padding-left: 20px">비밀번호 확인</div>
+                                <div style="font-weight:500;width: 150px; padding-left: 20px">비밀번호 확인</div>
                                 <div style="padding-left: 40px"><input type="password" id="pw2" name="pw2" ></div>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div>
+                    <div style="text-align:center">
                         <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow" style="margin-top:30px">
                     </div>
                 </form>

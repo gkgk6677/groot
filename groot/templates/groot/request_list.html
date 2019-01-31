@@ -14,17 +14,20 @@
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>서비스 신청 현황</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/request_list">서비스 신청 현황</a>
-</div>    
+<div class="contents-header">
+    <div class="contents-header-left">마이페이지</div>
+    <div class="contents-header-right">
+        <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a class="header-right-last" href="/request_list">서비스 신청 현황</a>
+    </div>
+</div>
+<hr class="contents-header-hr">    
 {% endblock sidebar %}
 
 {% block content %}
     <div class="col-lg-9">
         <div class="contents">
             <!-- 소제목 -->
-            <h3 class="mb-30 title_color" style="padding-left:40px">서비스 신청 현황</h3>
+            <h3 class="mb-30 title_color" style="padding-left:40px;color:rgb(88, 88, 88)">서비스 신청 현황</h3>
 
             <!-- Tab Menu -->
             <ul class="nav nav-tabs" role="tablist" style="font-weight:500;">

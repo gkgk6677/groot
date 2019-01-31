@@ -56,9 +56,10 @@ html {
 }  
 
 section {
-  padding-top: 90px;
+  padding:90px 0 70px 0;
   margin:0 auto;
-  min-height: 100%;
+  min-height: -webkit-fill-available;
+  background: rgb(245, 243, 241);
 }
 
 body {
@@ -69,6 +70,7 @@ body {
   color: #777777; 
   position: relative;
   min-height: 100%;
+  display: block;
 }
 
 .list {
@@ -95,8 +97,10 @@ button:focus {
   box-shadow: none; }
 
 .p_120 {
-  padding-top: 150px;
-  padding-bottom: 200px; }
+  padding-top: 40px;
+  padding-bottom: 60px; 
+  min-height: -webkit-fill-available;
+}
 
 .p_200 {
   padding-top: 150px;
@@ -126,7 +130,7 @@ button:focus {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1170px; } }
+    max-width: 1300px; } }
 
 @media (min-width: 1620px) {
   .box_1620 {
@@ -2994,6 +2998,7 @@ footer {
   background: #222222; 
   position: absolute;
   padding: 20px 0 20px 0;
+  min-height: 70px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -3103,6 +3108,37 @@ footer {
 /* 내가 추가한것
 ========================================================================
 */
+.contents-header {
+  display: flex; 
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.contents-header-left {
+  font-weight: 500;
+  font-size: 35px;
+  padding-top: 5px;
+  padding-left:40px;
+  color: #3189AE;
+  position: absolute;
+}
+
+.contents-header-right {
+  padding-top:15px;
+  padding-right:40px;
+  text-align:right;
+  right:0px;
+  position: absolute
+}
+
+.contents-header-right .header-right-last {
+  font-weight: 500;
+}
+
+.contents-header-hr {
+  border:solid 1px #B8B6B6;
+  margin-bottom:40px;
+}
 
 .inner-container {
   padding: 30px 10px 30px 10px;
@@ -3204,7 +3240,7 @@ a {
   padding-right: 20px;
   padding-top: 40px;
   padding-bottom: 40px;
-  min-height: 600px;
+  min-height: 570px;
 }
 
 /* carousel

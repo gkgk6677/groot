@@ -1,0 +1,42 @@
+.green_window {
+    display: inline-block;
+    width: 570px;
+    height: 50px;
+    border: 2px solid #2f89ae;
+    border-radius: 15px;
+    background-color: #fff;
+}
+.sch_smit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: visible;
+    width: 49px;
+    height: 49px;
+    border: 0;
+    background: #03cf5d;
+}
+
+.search .input_text {
+    margin: 12px 0 0 9px;
+    width: 455px;
+    height: 23px;
+    outline: 0;
+    border: 0;
+
+    background-color: transparent;
+    color: #222222;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 23px;
+    *ime-mode: active;
+}
+.blind {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+}
+.fa-search {  font-size: 1.4rem;  color: #29abe2;  z-index: 3;  top: 25%;
