@@ -29,6 +29,7 @@ import random
 from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
+from .render import Render
 # from .render import render_to_pdf
 # import pdfkit
 # import os
@@ -641,12 +642,19 @@ def issue(request):
     else :
         return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info})
 
-# class GeneratePdf(View) :
-#     def get(self, request, *args, **kwargs):
-#         template = get_template('groot/show_app.html')
-#         html = template.render(kwargs)
-#         # pdf = render_to_pdf('groot/show_app.html', kwargs)
-#         return HttpResponse(pdf, content_type='application/pdf')
+class Pdf(View) :
+    def get(self, request, idx, *args, **kwargs):
+        # template = get_template('groot/show_app.html')
+        # html = template.render(kwargs)
+        # pdf = render_to_pdf('groot/show_app.html', kwargs)
+        user_id = request.session['user_id']
+
+        enroll_info = Enrollment.objects.get(enroll_idx=idx)
+        user = User.objects.get(user_id=user_id)
+        cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
+        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+
+        return Render.render('groot/generatepdf.html', params)
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']

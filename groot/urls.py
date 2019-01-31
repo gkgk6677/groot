@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from groot.views import Pdf
 from groot import views
 # from groot.views import SearchFormView
 
@@ -34,8 +34,8 @@ urlpatterns = [
     path('test', views.test, name='test'),
     path('issue/', views.issue, name='issue'),
     # path('issue/show_app/<int:idx>', views.GeneratePdf.as_view(), name='show_app'),
-    path('issue/show_app/<int:idx>/', views.show_app, name='show_app'),
-    path('issue/show_app/<int:idx>/pdf', views.pdf_app, name='pdf_app'),
+    path('issue/show_app/<int:idx>/', Pdf.as_view()),
+    # path('render/pdf/<int:idx>', Pdf.as_view()),
     path('issue/show_cont/<int:en_idx>-<int:cont_idx>', views.show_cont, name='show_cont'),
     path('groot_scan/', views.groot_scan, name='groot_scan'),
     path('groot_scan/block/', views.groot_block, name='groot_block'),
