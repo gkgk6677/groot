@@ -3,12 +3,22 @@
 
 {% block css %}
     <style>
-			table {
-                table-layout:fixed;
-            }
+        table {
+            table-layout:fixed;
+        }
         .tr_link:hover{color:black; font-weight: bold;}
         .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
         .btn-outline-info:hover{color:white; background-color:#00c8a9;}
+        #file {
+            color:#2F89AE;
+            border-bottom: 3px solid #2F89AE; 
+        }
+        #file-read {
+            color:#2F89AE;
+        }
+        #file-read:hover {
+            color:white;
+        }
     </style>
 
 {% endblock css %}
@@ -33,7 +43,7 @@
                                 {% if enroll_infos %}
                                 <thead>
                                     <tr>
-                                        <th>번&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;호</th>
+                                        <th>No</th>
                                         <th>임치 기술명</th>
                                         <th>임치 문서</th>
                                     </tr>

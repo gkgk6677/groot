@@ -67,7 +67,7 @@ body {
   font-size: 14px;
   font-family: "Roboto", sans-serif;
   font-weight: normal;
-  color: #777777; 
+  color: #4b4b4b; 
   position: relative;
   min-height: 100%;
   display: block;
@@ -80,7 +80,7 @@ body {
 
 a {
   text-decoration: none;
-  transition: all 0.3s ease-in-out; }
+  transition: 0.1s ease-in-out; }
   a:hover, a:focus {
     text-decoration: none;
     outline: none; }
@@ -155,7 +155,7 @@ button:focus {
     font-size: 14px;
     font-family: "Roboto", sans-serif;
     line-height: 24px;
-    color: #777777;
+    color: #4b4b4b;
     margin-bottom: 0px;
     max-width: 740px;
     margin: auto; }
@@ -187,7 +187,7 @@ button:focus {
     .header_area .navbar .navbar-brand img + img {
       display: none; }
     .header_area .navbar .nav .nav-item {
-      margin-right: 45px; }
+      margin-right: 20px; }
       .header_area .navbar .nav .nav-item .nav-link {
         font: 500 13px/68px "Roboto", sans-serif;
         color: rgb(71,72,72);
@@ -198,13 +198,15 @@ button:focus {
         font: 500 15px/68px "Roboto", sans-serif;
         color: rgb(71,72,72);
         font-weight: bold;
-        padding: 0px;
+        height: 68px;
+        padding: 0px 10px 0 10px;
         display: inline-block; }
         .header_area .navbar .nav .nav-item .nav-link-other:hover{
         font: 500 15px/68px "Roboto", sans-serif;
+        border-bottom: 3px solid #2F89AE;
         color: rgb(32, 155, 204);
         font-weight: bold;
-        padding: 0px;
+        padding: 0px 10px 0 10px;
         display: inline-block; }
 
         .header_area .navbar .nav .nav-item .nav-link:after {
@@ -231,7 +233,7 @@ button:focus {
               display: block;
               border: none;
               padding: 0px;
-              box-shadow: 0px 10px 30px 0px rgba(255, 255, 255, 0.3); } }
+              box-shadow: 2px 10px 30px 0px rgba(255, 255, 255, 0.3); } }
           .header_area .navbar .nav .nav-item.submenu ul:before {
             content: "";
             width: 0;
@@ -518,7 +520,7 @@ button:focus {
     .causes_item .causes_text p {
       font-size: 14px;
       line-height: 24px;
-      color: #777777;
+      color: #4b4b4b;
       font-weight: 300;
       margin-bottom: 0px; }
   .causes_item .causes_bottom a {
@@ -554,7 +556,7 @@ button:focus {
       padding: 10px 0px 13px;
       transition: all 0.3s linear; }
       .single-recent-blog-post .details .sec_h4:hover {
-        color: #777777; }
+        color: #4b4b4b; }
   .single-recent-blog-post .date {
     font-size: 14px;
     line-height: 24px;
@@ -631,12 +633,12 @@ button:focus {
       font: 300 14px/21px "Roboto", sans-serif;
       color: #222222; }
       .blog_info .post_tag a:hover {
-        color: #777777; }
+        color: #4b4b4b; }
       .blog_info .post_tag a.active {
         color: #faba00; }
   .blog_info .blog_meta li a {
     font: 300 14px/20px "Roboto", sans-serif;
-    color: #777777;
+    color: #4b4b4b;
     vertical-align: middle;
     padding-bottom: 12px;
     display: inline-block; }
@@ -1012,7 +1014,7 @@ button:focus {
     color: #cccccc;
     margin-bottom: 13px; }
   .comments-area .comment {
-    color: #777777;
+    color: #4b4b4b;
     margin-bottom: 0px; }
   .comments-area .btn-reply {
     background-color: #fff;
@@ -1058,7 +1060,7 @@ button:focus {
     border-radius: 0px;
     width: 100%;
     font-size: 14px;
-    color: #777777;
+    color: #4b4b4b;
     border: 1px solid transparent; }
     .comment-form .form-control:focus {
       box-shadow: none;
@@ -1578,7 +1580,7 @@ h6 {
   font-size: 14px; }
 
 .typography h1, .typography h2, .typography h3, .typography h4, .typography h5, .typography h6 {
-  color: #777777; }
+  color: #4b4b4b; }
 
 .button-area .border-top-generic {
   padding: 70px 15px;
@@ -1981,7 +1983,7 @@ h6 {
 
 .ordered-list li span {
   font-weight: 300;
-  color: #777777; }
+  color: #4b4b4b; }
 
 .ordered-list-alpha li {
   margin-left: 30px;
@@ -1992,7 +1994,7 @@ h6 {
 
 .ordered-list-alpha li span {
   font-weight: 300;
-  color: #777777; }
+  color: #4b4b4b; }
 
 .ordered-list-roman li {
   margin-left: 30px;
@@ -2003,7 +2005,7 @@ h6 {
 
 .ordered-list-roman li span {
   font-weight: 300;
-  color: #777777; }
+  color: #4b4b4b; }
 
 .single-input {
   display: block;
@@ -2953,7 +2955,7 @@ h6 {
     font-size: 14px; }
   .portfolio_details_inner .portfolio_right_text .list li {
     margin-bottom: 7px;
-    color: #777777;
+    color: #4b4b4b;
     font-weight: normal;
     font-size: 14px; }
     .portfolio_details_inner .portfolio_right_text .list li span {
@@ -3018,7 +3020,7 @@ footer {
   font-size: 14px;
   line-height: 24px;
   font-family: "Roboto", sans-serif;
-  color: #777777;
+  color: #4b4b4b;
   margin-bottom: 30px; }
   .ab_widget p a {
     color: #faba00; }
@@ -3031,7 +3033,7 @@ footer {
     font-size: 14px;
     line-height: 24px;
     font-family: "Roboto", sans-serif;
-    color: #777777;
+    color: #4b4b4b;
     margin-bottom: 15px; }
   .news_widget .input-group input {
     height: 40px;
@@ -3079,7 +3081,7 @@ footer {
   font-size: 14px;
   line-height: 24px;
   font-family: "Roboto", sans-serif;
-  color: #777777;
+  color: #4b4b4b;
   margin-bottom: 10px; }
 .social_widget .list li {
   margin-right: 17px;

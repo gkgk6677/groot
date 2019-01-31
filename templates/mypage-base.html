@@ -20,7 +20,18 @@
         <link rel="stylesheet" href="{%static 'css/style.css' %}">
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
         <link href="{%static 'css/admin_font.css' %}" rel="stylesheet">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <style>
+            #mypage {
+                color:#3189AE;
+            }
+            #user {
+                border-bottom: 3px solid #3189AE; 
+            }
+            #mypage:hover {
+                color:white;
+            }
+        </style>
         {% block css %}
         {% endblock css %}
     </head>
@@ -53,9 +64,9 @@
                                 <li class="nav-item"><a class="nav-link-other" href="/groot_scan">Groot Scan</a></li>
                                 {%if request.session.user_id %}
                                     <li class="nav-item submenu dropdown">
-                                        <a class="nav-link-other" href="#" data-toggle="dropdown" style="padding-top:6px;margin-left: 2px;"><i class="fas fa-user fa-2x" style="color:#2F89AE"></i></a>
+                                        <a class="nav-link-other" href="#" data-toggle="dropdown" style="padding-top:6px;margin-left: 2px;" id="user"><i class="fas fa-user fa-2x" style="color:#2F89AE"></i></a>
                                         <ul class="dropdown-menu">
-                                            <li class="nav-item"><a class="nav-link" href="/mypage"><i class="far fa-user"></i>&nbsp;&nbsp;마이페이지</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="/mypage" id="mypage"><i class="far fa-user"></i>&nbsp;&nbsp;마이페이지</a></li>
                                             <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;로그아웃</a></li>
                                         </ul>
                                     </li>
@@ -80,33 +91,33 @@
                         <div class="col-lg-3">
                             <div class="blog_right_sidebar">
                                 <aside class="single_sidebar_widget author_widget">
-                                    <img class="author_img rounded-circle" src="{% static 'img/blog/user.jpg' %}" alt="">
+                                    <img class="author_img rounded-circle" src="{% static 'img/blog/user2.jpg' %}" alt="">
                                     <div><h4 style="color:#3189AE; margin: 20px;">{{ request.session.user_id }} 님</h4></div>
                                     <hr style="margin-bottom:30px;">
                                 </aside>
                                 <aside class="single_sidebar_widget post_category_widget">
                                     <ul class="list cat-list" >
-                                        <li>
+                                        <li id="application_list">
                                             <a href="/application_list">
                                                 <p>내 임치물 관리</p>
                                             </a>
                                         </li>
-                                        <li>
+                                        <li id="request_list">
                                             <a href="/request_list">
                                                 <p>서비스 신청 현황</p>
                                             </a>
                                         </li>
-                                        <li>
+                                        <li id="contract_list">
                                             <a href="/contract_list">
                                                 <p>회사간 계약 현황</p>
                                             </a>
                                         </li>
-                                        <li>
+                                        <li id="change">
                                             <a href="/change">
                                                 <p>내정보 수정</p>
                                             </a>
                                         </li>
-                                        <li>
+                                        <li id="bye">
                                             <a href="/bye">
                                                 <p>회원탈퇴</p>
                                             </a>

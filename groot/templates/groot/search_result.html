@@ -3,6 +3,19 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+    <style>
+        #DataTables_Table_0_filter {
+            visibility: hidden;
+        }
+        #DataTables_Table_0_info {
+            visibility: hidden;
+        }
+        #search {
+            color:#2F89AE;
+            border-bottom: 3px solid #2F89AE; 
+        }
+    </style>
 {% endblock css %}
 
 {% block content %}
@@ -35,10 +48,10 @@
                     
                             <div class="panel-body">
                 
-                                <table class="table table-hover" style="text-align:center">
+                                <table class="table table-hover dataTables-example" style="text-align:center">
                                     <thead>
                                     <tr>
-                                        <th style="width:5%;">번호</th>
+                                        <th style="width:5%;">No</th>
                                         <th style="width:12%">기술 분류</th>
                                         <th style="width:14%">임치 기술명</th>
                                         <th style="width:40%">기술 요약</th>
@@ -94,19 +107,31 @@
 {% endblock content %}
 
 {% block js %}
-                    <script>
-                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
-                        var tables = document.getElementsByTagName('tbody');
-                        var table = tables[tables.length - 1];
-                        var rows = table.rows;
-                        for(var i = 0, td; i < rows.length; i++){
-                            td = document.createElement('td');
-                            td.appendChild(document.createTextNode(i+1));
-                            td.style ="vertical-align: middle;"
-                            rows[i].insertBefore(td, rows[i].firstChild);
-                        }
+    <script>
+        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+        var tables = document.getElementsByTagName('tbody');
+        var table = tables[tables.length - 1];
+        var rows = table.rows;
+        for(var i = 0, td; i < rows.length; i++){
+            td = document.createElement('td');
+            td.appendChild(document.createTextNode(i+1));
+            td.style ="vertical-align: middle;"
+            rows[i].insertBefore(td, rows[i].firstChild);
+        }
 
-                    </script>
+    </script>
+    <!-- DataTables JavaScript -->
+    <script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+    <script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('.dataTables-example').DataTable({
+            "lengthMenu": [ 5,10,15 ]
+        });
+    });
+    </script>
 
 {% endblock js %}
 
@@ -124,5 +149,3 @@
 <!--{% else %}-->
 <!--<p>No result matched your search criteria.</p>-->
 <!--{% endif %}-->
-</body>
-</html>
