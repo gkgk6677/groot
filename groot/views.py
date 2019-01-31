@@ -861,57 +861,6 @@ def search_form(request):
 
     return render(request, 'groot/search.html', {'error': error})
 
-#
-# def search_form(request):
-#     error = False
-#     if 's_option' in request.GET:
-#         s_option = request.GET['s_option']
-#         if s_option == '2':
-#             if 'q' in request.GET:
-#                 q = request.GET['q']
-#                 if not q:
-#                     error = True
-#                 else :
-#                     result = Enrollment.objects.filter(Q(title__icontains=q)).distinct()
-#                     r_result = result.filter(agree_status=1)
-#
-#                 return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option})
-#
-
-                # elif s_option == 2 :
-                #     result = Enrollment.objects.filter(Q(title__icontains=q)).distinct()
-                #     r_result = result.filter(agree_status=1)
-                #     return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
-                # elif s_option == 3 :
-                #     result = Enrollment.objects.filter(Q(summary__icontains=q)).distinct()
-                #     r_result = result.filter(agree_status=1)
-                #     return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
-                # elif s_option == 4 :
-                #     result = Enrollment.objects.filter(Q(title__icontains=q) | Q(summary__icontains=q)).distinct()
-                #     r_result = result.filter(agree_status=1)
-                #     return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
-
-    # return render(request, 'groot/search.html', {'error': error})
-
-
-#
-# ######################TEST
-# def search_form(request):
-#     error = False
-#     if 'q' in request.GET:
-#         q = request.GET['q']
-#         if not q:
-#             error = True
-#         else:
-#              result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
-#              r_result=result.filter(agree_status=1)
-#              return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
-#
-#
-#     return render(request, 'groot/search.html', {'error': error})
-#
-# ########################TEST
-
 
 
 
