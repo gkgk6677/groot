@@ -1,10 +1,11 @@
 import datetime
 import hashlib
 import json
+import operator
 import os
-from functools import wraps
+from functools import wraps, reduce
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 import requests
 from django.shortcuts import render, redirect
 from django.template import RequestContext
@@ -25,7 +26,7 @@ import zipfile
 import calendar
 import pandas
 import random
-
+from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 # from .render import render_to_pdf
@@ -280,6 +281,7 @@ def my_login_required(func):
         return wrap
 
 
+# -*- coding: utf-8 -*-
 @csrf_exempt
 def download(request, idx):
     def folder_zip(src_path, dest_file):
@@ -298,17 +300,25 @@ def download(request, idx):
 
     filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
                             enrollment.user.com_name, enrollment.title)
-    dest = filepath + '/' + enrollment.title + '.zip'
+    dest = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp') + '/' + enrollment.title + '.zip'
     folder_zip(filepath, dest)
     os.chdir(tpath)
 
-    filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx),
-                            enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
-    filename = enrollment.title
+    # filepath = os.path.join(settings.BASE_DIR, 'uploaded_files', str(enrollment.sort_idx.sort_idx) , enrollment.user.com_name, enrollment.title, enrollment.title + '.zip')
 
-    with open(filepath, 'rb') as f:
+    zippath = os.path.join(settings.BASE_DIR, 'uploaded_files/tmp', enrollment.title + '.zip')
+    fileName = os.path.basename(zippath)
+    with open(zippath, 'rb') as f:
         response = HttpResponse(f, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="download.zip"'
+        # fileName = fileName.encode("utf-8")
+        # try:
+        #     fileName.encode('ascii')
+        #     file_expr = 'filename="{}"'.format(fileName)
+        # except UnicodeEncodeError:
+        #     # Handle a non-ASCII filename
+        file_expr = "filename*=utf-8''{}".format(quote(fileName))
+        response['Content-Disposition'] = 'attachment; {}'.format(file_expr)
+    os.remove(zippath)
     return response
 
 
@@ -478,20 +488,6 @@ def com_num_check(request):
     #     form = EnrollmentForm()
     # return render(request, 'groot/insert.html', {'form': form, 'enrollinfo': enrollinfo})
 
-#
-# class SearchFormView():
-#     form_class= SearchForm
-#     template_name = 'groot/insert.html'
-#
-#     def form_valid(self, form):
-#         word = '%s' %self.request.POST['word']
-#         com_list = Enrollment.objects.filter(
-#             Q(com_name__icontains=word)
-#         ).distinct()
-#         context = {}
-#         context['object_list']= com_list
-#         context['search_word']=word
-#         return context
 
 def change(request):
     return render(request, 'groot/change.html', {})
@@ -546,7 +542,12 @@ def test(request):
 def issue(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-    contract_infos = Contract.objects.all().filter(user_id=user_id, status=1)
+    contract_infos = Contract.objects.all()
+    cont_info = []
+
+    for contract_info in contract_infos:
+        if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
+            cont_info.append(contract_info)
 
     if request.method == 'POST' :
         enroll_idx = request.POST.get('enroll_id')
@@ -638,7 +639,7 @@ def issue(request):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
     else :
-        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
+        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info})
 
 # class GeneratePdf(View) :
 #     def get(self, request, *args, **kwargs):
@@ -713,8 +714,106 @@ def show_cont(request, en_idx, cont_idx):
 
     return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
 
+def get_title() : # 임치된 title을 불러오는 함수
+    technology = Enrollment.objects.filter(enroll_status=1)
+    title = []
+    for tech in technology :
+        title.append(tech.title)
+
+    return title
+
+def get_tx() : # 모든 tx 불러오는 함수
+    titles = get_title()
+    groot_scan = []
+    for title in titles:
+        # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
+        fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
+        result = requests.get(fabric)
+        tx_parses = result.json()
+        # [
+        #     {
+        #       "TxId": "93fd07b0727289df08b75c0b0059e19dead5793c53cb9d53915f1cbe328c1aee",
+        #       "Value": {
+        #                    "technology": "testtt", "sort": 33, "company": "GROOT", "com_num": 123456789, "term": 5,
+        #                    "content": {
+        #                                   "test1.txt":"6246f69ac47f80f5ecb5a840bfd72dee1db7bc650091a4b773fd366632d8a40b",
+        #                                   "test2.txt":"922e49fa1b9bbd9881420cf985bbb442f714868e28d0e8254f341a7de22337cf"
+        #                               },
+        #                    "enroll_date": "2019.01.28", "status": 1
+        #       },
+        #       "Timestamp": "2019-01-28 02:08:00.88 +0000 UTC",
+        #       "IsDelete": "false"
+        #     },
+        #     { ... }, { ... }
+        # ]
+
+        for tx_parse in tx_parses:
+            txid = tx_parse.get('TxId')
+            timestamp = tx_parse.get('Timestamp')
+            groot_scan.append([{"TxId": txid, "Timestamp": timestamp}])
+
+    groot_scan = sorted(groot_scan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
+
+    return groot_scan
+
 def groot_scan(request):
-    return render(request, 'groot/groot_scan.html', {})
+    # # Hyperledger-Fabric에서 전체 결과 받아오기
+    # fabric = "http://210.107.78.150:8001/get_all_tech"
+    # result = requests.get(fabric)
+    # titles = []
+    # block_parses = result.json()  # JSON형식으로 parse(분석)
+    # # [
+    # #     {
+    # #         "Key": "testtt",
+    # #         "Record": {
+    # #                       "client": {"dayoung": 4, "fowofi": 3, "sunyou": 5},
+    # #                       "com_num": 123456789, "company": "GROOT",
+    # #                       "content": {
+    # #                             ".DS_Store":"99a697877975794602867c62e076f901972ec79d541c3400f3aa791380b957e9",
+    # # 		                      "01.html":"3230f0f03a0d8c3185c76b9fcd545f62c5793e189202b637af4006effa78d2af"
+    # #                       },
+    # #                       "enroll_date": "2019.01.28", "sort": 33, "status": 4,
+    # #                       "technology": "testtt", "term": 5
+    # #                   }
+    # #     },
+    # #     { ... }, { ... }
+    # # ]
+    #
+    # for block_parse in block_parses :
+    #     titles.append(block_parse.get('Key'))
+    groot_scan = get_tx()
+    number = get_title()
+
+    return render(request, 'groot/groot_scan.html', {'results': groot_scan, 'number':number})
+
+def groot_block(request):
+    return render(request, 'groot/groot_block.html', {})
+
+def groot_block_detail(request, height):
+    return render(request, 'groot/groot_block_detail.html', {})
+
+def groot_transaction(request):
+    transaction = get_tx()
+    time = datetime.datetime.now()
+
+    for tx in transaction :
+        timestamp = tx[0].get("Timestamp")[0:19]
+        timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+        # print(timestamp)
+        diff = time - timestamp # 시간차이 구하기
+        diff = str(diff)[:-7] # milisecond 제외한 값만 보내기
+        tx[0]["Timestamp"] = diff # 값 update
+
+    return render(request, 'groot/groot_transaction.html', {'transactions':transaction})
+
+def groot_transaction_detail(request, txid):
+    # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
+    # fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
+    # result = requests.get(fabric)
+    # tx_parses = result.json()
+
+
+    return render(request, 'groot/groot_transaction_detail.html', {'txid':txid})
 
 def read(request):
     user_id = request.session['user_id']
@@ -842,33 +941,39 @@ def a(request):
     return render(request, 'groot/a.html', {})
 
 
-######################TEST
-class SearchFormView(FormView):
-    form_class = SearchForm
-    template_name = 'groot/search.html'
-
-    def form_valid(self, form):
-        schWord = self.request.POST['search_word']
-        user_list = User.objects.filter(Q(user_id__icontains=schWord)).distinct()
-
-        context = {}
-        context['form'] = form
-        context['search_term'] = schWord
-        context['object_list'] = user_list
-
-
-
-        return render(self.request, self.template_name, context)
+# def search_form(request):
+#     error = False
+#     if 'q' in request.GET:
+#         q = request.GET['q']
+#         if not q:
+#             error = True
+#         else:
+#
+#              result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
+#              resultt = result.agree_status
+#              if resultt == 1:
+#                  return render(request, 'groot/search_result.html', {'result': result, 'query': q})
+#
+#         return render(request, 'groot/search.html', {'error': error})
 
 
 
+#######################TEST
+def search_form(request):
+    error = False
+    if 'q' in request.GET:
+        q = request.GET['q']
+        if not q:
+            error = True
+        else:
+             result = Enrollment.objects.filter(Q(title__icontains=q)|Q(summary__icontains=q)).distinct()
+
+        return render(request,'groot/search_result.html',{'result':result, 'query':q})
+
+    return render(request, 'groot/search.html', {'error': error})
 
 #########################TEST
-def search_list(request):
-    app_info = Enrollment.objects.all().filter(enroll_status=1)
 
-    if request.method == 'GET':
-        return render(request, 'groot/search.html',{'app_info': app_info})
 
 
 
@@ -972,6 +1077,8 @@ def contract_list_detail(request, idx):
     enrolldate = contract_infos.enroll_idx.enroll_date.date()
     enddate = contract_infos.enroll_idx.end_date.date()
     cdate = contract_infos.c_date.date()
+    enroll_idx = contract_infos.enroll_idx.enroll_idx
+    enrollment_info = Enrollment.objects.get(enroll_idx=enroll_idx)
 
     if request.method == 'GET':
         return render(request, 'groot/contract_list_detail.html', {'cdate':cdate, 'enddate':enddate, 'enrolldate':enrolldate, 'contract_infos':contract_infos})
@@ -980,7 +1087,18 @@ def contract_list_detail(request, idx):
             contract_infos.status = 1
             contract_infos.accept_date = datetime.datetime.now()
             contract_infos.end_date = contract_infos.accept_date + datetime.timedelta(days=365 * contract_infos.term)
+
+            # Hyperledger fabric 연결
+            #     0          1        2         3        4        5       6          7            8          9
+            # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
+            fabric = "http://210.107.78.150:8001/add_client/" + enrollment_info.title + "@" \
+                     + contract_infos.user.user_id + "@" \
+                     + str(contract_infos.term) + "@" + "4"
+            f = requests.get(fabric)
+            print(f.text)  # cmd 창에 보여질 값
+            contract_infos.contract_tx = f.text[1:-1]
             contract_infos.save()
+
         else:
             contract_infos.status = 2
             contract_infos.accept_date = datetime.datetime.now()

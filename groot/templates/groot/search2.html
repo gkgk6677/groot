@@ -5,238 +5,330 @@
 {% endblock css %}
 
 {% block content %}
-<!--<style>-->
-<!--.green_window {-->
-	<!--display: inline-block;-->
-	<!--width: 366px; height: 34px;-->
-	<!--border: 3px solid #2db400;-->
-	<!--background: white;-->
-<!--}-->
-<!--.input_text {-->
-	<!--width: 348px; height: 21px;-->
-	<!--margin: 6px 0 0 9px;-->
-	<!--border: 0;-->
-	<!--line-height: 21px;-->
-	<!--font-weight: bold;-->
-	<!--font-size: 16px;-->
-	<!--outline: none;-->
-<!--}-->
-<!--.sch_smit {-->
-	<!--width: 54px; height: 40px;-->
-	<!--margin: 0; border: 0;-->
-	<!--vertical-align: top;-->
-	<!--background: #22B600;-->
-	<!--color: white;-->
-	<!--font-weight: bold;-->
-	<!--border-radius: 1px;-->
-	<!--cursor: pointer;-->
-<!--}-->
-<!--.sch_smit:hover {-->
-	<!--background: #56C82C;-->
-<!--}-->
-<!--</style>-->
-<style>
+<head> <!--키프리스 스타일 가져옴 -->
+        <link rel="stylesheet" href="{%static 'css/common.css' %}">
+        <link rel="stylesheet" href="{%static 'css/result.css' %}">
+</head>
 
-
-
-.first_search_box{
- height :40px;
- width : 400px;
- border : 1px solid #1b5ac2;
- background: #ffffff;
-}
-
-.search_keyword_box{
-font-size : 16px;
-padding : 10px;
-border: 0px;
-outline : none;
-float: left;
-}
-
-.searchButton{
- width: 60px;
- height: 100%;
- border: 0px;
- background : #1b5ac2;
- outline : none;
- float :right;
- color : #ffffff
-}
-
-
-.searchButton2 {
-    margin: 0;
-    padding: 0;
-    background: none;
-    border: 0;
-    cursor: pointer;
-    _cursor: hand;
-    text-decoration: none;
-    overflow: visible;
-    font-family:"NanumBarunGothic", "돋움", dotum, Gulim, Tahoma, Verdana, AppleGothic, UnDotum, sans-serif;
-    letter-spacing: -1px;
-    white-space: nowrap;
-    }
-
-.search_keyword_box{
-    outline: none;
-    border: 0;
-}
-
-
-</style>
 
 <!--================Content Area =================-->
 
-<section class="about_area p_120">
-        <div class="first_wrap" align="center">
-            <div class="logo_div">
+
+<body>
+    <section class="first_search_body">
+        <div id="allResultLoading" class="loading_bar_div"><img src="/beginner/images/common/loading_all.gif" alt="검색결과를 불러오고 있습니다." /></div>
+        <div class="first_wrap">
+             <div class="logo_div">
                 <h1>
-                        <img src="/beginner/images/header/txt_titleKIPRIS.png" alt="임치된 기술 간단 검색">
+                        <img src="{% static 'img/search.png' %}">  임치된 기술 검색
                     </a>
                 </h1>
-            </div>
-            <div class="number_info">
-                <table border="0">
-                    <thead>
-                        <tr>
+             </div>
 
+        <!-- 단계별검색 안내 -->
+        <section class="step_ex_box step01">
+            <span class="step_ex_main_title">STEP 01</span>
+            <div class="step_ex_sub_box">
+                <div class="step_ex_title">검색 후 마음에 드는 기술 계약 신청을 클릭해주세요.</div>
+
+                    <div class="step_ex_sub_title">
+                        <span class="step_ex_sub_title_01">임치 기술 공개에<b>동의</b>를 선택한 임치물만 검색이 가능합니다</span><br/>
+                        <!--<span class="step_ex_sub_title_02">연산자를 이용한 검색식 작성을 통해 좀 더 다양한 검색을 할 수 있습니다.</span>-->
+                    </div>
+
+                    <!--<div class="step_ex_img">-->
+                        <!--<img src="{% static 'img/step1_on.png' %}" alt="STEP1"/>-->
+                        <!--<img src="{% static 'img/step2_off.png' %}" alt="STEP2"/>-->
+                        <!--<img src="{% static 'img/step3_off.png' %}" alt="STEP3"/>-->
+                    <!--</div>-->
+
+            <!--검색식 설명-->
+            <div class="step_info">
+                <table border="0">
+                    <tbody class="step_info_main">
+                         <tr>
+                            <td rowspan="5" class="step_info_formula_title">Use Tip</td>
+                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_ex_main_title">Step1</div><p>&nbsp;찾고자 하는 기술명 혹은 관련 키워드를 검색!</p></td>
+                            <td>
+                               <table border="0">
+                                   <tbody class="step_info_example_contents">
+                                    <tr>
+                                        <td><span>'자동차'와 '엔진' 두 키워드를 모두 포함하여 검색할 경우</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">*</span>&nbsp;엔진</span></td>
+
+                                    </tr>
+                                    </tbody>
+                               </table>
+                            </td>
                         </tr>
-                    </thead>
-                </table>
-                <table border="0" class="number_info_howtouse">
-                    <tbody>
-                        <tr><td colspan="3" class="info_title fa fa-info-circle"><p>검색방법</p></td></tr>
-                        <tr class="number_info_top number_info_bg">
-                            <td colspan="2" class="number_info_howtouse_title"><b>분류번호</b> 선택</td>
-                            <td><span class="number_info_gray"> 후 </span>기술 키워드 검색<span class="number_info_gray"> </span></td>
+
+                        <tr>
+                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_ex_main_title">Step2</div><p>기술 제목을 눌러 기술에 대한 설명을 확인!</p></td>
+                            <td>
+                               <table border="0">
+                                   <tbody class="step_info_example_contents">
+                                    <tr>
+                                        <td><span>'자동차'와 '엔진' 중 하나 이상의 키워드를 포함하여 검색할 경우 </span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">자동차&nbsp;<span class="formula_sign">+</span>&nbsp;엔진</span></td>
+                                    </tr>
+                                    </tbody>
+                               </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="step_info_formula_explain"><img src="/beginner/images/explain/number_search_arrow.png" alt=""/><div class="step_ex_main_title">Step3</div><p>&nbsp;기술 계약 신청서를 작성!</p></td>
+                            <td>
+                               <table border="0">
+                                   <tbody class="step_info_example_contents">
+                                    <tr>
+                                        <td><span>'자동차'로 검색된 결과에서 '엔진' 키워드를 가진 결과를 제외할 경우</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="step_formula_ex">검색식 예시 : <span class="info_gray">&nbsp;자동차*<span class="formula_sign">!</span>엔진</span></td>
+                                    </tr>
+                                    </tbody>
+                               </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="step_info_formula_explain_extend"> 다양한 키워드를 적절한 연산자와 조합하면 더 구체적인 검색이 가능합니다. </td>
+                        </tr>
+                         <tr>
+                            <td colspan="2" class="step_info_formula_explain text_center border_right"> 검색식 응용 예시 : <span class="info_gray">자동차<span class="formula_sign">*</span>엔진<span class="formula_sign">*</span>(효율<span class="formula_sign">+</span>하이브리드)*<span class="formula_sign">!</span>(장치<span class="formula_sign">+</span> 시스템)</span> </td>
                         </tr>
 
                     </tbody>
                 </table>
             </div>
-            <section class="search_box_section" >
-                <div class="first_search_box">
-                <div id="search_box" class="first_search_box">
-                    <form name="numberSearchF" id="numberSearchF" class="search_Form" method="post" action="/beginner/search/headerSearch.do">
-                        <input type="hidden" id="searchRight" name="searchRight" value="">
-                        <input type="hidden" id="searchType" name="searchType" value="SNU">
-                        <input type="hidden" id="searchYear" name="searchYear" value="">
-                        <input type="hidden" id="queryText" name="queryText" value="">
-                        <input type="hidden" id="searchClass" name="searchClass" value="numberSearch">
+            <!--검색식 설명 끝-->
+            </div>
+        </section>
 
+             <div class="search_box_section">
+                <div id="search_box" class="first_search_box">
+
+                    <form name="firstSearchF" id="firstSearchF" class="search_Form" method="post" action="/beginner/search/headerSearch.do">
+                        <input type="hidden" id="searchRight" name="searchRight" value="" />
+                        <input type="hidden" id="searchType" name="searchType" value="SKW" />
+                        <input type="hidden" id="queryText" name="queryText" value="" />
+                        <input type="hidden" id="searchClass" name="searchClass" value="firstSearch" />
                         <div class="search_box_wrap">
-                            <tr>
-                                <th>종류</th>
-                                <td>{{form.sort_idx}}</td>
-                                <td colspan="2" class="left">※ 산업기술분류체계를 참조하여 기재하여 주십시오.</td>
-                            </tr>
-                             <select id="searchTypeSelect" class="search_type_select">
-                                <option value="all" label="전체권리">분류</option>
-                                <option value="10" label="(10)특허">(10)특허</option>
-                                <option value="20" label="(20)실용신안">(20)실용신안</option>
-                                <option value="30" label="(30)디자인">(30)디자인</option>
-                                <option value="40" label="(40)상표">(40)상표</option>
-                                <option value="41" label="(41)서비스표">(41)서비스표</option>
-                                <option value="42" label="(42)업무표장">(42)업무표장</option>
-                                <option value="43" label="(43)단체표장">(43)단체표장</option>
-                                <option value="44" label="(44)지리적 표시 단체표장">(44)지리적 표시 단체표장</option>
-                                <option value="45" label="(45)상표, 서비스표">(45)상표·서비스표</option>
-                                <option value="47" label="(47)증명표장">(47)증명표장</option>
-                                <option value="48" label="(48)지리적 표시 증명표장">(48)지리적 표시 증명표장</option>
+                            <input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="검색어를 입력해주세요 ex) 자동차*엔진" />
+
+                            <select id="searchTypeSelect" class="search_type_select">
+                                <option value="all" label="전체">전체</option>
+                                <option value="patent" label="특허실용신안">특허실용신안</option>
+                                <option value="design" label="디자인">디자인</option>
+                                <option value="trademark" label="상표">상표</option>
                             </select>
-                             <input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="키워드를 입력하세요">
-                                <!--<input type="text" id="searchKeyword" name="searchKeyword" class="search_keyword_box" value="" placeholder="키워드를 입력하세요">-->
-                             <div class="searchButtonBox">
-                                 <button title="검색" type="submit" id="numberSearchBtn" class="searchButton">검색</button>
-                                 <!--<button title="검색" type="submit" id="numberSearchBtn" class="searchButton">검색</button>-->
-                             </div>
-                         </div>
+                            <div class="searchButtonBox">
+                                <button title="검색" type="submit" id="firstSearchBtn" class="searchButton">검색</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
-                    </div>
-            </section>
-        </div>
+            </div>
+        </div> <!--first_wrap 끝-->
+             <section class="first_wrap" >
+            <div class="container" style="text-align:center;",  >
+                <h3 class="mb-30 title_color">임치 기술 목록</h3>
+                <div class="panel-body">
 
-
-
-
-    <section class="contact_area p_130" >
-            <div class="container" style="text-align:center;">
-                <h3 class="mb-30 title_color">임치된 계약 목록</h3>
-                <table class="table table-hover" width="90%">
-                    <thead>
+                    <table class="table table-hover" width="90%">
+                        <thead>
                         <tr>
                             <th>번호</th>
                             <th>임치 기술명</th>
                             <th>회사명</th>
-                            <th>연락처</th>
                             <th>홈페이지 주소</th>
                         </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for enroll_info in enroll_infos %}
+                        </thead>
+                        <tbody>
+                        {% for app_infos in app_info %}
                         <tr>
-                            <td>
-                                <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link">
-                                    {{enroll_info.enroll_idx}}
-                                </a>
-                            </td>
-                            <td>{{enroll_info.title}}</td>
-                            <td>{{enroll_info.c_date}}</td> <!-- 임시로 작성 -->
-                            <!--<td>{{enroll_info.enroll_date}}</td>-->
-                            <td>{{enroll_info.end_date}}</td>
-                            <td>
-                                <a href="show_app/{{enroll_info.enroll_idx}}">
-                                    <button type="button" class="btn btn-outline-warning" style="font-size:80%;"> 임치 증명서 발급 </button>
-                                </a>
+                            <!--<td class="center">{{app_infos.enroll_idx.enroll_idx}}</td>-->
+                            <td><a href="#" class="tr_link">{{app_infos.title}}</a></td>
+                            <td class="center">{{app_infos.user.com_name}}</td>
+                            <td class="center">{{app_infos.user.email}}</td>
+                            <td class="center" style="text-align:center;">
                             </td>
                         </tr>
-                        {% for contract_info in contract_infos %}
-                            {% if contract_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                <tr id="tr_show" class="tr{{contract_info.enroll_idx.enroll_idx}}" style="{display:none}">
-                                    <td>
-                                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            {% if app_infos.enroll_idx == app_infos.enroll_idx %}
+                                <tr id="tr_show" class="tr{{app_infos.enroll_idx.enroll_idx}}" style="{display:none}">
+                                    <td style="padding-left:9%;">
+                                        <span style="font-size: 20px; color: Dodgerblue;">
+                                          <i class="fa fa-angle-right"></i>
+                                        </span>
                                     </td>
-                                    <td>{{contract_info.cont_idx}}</td>
-                                    <td>{{contract_info.c_date}}</td>
-                                    <td>{{contract_info.end_date}}</td>
+                                    <td>{{app_infos.summary}}</td>
                                     <td>
-                                        <a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">
-                                            <button type="button" class="btn btn-outline-success" style="font-size:80%;"> 계약 증명서 발급 </button>
+                                        <a href="insert/{{app_infos.enroll_idx}}">
+                                            <button type="button" class="btn btn-outline-info"
+                                                    style="font-size:80%; border-color:#00c8a9;"> 기술 계약 신청
+                                            </button>
                                         </a>
                                     </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
     </section>
     <br><br><br><br><br><br><br><br><br>
-
-
     </section>
 
 
 
 
 
-
-
-
-
-<!--================End Content Area =================-->
+    <!--================End Content Area =================-->
 {% endblock content %}
 
 {% block js %}
+
 <script src="{% static 'js/jquery.form.js' %}"></script>
 <script src="{% static 'js/jquery.validate.min.js' %}"></script>
 <script src="{% static 'js/contact.js' %}"></script>
-{% endblock js %}
+<script> <!--Table 숫자 증가-->
+    var tables = document.getElementsByTagName('tbody');
+    var table = tables[tables.length - 1];
+    var rows = table.rows;
+    for(var i = 0, td; i < rows.length; i++){
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(i+1));
+        rows[i].insertBefore(td, rows[i].firstChild);
+    }
+</script>
+
+<script>
+    $(function() {
+        $('.tr_link').click(function() {
+            let trid = $(this).attr('trid');
+            $('.tr'+trid).toggle();
+        });
+        <!--$('.tr'+trid').hide();-->
+
+        <!--임치목록 1부터 나타내기-->
+        <!--var tables = document.getElementsByTagName('tr');-->
+        <!--var table = tables[tables.length - 1];-->
+        <!--var rows = table.rows;-->
+        <!--for(var i = 0, td; i < rows.length; i++){-->
+            <!--td = document.createElement('td');-->
+            <!--td.appendChild(document.createTextNode(i+1));-->
+            <!--rows[i].insertBefore(td, rows[i].firstChild);-->
+        <!--}-->
+
+        <!--$('.tr_link').hover(function() { 돋보기 뜨는거-->
+            <!--let trid = $(this).attr('trid');-->
+            <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
+                           <!--<i class="fa fa-search-plus"></i>-->
+                        <!--</span>`;-->
+            <!--$('#'+trid).html(icon);-->
+        <!--});-->
+        <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
+    });
+</script>
+
+
+<script type="text/javascript">
+<!--하이드메뉴-->
+
+$(function() {
+    $('.tr_link').click(function() {
+        let trid = $(this).attr('trid');
+        $('.tr'+trid).toggle();
+    });
+    <!--$('.tr'+trid').hide();-->
+
+    <!--$('.tr_link').hover(function() {-->
+        <!--let trid = $(this).attr('trid');-->
+        <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
+                       <!--<i class="fa fa-search-plus"></i>-->
+                    <!--</span>`;-->
+        <!--$('#'+trid).html(icon);-->
+    <!--});-->
+    <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
+});
+
+<!--END-->
+
+jQuery(document).ready(function(){
+	if( $('.cd-stretchy-nav').length > 0 ) {
+		var stretchyNavs = $('.cd-stretchy-nav');
+
+		stretchyNavs.each(function(){
+			var stretchyNav = $(this),
+				stretchyNavTrigger = stretchyNav.find('.cd-nav-trigger');
+
+			stretchyNavTrigger.on('click', function(event){
+				event.preventDefault();
+				stretchyNav.toggleClass('nav-is-visible');
+			});
+		});
+
+		$(document).on('click', function(event){
+			( !$(event.target).is('.cd-nav-trigger') && !$(event.target).is('.cd-nav-trigger span') ) && stretchyNavs.removeClass('nav-is-visible');
+		});
+	}
+
+
+var htmlText = "";
+var searchType = $("#searchType").val();
+if(searchType=="SKW"){
+    htmlText = "<a href='http://www.kipris.or.kr/khome/guide/easy/easy_begin_step.jsp' target='_blank'><img src='/beginner/images/intro/side_btn_step.png' alt='단계별 검색 안내동영상 새창으로 열림'></a>" ;
+}else if(searchType=="SNU" || searchType=="SPE"){
+    htmlText = "<a href='http://www.kipris.or.kr/khome/guide/easy/easy_begin_number.jsp' target='_blank'><img src='/beginner/images/intro/side_btn_personnumber.png' alt='번호/인명 검색 안내동영상 새창으로 열림'></a>" ;
+}else{
+    htmlText = "<a href='http://www.kipris.or.kr/khome/guide/easy/easy_begin_kdc.jsp' target='_blank'><img src='/beginner/images/intro/side_btn_kdc.png' alt='문장검색 안내동영상 새창으로 열림'></a>" ;
+}
+    $("#guide_span").html(htmlText);
+
+});
+
+
+</script>
+
+<script type="text/javascript">
+
+jQuery("#firstSearchF").submit(
+	function(evt) {
+      //  function(){
+           // alert("firstSearchBtn click 호출");
+            jQuery("#searchRight").val($("#searchTypeSelect option:selected").val()) ;
+            var queryTextCheck = jQuery("#searchKeyword").val().trim();
+
+            if((queryTextCheck =="" || queryTextCheck == null) ){
+                alert("검색어를 입력해 주십시요.");
+                jQuery("#searchKeyword").focus();
+                return false;
+            }
+
+           //공백처리
+           //queryTextCheck = queryTextCheck.replace(/ /gi,"*");
+            queryTextCheck = removeOperatorBlank(queryTextCheck);
+
+            //검색식 유효성 검사
+           if( checkVaildQuery(queryTextCheck) != true) return false;
+            showLoadingBar('all','');
+            $("#queryText").val(queryTextCheck);
+        }
+    );
+
+  jQuery(document).ready(function(){
+	jQuery("#goTopBtn").click(function() { $(window).scrollTop(0);}) ;
+});
+
+</script>
+
 <script type="text/javascript">
 $(document).ready(function(){
         jQuery("#goTopBtn").click(function() { $(window).scrollTop(0);}) ;
@@ -277,18 +369,7 @@ $(document).ready(function(){
                     return false;
                 }
 
-                if(queryTextCheck.length  < 3){
-                    alert("번호검색의 경우 최소 3자리 이상 입력하시기 바랍니다.");
-                    return false;
-                }
 
-                //숫자없이 문자만 존재하는경우 검색 제외
-                var numCheck = /[0-9]/;
-                if(!numCheck.test(queryTextCheck)){
-                    alert("번호검색에서는 숫자로만 검색 가능합니다. 키워드 검색을 원하시면 단계별 검색을 이용하시기 바랍니다.");
-                    $("#searchKeyword").focus();
-                    return false;
-                }
 
                 //공백처리
 //                queryTextCheck = removeOperatorBlank(queryTextCheck);
@@ -318,3 +399,7 @@ $(document).ready(function(){
 
 
 </script>
+
+
+
+{% endblock js %}
