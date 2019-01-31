@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block css %}
+<link href="{% static 'css/table.css' %}" rel="stylesheet">
 {% endblock css %}
 
 {% block sidebar %}
@@ -16,7 +17,7 @@
         <div class="contents">
             <div style="min-height:300px;">
                 <h3 class="mb-30 title_color" style="padding-left:40px">회사간 계약 현황</h3>
-                <table class="table table-hover" width="90%" style="text-align:center;">
+                <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                     <thead>
                         <tr>
                             <th>번호</th>
@@ -53,10 +54,10 @@
                     </script>
                 </table>
             </div>
-            <hr><br>
+            <br><hr><br>
             <div style="min-height:300px;">
                 <h3 class="mb-30 title_color" style="padding-left:40px">내게 들어온 계약요청</h3>
-                <table class="table table-hover" width="90%" style="text-align:center;">
+                <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                     <thead>
                         <tr>
                             <th>번호</th>
@@ -98,4 +99,16 @@
 {% endblock content %}
 
 {% block js %}
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        responsive: true
+    });
+});
+</script>
 {% endblock js %}

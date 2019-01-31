@@ -21,7 +21,13 @@
     
         <!-- Morris Charts CSS -->
         <link href="{%static 'morrisjs/morris.css' %}" rel="stylesheet">
-    
+        
+        <!-- DataTables CSS -->
+        <link href="{% static 'datatables-plugins/dataTables.bootstrap.css' %}" rel="stylesheet">
+
+        <!-- DataTables Responsive CSS -->
+        <link href="{% static 'datatables-responsive/dataTables.responsive.css' %}" rel="stylesheet">
+
         <!-- Custom Fonts -->
         <link href="{%static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -319,13 +325,21 @@
         <!-- Metis Menu Plugin JavaScript -->
         <script src="{%static 'metisMenu/metisMenu.min.js' %}"></script>
 
-        <!-- Morris Charts JavaScript -->
-        <script src="{%static 'raphael/raphael.min.js' %}"></script>
-        <script src="{%static 'morrisjs/morris.min.js' %}"></script>
-        <script src="{%static 'morrisjs/morris-data.js' %}"></script>
-
         <!-- Custom Theme JavaScript -->
         <script src="{%static 'js/sb-admin-2.js' %}"></script>
+
+        <!-- DataTables JavaScript -->
+        <script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+        <script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+        <script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+        <script>
+        $(document).ready(function() {
+            $('#dataTables-example').DataTable({
+                responsive: true
+            });
+        });
+        </script>
         {% block js %}
         {% endblock js %}
     </body>

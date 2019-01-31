@@ -44,6 +44,33 @@ Table of Content:
 @import url("https://fonts.googleapis.com/css?family=Heebo:300,400,500,700|Roboto:300,400,500,700");
 /*---------------------------------------------------- */
 /*----------------------------------------------------*/
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}  
+
+section {
+  padding-top: 90px;
+  margin:0 auto;
+  min-height: 100%;
+}
+
+body {
+  line-height: 24px;
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  font-weight: normal;
+  color: #777777; 
+  position: relative;
+  min-height: 100%;
+}
+
 .list {
   list-style: none;
   margin: 0px;
@@ -58,17 +85,6 @@ a {
 
 .row.m0 {
   margin: 0px; }
-
-body {
-  line-height: 24px;
-  font-size: 14px;
-  font-family: "Roboto", sans-serif;
-  font-weight: normal;
-  height: 100%;
-  color: #777777; 
-  position: relative;
-  min-height: 880px;
-}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Heebo", sans-serif;
@@ -2974,13 +2990,13 @@ h6 {
 /*----------------------------------------------------*/
 /* Footer Area css
 ============================================================================================ */
-.footer_area {
+footer {
   background: #222222; 
-  position: absolute; 
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  height: 100px;
+  position: absolute;
+  padding: 20px 0 20px 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .f_title {

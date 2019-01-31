@@ -31,6 +31,7 @@ from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 from .render import Render
+# from .render import render_to_pdf
 # import pdfkit
 import os
 # import xhtml2pdf
@@ -654,9 +655,7 @@ class Pdf(View) :
         cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
         params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
 
-        return Render.render('groot/app_pdf.html', params)
-
-
+        return Render.render('groot/generatepdf.html', params)
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']

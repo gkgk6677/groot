@@ -2,23 +2,30 @@
 {% load static %}
 
 {% block css %}
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+    <style>
+        .col-sm-12{
+            min-height:350px;
+        }           
+    </style>
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>내 임치물 관리</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/application_list">내 임치물 관리</a>
-</div>    
+    <div style="padding-left:40px;"><h1>내 임치물 관리</h1></div><br><hr>
+    <div style="padding-right:40px;text-align:right">
+        <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/application_list">내 임치물 관리</a>
+    </div>    
 {% endblock sidebar %}
 
 {% block content %}
     <div class="col-lg-9">
         <div class="contents">
             <h3 class="mb-30 title_color" style="padding-left:40px">임치물 리스트</h3>
-            <table class="table table-hover" width="90%" style="text-align:center;">
+            <hr>
+            <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                 <thead>
                     <tr>
-                        <th>번호</th>
+                        <th>No</th>
                         <th>임치 기술명</th>
                         <th>분류</th>
                         <th>만료 날짜</th>
@@ -63,60 +70,70 @@
 {% endblock content %}
 
 {% block js %}
-<script>
-    var tables = document.getElementsByTagName('tbody');
-    var table = tables[tables.length - 1];
-    var rows = table.rows;
-    for(var i = 0, td; i < rows.length; i++){
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(i+1));
-        rows[i].insertBefore(td, rows[i].firstChild);
-    }
-</script>
- <script>
-
+    <script>
+        var tables = document.getElementsByTagName('tbody');
+        var table = tables[tables.length - 1];
+        var rows = table.rows;
+        for(var i = 0, td; i < rows.length; i++){
+            td = document.createElement('td');
+            td.appendChild(document.createTextNode(i+1));
+            rows[i].insertBefore(td, rows[i].firstChild);
+        }
+    </script>
+    <script>
         function ck(s){
-         $.ajax({
-            url: '/login2',
-            type: 'POST',
-            dataType : 'json',
-            data: {'s' : s},
-            success: function(result) {
-            if(result.ck_val == 0) {
-                    alert('이미 연장신청이 진행 중 입니다.')
-                    location.reload()
+            $.ajax({
+                url: '/login2',
+                type: 'POST',
+                dataType : 'json',
+                data: {'s' : s},
+                success: function(result) {
+                if(result.ck_val == 0) {
+                        alert('이미 연장신청이 진행 중 입니다.')
+                        location.reload()
+                    }
+                    else {
+                            location.href="extend/" + s ;
+                    }
                 }
-                else {
-                       location.href="extend/" + s ;
-                }
-            }
-        });
-    };
-
-</script>
-<script>
-
+            });
+        };
+    </script>
+    <script>
         function ck2(s){
-         $.ajax({
+            $.ajax({
             url: '/login3',
             type: 'POST',
             dataType : 'json',
             data: {'s' : s},
             success: function(result) {
-            if(result.ck_val == 0) {
-                    alert('이미 해지신청이 진행 중 입니다. ')
-                    location.reload()
-                }else if(result.ck_val == 3) {
-                    alert('해당 임치물에 진행중인 계약이 있습니다. \n기술 계약 해지는 관리자에게 문의하세요.')
-                    location.reload()
-                }
-                else {
-                       location.href="expire/" + s ;
+                if(result.ck_val == 0) {
+                        alert('이미 해지신청이 진행 중 입니다. ')
+                        location.reload()
+                    }else if(result.ck_val == 3) {
+                        alert('해당 임치물에 진행중인 계약이 있습니다. \n기술 계약 해지는 관리자에게 문의하세요.')
+                        location.reload()
+                    }
+                    else {
+                            location.href="expire/" + s ;
 
+                    }
                 }
-            }
-        });
-    };
+            });
+        };
+    </script>
 
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 5,10,15 ]
+    });
+});
 </script>
+
 {% endblock js %}
