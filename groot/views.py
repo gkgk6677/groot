@@ -27,11 +27,12 @@ import calendar
 import pandas
 import random
 from urllib.parse import quote
+
 # html2pdf 위한 라이브러리
 from django.views.generic import View
-# from .render import render_to_pdf
+from .render import Render
 # import pdfkit
-# import os
+import os
 # import xhtml2pdf
 
 # Create your views here.
@@ -641,12 +642,21 @@ def issue(request):
     else :
         return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info})
 
-# class GeneratePdf(View) :
-#     def get(self, request, *args, **kwargs):
-#         template = get_template('groot/show_app.html')
-#         html = template.render(kwargs)
-#         # pdf = render_to_pdf('groot/show_app.html', kwargs)
-#         return HttpResponse(pdf, content_type='application/pdf')
+class Pdf(View) :
+    def get(self, request, idx, *args, **kwargs):
+        # template = get_template('groot/show_app.html')
+        # html = template.render(kwargs)
+        # pdf = render_to_pdf('groot/show_app.html', kwargs)
+        user_id = request.session['user_id']
+
+        enroll_info = Enrollment.objects.get(enroll_idx=idx)
+        user = User.objects.get(user_id=user_id)
+        cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
+        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+
+        return Render.render('groot/app_pdf.html', params)
+
+
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']
@@ -665,6 +675,7 @@ def show_app(request, idx):
     # return render_to_pdf('groot/show_app.html', {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info})
 
     return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
+    # return render(request, 'groot/app_pdf.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
 
 @csrf_exempt
 def pdf_app(request, idx) :
@@ -749,7 +760,11 @@ def get_tx() : # 모든 tx 불러오는 함수
 
         for tx_parse in tx_parses:
             txid = tx_parse.get('TxId')
-            timestamp = tx_parse.get('Timestamp')
+            timestamp = tx_parse.get('Timestamp')[0:19]
+            timestamp_mil = tx_parse.get('Timestamp')[19:]
+            timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+            timestamp = timestamp + datetime.timedelta(hours=9)
+            timestamp = str(timestamp) + timestamp_mil
             groot_scan.append([{"TxId": txid, "Timestamp": timestamp}])
 
     groot_scan = sorted(groot_scan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
