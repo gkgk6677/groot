@@ -1,0 +1,99 @@
+{% extends "groot_scan-base.html" %}
+{% load static %}
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<div class="content-wrap">
+	<div class="screen0">
+		<div class="wrap-holder">
+			<p class="title"> Transaction </p>
+			<div class="contents">
+				<table class="table-typeB transaction">
+                    <tbody>
+                    <tr>
+                        <td> TxHash	</td>
+                        <td>
+                            {{txid}}<span class="copy clipboard-btn " data-clipboard-text="{{txid}}">Copy TxHash</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Status </td>
+                        <td class=""> Success </td>
+                    </tr>
+                    <tr>
+                        <td> Block Height </td>
+                        <td>
+                            <span><a class="on " title="4399750" href="/block/4399750">4,399,750</a></span><em>(220 Confirmations)</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Time Stamp </td>
+                        <td> 2019-01-31 00:25:43<em>(UTC+9, 10 minutes ago)</em> </td>
+                    </tr>
+                    <tr>
+                        <td> From </td>
+                        <td class="">
+                            <span class=""><a class="on" title="hx60dd7caeb663f8676177d5c3aa0f461b23e4785f" href="/address/hx60dd7caeb663f8676177d5c3aa0f461b23e4785f">hx60dd7caeb663f8676177d5c3aa0f461b23e4785f</a></span><span class="copy clipboard-btn " data-clipboard-text="hx60dd7caeb663f8676177d5c3aa0f461b23e4785f">Copy Address</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> To </td>
+                        <td class="trans">
+                            <i class="img"></i><span class=""><a class="on" title="cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512" href="/contract/cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512">cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512</a></span><span class="copy clipboard-btn " data-clipboard-text="cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512">Copy Address</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Data </td>
+                        <td class="convert">
+                            <div class="scroll">
+                                <p style="white-space: pre-line;">
+                                    {
+                                      "TxId": "93fd07b0727289df08b75c0b0059e19dead5793c53cb9d53915f1cbe328c1aee",
+                                      "Value": {"technology": "testtt", "sort": 33, "company": "GROOT", "com_num": 123456789, "term": 5,"content": {"test1.txt":"6246f69ac47f80f5ecb5a840bfd72dee1db7bc650091a4b773fd366632d8a40b","test2.txt":"922e49fa1b9bbd9881420cf985bbb442f714868e28d0e8254f341a7de22337cf"},"enroll_date": "2019.01.28", "status": 1},
+                                      "Timestamp": "2019-01-28 02:08:00.88 +0000 UTC",
+                                      "IsDelete": "false"
+                                    }
+                                </p>
+                            </div>
+                            <button class="btn-type-normal" disabled="">Convert to UTF-8</button>
+                        </td>
+                    </tr>
+                    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="screen1">
+		<div class="wrap-holder">
+			<div class="tab-holder">
+				<ul>
+					<li class="on">Events</li>
+				</ul>
+			</div>
+			<div class="contents">
+				<p class="txt">
+					<span>Latest<em>1</em> events from a total of<em class="mint">1 events</em></span>
+				</p>
+				<table class="table-typeH log">
+                    <thead>
+                        <tr>
+                            <th> Event Logs </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {"scoreAddress":"cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512","indexed":[Transfer(Address,Address,int,bytes), hx60dd7caeb663f8676177d5c3aa0f461b23e4785f, hxfa64952cd291f7824919a9e7b3c4f6a0fa0c146b, 0x3e8],"data":[0x]}
+                            </td>
+                        </tr>
+                    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

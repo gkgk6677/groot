@@ -4,6 +4,13 @@
 {% block css %}
     <!-- 탭 관련 CSS 파일 -->
     <link href="{%static 'css/tab.css' %}" rel="stylesheet">
+    <!-- Pagination 및 검색을 위한 CSS 파일 -->
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+    <style>
+        .col-sm-12{
+            min-height:350px;
+        }           
+    </style>
 {% endblock css %}
 
 {% block sidebar %}
@@ -33,12 +40,12 @@
             </ul>
 
             <!-- Tab Contents -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="extend">
-                    <table class="table table-hover" width="90%" style="text-align:center;">
+            <div class="tab-content" >
+                <div role="tabpanel" class="tab-pane active" id="extend" > 
+                    <table class="table table-hover dataTables-example" width="100%" style="text-align:center;" >
                         <thead>
                             <tr>
-                                <th>번호</th>
+                                <th>No</th>
                                 <th>임치 기술명</th>
                                 <th>년 수</th>
                                 <th>신청날짜</th>
@@ -69,14 +76,14 @@
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane " id="contract">
-                    <table class="table table-hover" width="90%" style="text-align:center;">
+                    <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>번호</th>
+                                <th>No</th>
                                 <th>임치 기술명</th>
                                 <th>임치기업</th>
                                 <th>계약기업</th>
-                                <th>계약기간</th>
+                                <th >계약기간</th>
                                 <th>신청날짜</th>
                                 <th>상태</th>
                             </tr>
@@ -88,7 +95,7 @@
                                 <td>{{list.enroll_idx.title}}</td>
                                 <td>{{list.enroll_idx.user.com_name}}</td>
                                 <td>{{list.user.com_name}}</td>
-                                <td>{{list.term}}</td>
+                                <td>{{list.term}} 년</td>
                                 <td>{{list.c_date}}</td>
                                 {{list.status | safe}}
                             </tr>
@@ -107,10 +114,10 @@
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane " id="expire">
-                    <table class="table table-hover" width="90%" style="text-align:center;">
+                    <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>번호</th>
+                                <th>No</th>
                                 <th>임치 기술명</th>
                                 <th>신청날짜</th>
                                 <th>신청상태</th>
@@ -144,5 +151,16 @@
 {% endblock content %}
 
 {% block js %}
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
 
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 5, 10, 15 ]
+    });
+});
+</script>
 {% endblock js %}
