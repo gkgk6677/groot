@@ -27,9 +27,9 @@
   white-space: nowrap;
   width: auto; }
   .nice-select:hover {
-    border-color: #dbdbdb; }
+    border-color: rgb(147, 182, 197); }
   .nice-select:active, .nice-select.open, .nice-select:focus {
-    border-color: #999; }
+    border-color: #2F89AE; }
   .nice-select:after {
     border-bottom: 2px solid #999;
     border-right: 2px solid #999;

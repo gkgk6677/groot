@@ -107,9 +107,9 @@
                     location.reload();
                 } else if(result.ck_val == 1) { <!-- 증명서 발급내역 존재 -->
                     if(result.type == 0) { <!-- 임치증명서 -->
-                        location='/issue/show_app/' + trid;
+                        window.open("about;blank").location.href='/issue/show_app/' + trid;
                     } else { <!-- 계약증명서 -->
-                        location='/issue/show_cont/' + trid + '-' + cont_id;
+                        window.open("about;blank").location.href='/issue/show_cont/' + trid + '-' + cont_id;
                     }
                 } else if(result.ck_val == 2) { <!-- 증명서 발급 기한 만료 -->
                     alert('증명서의 유효기간이 만료되었습니다.\n재발급 받아주세요.');
@@ -146,7 +146,7 @@
             <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
                            <!--<i class="fa fa-search-plus"></i>-->
                         <!--</span>`;-->
-            <!--$('#'+trid).html(icon);-->
+            <!--$('#'+trid).after(icon);-->
         <!--});-->
         <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
     });

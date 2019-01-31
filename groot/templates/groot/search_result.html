@@ -14,19 +14,21 @@
                 <div class="col-lg-12">
                     <div class="contents" style="min-height:670px">
                         <div class="search">
-
-
                             <form action="" method="get">
                                 <fieldset>
                                     <img src="{%static '/img/GrootSearch2.png' %}" style="margin-right:100px;">
                                     <span class="green_window">
-                            <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
-                                <i class="fa fa-search"></i>
-                            </span>
+                                        <select id="s_option" class="s_option" name="s_option">
+                                            <option value="1">제목</option>
+                                            <option value="2">기술 요약</option>
+                                            <option value="3">제목+기술요약</option>
+                                        </select>
+                                        <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
+                                            <i class="fa fa-search"></i>
+                                    </span>
                                     <input class="blind" type="submit" value="Groot 검색">
                                 </fieldset>
                             </form>
-                    
                         </div>
                     
                         <div class><br>
@@ -40,21 +42,20 @@
                                         <th style="width:12%">기술 분류</th>
                                         <th style="width:14%">임치 기술명</th>
                                         <th style="width:40%">기술 요약</th>
-                                    <th style="width:10%">회사명</th>
+                                        <th style="width:10%">회사명</th>
                                         <th style="width:10%">홈페이지 주소</th>
-                                    <th style="width:10%">계약 신청</th>
+                                        <th style="width:10%">계약 신청</th>
                 
                                     </tr>
                                     </thead>
                                     <tbody>
                 
-                                    {% if result %}
+                                    {% if r_result %}
                                     <p>검색 키워드 : <strong>{{ query }}</strong></p>
                 
-                                    <p> 관련 기술 총 {{ result|length }} 건 검색 되었습니다.</p>
+                                    <p> 관련 기술 총 {{ r_result|length }} 건 검색 되었습니다.</p>
                                     <!--<p> 관련 기술 총 {{ result|length }} 건 검색 되었습니다. {{ result|pluralize }}.</p>-->
-                                    {% for r in result %}
-                                    {% if r.agree_status == 1 %}
+                                    {% for r in r_result %}
                 
                                     <tr>
                                         <!--<td class="center">{{app_infos.enroll_idx.enroll_idx}}</td>-->
@@ -73,17 +74,13 @@
                                         </td>
                                     </tr>
                 
-                                    {% endif %}
                                     {% endfor %}
                 
                                     {% else %}
                                     <p>" {{ query }} " 에 대한 검색 결과가 없습니다.</p>
                                     {% endif %}
-                
-                
+        
                                     </tbody>
-                
-                
                                 </table>
                             </div>
                         </div>
@@ -110,7 +107,6 @@
                         }
 
                     </script>
-
 
 {% endblock js %}
 
