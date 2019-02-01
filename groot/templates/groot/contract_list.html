@@ -3,20 +3,31 @@
 
 {% block css %}
 <link href="{% static 'css/table.css' %}" rel="stylesheet">
+<style>
+    #contract_list {
+        border-color: #3189AE;
+    }
+    #contract_list p {
+        color: #3189AE;
+    }
+</style>
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>회사간 계약 현황</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/contract_list">회사간 계약 현황</a>
-</div>    
+<div class="contents-header">
+    <div class="contents-header-left">마이페이지</div>
+    <div class="contents-header-right">
+    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a class="header-right-last" href="/contract_list">회사간 계약 현황</a>
+    </div>
+</div>
+<hr class="contents-header-hr">    
 {% endblock sidebar %}
 
 {% block content %}
     <div class="col-lg-9">
         <div class="contents">
             <div style="min-height:300px;">
-                <h3 class="mb-30 title_color" style="padding-left:40px">회사간 계약 현황</h3>
+                <h3 class="mb-30 title_color" style="padding-left:40px;color:rgb(88, 88, 88)">회사간 계약 현황</h3>
                 <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                     <thead>
                         <tr>
@@ -56,7 +67,7 @@
             </div>
             <br><hr><br>
             <div style="min-height:300px;">
-                <h3 class="mb-30 title_color" style="padding-left:40px">내게 들어온 계약요청</h3>
+                <h3 class="mb-30 title_color" style="padding-left:40px;color:rgb(88, 88, 88)">내게 들어온 계약요청</h3>
                 <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                     <thead>
                         <tr>

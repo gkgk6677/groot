@@ -6,91 +6,90 @@
         .tr_link:hover{color:black; font-weight: bold;}
         .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
         .btn-outline-info:hover{color:white; background-color:#00c8a9;}
+        #issue {
+            color:#2F89AE;
+            border-bottom: 3px solid #2F89AE; 
+        }
     </style>
 {% endblock css %}
 
 {% block content %}
-    <section class="contact_area p_200" >
-            <div class="container" style="text-align:center;">
-                <h3 class="mb-30 title_color">임치 및 계약 목록</h3>
-                <table class="table table-hover" width="90%">
-                    <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>임치 기술명</th>
-                            <th>계약 날짜</th>
-                            <th>만료 날짜</th>
-                            <th>증명서 발급</th>
-                        </tr>
-                    </thead>
+<section>
+    <div class="container shadow" style="text-align:center;">
+        <div class="p_120">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="contents-header">
+                        <div class="contents-header-left">증명서 발급</div>
+                        <div class="contents-header-right">
+                            <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a class="header-right-last" href="/read">증명서 발급</a>
+                        </div>
+                    </div>
+                    <hr class="contents-header-hr">
 
-                    <tbody>
-                    {% for enroll_info in enroll_infos %}
-                        {% with forloop.counter as counter %}
-                            <tr>
-                                <td >
-                                    <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                        {{counter}}
-                                        <!--{{enroll_info.enroll_idx}}-->
-                                    </a>
-                                </td>
-                                <td>{{enroll_info.title}}</td>
-                                <td>{{enroll_info.enroll_date}}</td>
-                                <td>{{enroll_info.end_date}}</td>
-                                <td>
-                                    {% csrf_token %}
-                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                </td>
-                            </tr>
-                            {% for cont_info in cont_infos %}
-                                {% if cont_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                    <tr id="tr_show" class="tr{{cont_info.enroll_idx.enroll_idx}}" style="{display:none}">
-                                        <td style="padding-left:9%;">
-                                            <span style="font-size: 20px; color: Dodgerblue;">
-                                              <i class="fa fa-angle-right"></i>
-                                            </span>
+                    <div class="contents">
+                        <table class="table table-hover" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>임치 기술명</th>
+                                    <th>계약 날짜</th>
+                                    <th>만료 날짜</th>
+                                    <th>증명서 발급</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for enroll_info in enroll_infos %}
+                                {% with forloop.counter as counter %}
+                                    <tr>
+                                        <td >
+                                            <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
+                                                {{counter}}
+                                                <!--{{enroll_info.enroll_idx}}-->
+                                            </a>
                                         </td>
-                                        <td>{{cont_info.user.com_name}}</td>
-                                        <td>{{cont_info.c_date}}</td>
-                                        <td>{{cont_info.end_date}}</td>
+                                        <td>{{enroll_info.title}}</td>
+                                        <td>{{enroll_info.enroll_date}}</td>
+                                        <td>{{enroll_info.end_date}}</td>
                                         <td>
-                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                            <!--<a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">-->
-                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                            <!--</a>-->
+                                            {% csrf_token %}
+                                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
                                         </td>
                                     </tr>
-                                {% endif %}
+                                    {% for cont_info in cont_infos %}
+                                        {% if cont_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                            <tr id="tr_show" class="tr{{cont_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                                                <td style="padding-left:9%;">
+                                                    <span style="font-size: 20px; color: Dodgerblue;">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    </span>
+                                                </td>
+                                                <td>{{cont_info.user.com_name}}</td>
+                                                <td>{{cont_info.c_date}}</td>
+                                                <td>{{cont_info.end_date}}</td>
+                                                <td>
+                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                    <!--<a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">-->
+                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                    <!--</a>-->
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
                             {% endfor %}
-                        {% endwith %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
-            <div class="page">
-                <ul class="pagination" style="justify-content: center;">
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </li>
-                </ul>
-            </div>
-
-    </section>
-    <br><br><br><br><br><br><br>
+        </div>
+    </div>
+</section>
+                                                    
+  
 {% endblock content %}
 
 {% block js %}

@@ -2,21 +2,31 @@
 {% load static %}
 
 {% block css %}
+<style>
+    #change {
+        border-color: #3189AE;
+    }
+    #change p {
+        color: #3189AE;
+    }
+</style>
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>비밀번호 변경</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/change">개인정보 수정</a> &nbsp; > &nbsp; <a href="/change_pw">비밀번호 변경</a>
-</div>    
+<div class="contents-header">
+    <div class="contents-header-left">마이페이지</div>
+    <div class="contents-header-right">
+        <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/change">개인정보 수정</a> &nbsp; > &nbsp; <a class="header-right-last" href="/change_pw">비밀번호 변경</a>
+    </div>
+</div>
+<hr class="contents-header-hr">     
 {% endblock sidebar %}
 
 {% block content %}
     <div class="col-lg-9">
         <div class="contents" style="padding-bottom:110px;">
-            <div style="text-align:center;">
-                <h1>비밀번호 변경</h1><br>
-            </div>
+            <h3 class="mb-30" style="padding-left:40px;color:rgb(88, 88, 88)">비밀번호 변경</h3>
+            <hr><br>
             <div style="text-align:left;padding-left: 20px;">
                 <h6>·&nbsp;개인정보를 위해 동일한 숫자반복 등과 같이 타인이 쉽게 알아낼 수 있는 비밀번호는 사용하지 마십시오.</h6>
                 <h6>·&nbsp;개인정보 보안강화를 위해 비밀번호의 대소문자를 구분하고 있습니다. 대소문자를 확인해주세요.</h6>
