@@ -475,7 +475,6 @@ def insert(request,idx):
     return render(request, 'groot/insert.html', {'user':user,'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
 
 
-
 @csrf_exempt
 def com_num_check(request):
     find_num = request.POST['com_num']
@@ -643,60 +642,28 @@ def issue(request):
     else :
         return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info})
 
-class Pdf(View) :
+class app_pdf(View) :
     def get(self, request, idx, *args, **kwargs):
-        # template = get_template('groot/show_app.html')
-        # html = template.render(kwargs)
-        # pdf = render_to_pdf('groot/show_app.html', kwargs)
         user_id = request.session['user_id']
         user = User.objects.get(user_id=user_id)
-
         enroll_info = Enrollment.objects.get(enroll_idx=idx)
         cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
+
         params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+
+        return Render.render('groot/show_app.html', params)
+
+class cont_pdf(View):
+    def get(self, request, en_idx, cont_idx, *args, **kwargs):
+        user_id = request.session['user_id']
+        user = User.objects.get(user_id=user_id)
+        enroll_info = Enrollment.objects.get(enroll_idx=en_idx)
+        contract = Contract.objects.get(cont_idx=cont_idx)
+        cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
+
+        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+
         return Render.render('groot/show_cont.html', params)
-
-        # if len(args) == 1 :
-        #     enroll_info = Enrollment.objects.get(enroll_idx=args)
-        #     cert_info = Certificate.objects.get(enroll_idx=args, cont_idx=None)
-        #     params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
-        #     return Render.render('groot/generatepdf.html', params)
-        # else :
-        #     enroll_info = Enrollment.objects.get(enroll_idx=args)
-        #     cert_info = Certificate.objects.get(enroll_idx=args, cont_idx=args)
-        #     contract = Contract.objects.get(cont_idx=args)
-        #     params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
-        #     return Render.render('groot/show_cont.html', params)
-
-@csrf_exempt
-def show_app(request, idx):
-    user_id = request.session['user_id']
-
-    enroll_info = Enrollment.objects.get(enroll_idx=idx)
-    user = User.objects.get(user_id=user_id)
-    cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
-
-    print(cert_info.cert_idx)
-    app_pdf = Pdf()
-    app_pdf.get(request, idx)
-
-    # return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
-
-
-def show_cont(request, en_idx, cont_idx):
-    user_id = request.session['user_id']
-
-    enroll_info = Enrollment.objects.get(enroll_idx=en_idx)
-    user = User.objects.get(user_id=user_id)
-    contract = Contract.objects.get(cont_idx=cont_idx)
-    cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
-
-    print(cert_info.cert_idx)
-
-    # cont_pdf = Pdf()
-    # cont_pdf.get(request, en_idx, cont_idx)
-
-    # return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
 
 def get_title() : # 임치된 title을 불러오는 함수
     technology = Enrollment.objects.filter(enroll_status=1)

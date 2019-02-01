@@ -113,7 +113,7 @@
                     if(result.type == 0) { <!-- 임치증명서 -->
                         window.open("about;blank").location.href='/issue/show_app/' + trid;
                     } else { <!-- 계약증명서 -->
-                        window.open("about;blank").location.href='/issue/show_cont/' + trid;
+                        window.open("about;blank").location.href='/issue/show_cont/' + trid + '-' + cont_id;
                     }
                 } else if(result.ck_val == 2) { <!-- 증명서 발급 기한 만료 -->
                     alert('증명서의 유효기간이 만료되었습니다.\n재발급 받아주세요.');
