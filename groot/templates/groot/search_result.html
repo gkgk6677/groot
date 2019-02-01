@@ -15,6 +15,11 @@
             color:#2F89AE;
             border-bottom: 3px solid #2F89AE; 
         }
+        .button_style{
+background-color: Transparent;
+border: none;
+cursor:pointer;
+}
     </style>
 {% endblock css %}
 
@@ -36,10 +41,9 @@
                                             <option value="2">기술 요약</option>
                                             <option value="3">제목+기술요약</option>
                                         </select>
-                                        <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
-                                            <i class="fa fa-search"></i>
+                                        <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술명 혹은 키워드를 입력하세요">
+                                            <button class="button_style"><i class="fa fa-search"><input class="blind" type="submit" value="Groot 검색"></i></button>
                                     </span>
-                                    <input class="blind" type="submit" value="Groot 검색">
                                 </fieldset>
                             </form>
                         </div>
@@ -51,13 +55,14 @@
                                 <table class="table table-hover dataTables-example" style="text-align:center">
                                     <thead>
                                     <tr>
-                                        <th style="width:5%;">No</th>
-                                        <th style="width:12%">기술 분류</th>
-                                        <th style="width:14%">임치 기술명</th>
-                                        <th style="width:40%">기술 요약</th>
-                                        <th style="width:10%">회사명</th>
-                                        <th style="width:10%">홈페이지 주소</th>
-                                        <th style="width:10%">계약 신청</th>
+                                        <th style="width:5%; vertical-align: middle;"><i class="fa fa-sort">No</i></th>
+                                        <th style="width:7%; vertical-align: middle;">분류<br>번호</th>
+                                        <th style="width:10%; vertical-align: middle;">분류명</th>
+                                        <th style="width:11%; vertical-align: middle;">임치 기술명</th>
+                                        <th style="width:34%; vertical-align: middle;">기술 요약</th>
+                                        <th style="width:9%; vertical-align: middle;">회사명</th>
+                                        <th style="width:10%; vertical-align: middle;">홈페이지 주소</th>
+                                        <th style="width:11%; vertical-align: middle;">계약<br>신청</th>
                 
                                     </tr>
                                     </thead>
@@ -72,7 +77,8 @@
                 
                                     <tr>
                                         <!--<td class="center">{{app_infos.enroll_idx.enroll_idx}}</td>-->
-                                        <td class="center" style=" vertical-align: middle;">{{r.sort_idx}}</td>
+                                        <td class="center" style=" vertical-align: middle;">{{r.sort_idx.sort_idx}}</td>
+                                        <td class="center" style=" vertical-align: middle;">{{r.sort_idx.title}}</td>
                                         <td class="center" style=" vertical-align: middle;">{{ r.title }}</a></td>
                                         <td class="center" style=" vertical-align: middle;">{{ r.summary }}</td>
                                         <td class="center" style=" vertical-align: middle;">{{r.user.com_name}}</td>

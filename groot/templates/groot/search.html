@@ -8,6 +8,11 @@
             color:#2F89AE;
             border-bottom: 3px solid #2F89AE; 
         }
+.button_style{
+background-color: Transparent;
+border: none;
+cursor:pointer;
+}
     </style>
 {% endblock css %}
 
@@ -28,14 +33,13 @@
                                     <fieldset>
                                         <span class="green_window" >
                                             <select id="s_option" class="s_option" name="s_option">
-                                                <option value="1">제목</option>
+                                                <option value="1">기술명</option>
                                                 <option value="2">기술 요약</option>
-                                                <option value="3">제목+기술요약</option>
+                                                <option value="3">기술명+기술요약</option>
                                             </select>
-                                            <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술 제목 혹은 키워드를 입력하세요">
-                                            <i class="fa fa-search" ></i>
+                                            <input class="input_text" type="text" name="q" placeholder="찾고 싶은 기술명 혹은 키워드를 입력하세요">
+                                            <button class="button_style"><i class="fa fa-search"><input class="blind" type="submit" value="Groot 검색"></i></button>
                                         </span>
-                                        <input class="blind" type="submit" value="Groot 검색">
                                     </fieldset>
                                 </form>
                             </div>

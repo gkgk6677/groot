@@ -31,10 +31,7 @@ from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 from .render import Render
-# from .render import render_to_pdf
-# import pdfkit
 import os
-# import xhtml2pdf
 
 # Create your views here.
 
