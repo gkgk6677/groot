@@ -649,13 +649,25 @@ class Pdf(View) :
         # html = template.render(kwargs)
         # pdf = render_to_pdf('groot/show_app.html', kwargs)
         user_id = request.session['user_id']
+        user = User.objects.get(user_id=user_id)
 
         enroll_info = Enrollment.objects.get(enroll_idx=idx)
-        user = User.objects.get(user_id=user_id)
         cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
         params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+        return Render.render('groot/show_cont.html', params)
 
-        return Render.render('groot/generatepdf.html', params)
+        # if len(args) == 1 :
+        #     enroll_info = Enrollment.objects.get(enroll_idx=args)
+        #     cert_info = Certificate.objects.get(enroll_idx=args, cont_idx=None)
+        #     params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+        #     return Render.render('groot/generatepdf.html', params)
+        # else :
+        #     enroll_info = Enrollment.objects.get(enroll_idx=args)
+        #     cert_info = Certificate.objects.get(enroll_idx=args, cont_idx=args)
+        #     contract = Contract.objects.get(cont_idx=args)
+        #     params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
+        #     return Render.render('groot/show_cont.html', params)
+
 @csrf_exempt
 def show_app(request, idx):
     user_id = request.session['user_id']
@@ -665,52 +677,11 @@ def show_app(request, idx):
     cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
 
     print(cert_info.cert_idx)
+    app_pdf = Pdf()
+    app_pdf.get(request, idx)
 
-    # xhtml2pdf 이용
-    # # file = show_app.html
-    # html2pdf = GeneratePdf()
-    # html2pdf.get(request, **value)
-    # GeneratePdf.as_view()
-    # return render_to_pdf('groot/show_app.html', {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info})
+    # return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
 
-    return render(request, 'groot/show_app.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
-    # return render(request, 'groot/app_pdf.html', {'enroll_info': enroll_info, 'user':user, 'cert_info':cert_info})
-
-@csrf_exempt
-def pdf_app(request, idx) :
-    if request.method == 'POST' :
-        user_id = request.session['user_id']
-        idx = request.POST.get('idx')
-
-        enroll_info = Enrollment.objects.get(enroll_idx=idx)
-        user = User.objects.get(user_id=user_id)
-        cert_info = Certificate.objects.get(enroll_idx=idx, cont_idx=None)
-
-        value = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
-        options = {
-            'page-size': 'A4',
-            'margin-top': '0.75in',
-            'margin-right': '0.75in',
-            'margin-bottom': '0.75in',
-            'margin-left': '0.75in',
-            'encoding': "UTF-8",
-            'no-outline': None
-        }
-
-        # template = get_template("groot/show_app.html")
-        # html = template.render(value)
-        pdf = pdfkit.from_file(r'C:\Users\어다희\work_django\groot-django\groot\templates\groot\show_app.html', False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
-        # url = request.get_host() + '/issue/show_app/' + str(idx) + '/pdf'
-        # pdf = pdfkit.from_url(str(url), False, options=options) # False로 속성을 지정하므로써 사용자가 원하는 이름으로 저장 가능!
-        # response = HttpResponse(pdf, content_type='application/pdf')
-        # response['Content-Disposition'] = 'attachment; filename=임치증명서.pdf'
-
-        return HttpResponse(pdf, content_type='application/pdf')
-
-        # return HttpResponse(json.dumps(context), content_type='application/json')
-
-    # if request.method == 'GET':
-    #     return HttpResponse('get')
 
 def show_cont(request, en_idx, cont_idx):
     user_id = request.session['user_id']
@@ -722,7 +693,10 @@ def show_cont(request, en_idx, cont_idx):
 
     print(cert_info.cert_idx)
 
-    return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
+    # cont_pdf = Pdf()
+    # cont_pdf.get(request, en_idx, cont_idx)
+
+    # return render(request, 'groot/show_cont.html', {'enroll_info': enroll_info, 'user': user, 'contract': contract, 'cert_info':cert_info})
 
 def get_title() : # 임치된 title을 불러오는 함수
     technology = Enrollment.objects.filter(enroll_status=1)
