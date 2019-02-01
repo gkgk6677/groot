@@ -658,7 +658,7 @@ class cont_pdf(View):
         contract = Contract.objects.get(cont_idx=cont_idx)
         cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
 
-        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+        params = {'contract':contract, 'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
 
         return Render.render('groot/show_cont.html', params)
 
