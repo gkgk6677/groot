@@ -3254,7 +3254,7 @@ a {
   width: 100%;
 }
 .carousel {
-  position: absolute;
+  position: relative;
   left:0px;
   width: 100%;
 }

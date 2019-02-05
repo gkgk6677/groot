@@ -659,7 +659,6 @@ class cont_pdf(View):
         cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
 
         params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
-
         return Render.render('groot/show_cont.html', params)
 
 def get_title() : # 임치된 title을 불러오는 함수
