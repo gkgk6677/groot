@@ -31,10 +31,7 @@ from urllib.parse import quote
 # html2pdf 위한 라이브러리
 from django.views.generic import View
 from .render import Render
-# from .render import render_to_pdf
-# import pdfkit
 import os
-# import xhtml2pdf
 
 # Create your views here.
 
@@ -661,7 +658,7 @@ class cont_pdf(View):
         contract = Contract.objects.get(cont_idx=cont_idx)
         cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
 
-        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
+        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
 
         return Render.render('groot/show_cont.html', params)
 
