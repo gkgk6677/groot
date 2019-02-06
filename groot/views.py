@@ -74,8 +74,9 @@ def join(request):
         email = request.POST['email']
         address = request.POST['address']
         phone_num = request.POST['phone_num']
+        homepage = request.POST['homepage']
 
-        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num)
+        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num, homepage=homepage)
         user.status = 0
         user.s_date = timezone.now()
         user.save()
