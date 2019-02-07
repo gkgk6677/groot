@@ -916,9 +916,6 @@ def search_form(request):
 
     return render(request, 'groot/search.html', {'error': error})
 
-
-
-
 def upload(request):
     return render(request, 'groot/upload.html', {})
 
@@ -931,17 +928,32 @@ def application_list(request):
     now_date = datetime.datetime.now()
     enroll_lists = []
 
-
     for enroll_info in enroll_infos:
+        if enroll_info.agree_status == 0:
+            enroll_info.agree_status = '비동의'
+        else:
+            enroll_info.agree_status = '동의'
+
+        if enroll_info.enroll_date:
+            enroll_info.enroll_date = enroll_info.enroll_date.date()
+        if enroll_info.end_date:
+            enroll_info.end_date = enroll_info.end_date.date()
+
+        if not enroll_info.enroll_tx:
+            enroll_info.enroll_tx = '-'
+
+        if not enroll_info.enroll_date:
+            enroll_info.enroll_date = '-'
+
         if enroll_info.enroll_status == 0:
             enroll_info.enroll_status = "<div style='color:green'>대기중</div>"
+        elif enroll_info.enroll_status == 1:
+            enroll_info.enroll_status = "<div style='color:blue'>승인</div>"
         elif enroll_info.enroll_status == 2:
             enroll_info.enroll_status = "<div style='color:red'>반려</div>"
         elif enroll_info.end_date < now_date:
             enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
         enroll_lists.append(enroll_info)
-
-
 
     return render(request, 'groot/application_list.html', {'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
 
@@ -1002,14 +1014,10 @@ def contract_list(request):
             contract_info.status = "<td style='color:blue'>계약중</td>"
         else:
             contract_info.status = "<td style='color:red'>계약만료</td>"
+        contract_info.accept_date = contract_info.accept_date.date()
+        contract_info.end_date = contract_info.end_date.date()
+        
         contract_lists.append(contract_info)
-
-    # 날짜 비교
-    # end_date와 now_date()비교
-    # end_date > now_date 이면 계약중
-    # end_date < now_date 이면 계약 만료 문구 출력
-    # contract_list의 end_date 뽑아냄
-    # now_date 새로운 변수 만들어서 할당
 
 
     return render(request, 'groot/contract_list.html', {'contract_lists':contract_lists, 'user_id':user_id, 'contract_infos':contract_infos})

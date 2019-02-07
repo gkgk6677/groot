@@ -1,0 +1,67 @@
+{% extends "mypage-base.html" %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+    <style>
+        .col-sm-12{
+            min-height:350px;
+        }    
+        #application_list {
+            border-color: #3189AE;
+        }
+        #application_list p {
+            color: #3189AE;
+        }
+    </style>
+{% endblock css %}
+
+{% block sidebar %}
+    <div class="contents-header">
+        <div class="contents-header-left">임치물 상세정보</div>
+        <div class="contents-header-right">
+            <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/application_list">내 임치물 관리</a> &nbsp; > &nbsp; <a class="header-right-last" href="#">임치물 상세 정보</a>
+        </div>
+    </div>
+    <hr class="contents-header-hr">      
+{% endblock sidebar %}
+
+{% block content %}
+    <div class="col-lg-9">
+        <div class="contents">
+            <h3 class="mb-30 title_color" style="padding-left:40px;color:rgb(88, 88, 88)">임치물 리스트</h3>
+            <hr>
+            {{enroll_infos.title}}
+            {{enroll_infos.term}}
+            {{enroll_infos.enroll_status}}
+            {{enroll_infos.title}}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 5,10,15 ]
+    });
+});
+</script>
+
+<script type="text/javascript">
+	function show(str){
+		//show 호출시 넘겨준 값을 이용하여 ajax 등을 통해 modal 을 띄울때 동적으로 바뀌어야 하는 값을 얻어온다.  
+		//얻어온 값을 이용하여, modal 에서 동적으로 바뀌어야 하는 값을 바꾸어 준다..  
+	    $("#content").html("str");
+	    //modal을 띄워준다.  
+	    $("#myModal").modal('show');
+	}
+</script>
+
+{% endblock js %}
