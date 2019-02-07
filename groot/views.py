@@ -74,8 +74,9 @@ def join(request):
         email = request.POST['email']
         address = request.POST['address']
         phone_num = request.POST['phone_num']
+        homepage = request.POST['homepage']
 
-        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num)
+        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=phone_num, homepage=homepage)
         user.status = 0
         user.s_date = timezone.now()
         user.save()
@@ -658,8 +659,7 @@ class cont_pdf(View):
         contract = Contract.objects.get(cont_idx=cont_idx)
         cert_info = Certificate.objects.get(enroll_idx=en_idx, cont_idx=cont_idx)
 
-        params = {'contract':contract, 'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info}
-
+        params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
         return Render.render('groot/show_cont.html', params)
 
 def get_title() : # 임치된 title을 불러오는 함수

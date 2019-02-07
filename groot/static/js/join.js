@@ -113,7 +113,7 @@
 
 
     function checkId(event){
-        if(idFlag) return true;
+//        if(idFlag) return true;
 
         var id = $("#user_id").val();
         var oMsg = $("#idMsg");
