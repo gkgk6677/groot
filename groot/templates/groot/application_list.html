@@ -14,6 +14,13 @@
         #application_list p {
             color: #3189AE;
         }
+        table > tbody > tr > td > a {
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            white-space: nowrap; 
+            width: 300px;
+            display: inline-block;
+        }
     </style>
 {% endblock css %}
 
@@ -35,12 +42,12 @@
             <table class="table table-hover dataTables-example" width="100%" style="text-align:center; vertical-align:middle;">
                 <thead>
                     <tr>
-                        <th width="5%">No</th>
-                        <th width="36%">임치 기술명</th>
-                        <th width="10%">기간</th>
-                        <th width="15%">만료 날짜</th>
-                        <th width="10%">상태</th>
-                        <th width="14%">처리</th>
+                        <th width="10%">No</th>
+                        <th width="20%">임치 기술명</th>
+                        <th width="13%">기간</th>
+                        <th width="22%">만료 날짜</th>
+                        <th width="15%">상태</th>
+                        <th width="20%">처리</th>
                     </tr>
                 </thead>
 

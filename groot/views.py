@@ -1051,6 +1051,7 @@ def contract_list_detail(request, idx):
             contract_infos.save()
 
         else:
+            contract_infos.refused_reason = request.POST['refused_reason']
             contract_infos.status = 2
             contract_infos.accept_date = datetime.datetime.now()
             contract_infos.save()

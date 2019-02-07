@@ -2,39 +2,7 @@
 {% load static %}
 
 {% block css %}
-<style>  
-    #table {display:table; width:100%}
-    .cell {display:table-cell; padding:3px; border:1px solid #DDD;}
-    .nice-select ul.list{overflow-y: auto; height: 200px;}
-    *:after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        line-height: 1.5;
-        font-weight: 400;
-        color: #2b3034;
-        list-style: none;
-    }
-        caption{display: none}
-        #table{width: 700px; height: 853px; margin: 5px auto; padding: 5px}
-        #table table{width: 100%; table-layout: fixed; border-collapse: collapse; border-spacing: 0}
-        #table thead th{height: 70px; font-size: 24px; font-weight: bold}
-        #table th{background: #fafafa; border: 1px solid #dee0e1; height: 50px; padding: 5px; text-align: center}
-        #table td{padding: 5px; border: 1px solid #dee0e1;}
-        #table .center{text-align: center}
-        #table .input:after{content: ""; display: block; clear: both}
-        #table .input .radio{float: left; width: calc(50% - 5px); text-align: center}
-        #table .input .radio + .radio{margin-left: 10px}
-        #table #id_reason {min-height: 150px; resize:none;}
-        #table #id_term{width:50px;}
-
-.submit_btn:hover {
-    background: #00c8a9;
-    color: #fff;
-    }
-
-
-</style>
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
 {% endblock css %}
 
 {% block sidebar %}
@@ -145,7 +113,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="" style="margin-top:80px; text-align:center;">
+                            <div class="button-group-area mt-40 col-md-6" style="margin-top:80px; text-align:center;">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn submit_btn" data-toggle="modal" data-target="#acceptModal">승인</button>
                                     
@@ -160,7 +128,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body" style="margin:20px;">
-                                        해당 임치물에 대한 임치기간 연장을 승인하시겠습니까?
+                                        해당 임치물에 대한 계약 요청을 승인하시겠습니까?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -183,12 +151,19 @@
                                             </button>
                                         </div>
                                         <div class="modal-body" style="margin:20px;">
-                                            해당 임치물에 대한 임치기간 연장을 반려하시겠습니까?
+                                            해당 임치물에 대한 계약 요청을 반려하시겠습니까?
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                                            <button type="submit" name="no" value="no" class="btn btn-primary" onclick="denied();">반려</button>
-                                        </div>
+                                        <form action="#" method="POST">
+                                            {% csrf_token %}
+                                            <div class="form-group" style="padding:0 20px 0 20px">
+                                                <label for="message-text" class="col-form-label">반려 사유를 입력하세요:</label>
+                                                <textarea class="form-control" id="refused_reason" name="refused_reason" style="border:1px solid #808080;"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                                <button type="submit" name="no" value="no" class="btn btn-primary" onclick="denied();">반려</button>
+                                            </div>
+                                        </form>
                                         </div>
                                     </div>
                                 </div>

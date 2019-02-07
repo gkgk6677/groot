@@ -16,6 +16,20 @@
         #request_list p {
             color: #3189AE;
         }
+        table > tbody > tr > td > a {
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 300px; 
+            display: inline-block;
+        }
+        table > tbody > tr > .name >span {
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100px; 
+            display: inline-block;
+        }
     </style>
 {% endblock css %}
 
@@ -54,11 +68,11 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;" >
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>임치 기술명</th>
-                                <th>년 수</th>
-                                <th>신청날짜</th>
-                                <th>신청상태</th>
+                                <th width='10%'>No</th>
+                                <th width='35%'>임치 기술명</th>
+                                <th width='15%'>계약기간</th>
+                                <th width='25%'>신청날짜</th>
+                                <th width='15%'>신청상태</th>
                             </tr>
                         </thead>
                         
@@ -182,18 +196,18 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>임치기업</th>
-                                <th>임치 기술명</th>
-                                <th>계약기간</th>
-                                <th>신청날짜</th>
-                                <th>상태</th>
+                                <th width="50%">No</th>
+                                <th width="300%">임치 기술명</th>
+                                <th width="100%">임치기업</th>
+                                <th width="80%">계약기간</th>
+                                <th width="220%">신청날짜</th>
+                                <th width="80%">신청상태</th>
                             </tr>
                         </thead>
                         
                         <tbody>
                         {% for list in contract_lists %}
                             <tr>
-                                <td>{{list.enroll_idx.user.com_name}}</td>
                                 {% if list.status == "<td style='color:green'>대기중</td>" or list.status == "<td style='color:blue'>승인</td>" %}
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#contract{{list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a>
@@ -289,22 +303,33 @@
                                         </div>
                                     </td>
                                 {% endif %}
+                                <td class="name"><span>{{list.enroll_idx.user.com_name}}</span></td>
                                 <td>{{list.term}} 년</td>
                                 <td>{{list.c_date}}</td>
                                 {{list.status | safe}}
                             </tr>
                         {% endfor %}
                         </tbody>
+                        <script>
+                            var tables = document.getElementsByTagName('tbody');
+                            var table = tables[tables.length - 1];
+                            var rows = table.rows;
+                            for(var i = 0, td; i < rows.length; i++){
+                                td = document.createElement('td');
+                                td.appendChild(document.createTextNode(i+1));
+                                rows[i].insertBefore(td, rows[i].firstChild);
+                            }
+                        </script>
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane " id="expire">
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>임치 기술명</th>
-                                <th>신청날짜</th>
-                                <th>신청상태</th>
+                                <th width="100px">No</th>
+                                <th width="300px">임치 기술명</th>
+                                <th width="240px">신청날짜</th>
+                                <th width="110px">신청상태</th>
                             </tr>
                         </thead>
                         

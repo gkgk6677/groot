@@ -39,6 +39,7 @@ class Contract(models.Model):
     user = models.ForeignKey('User', models.DO_NOTHING)
     term = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     status = models.IntegerField()
     accept_date = models.DateTimeField(blank=True, null=True)

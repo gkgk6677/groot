@@ -251,6 +251,7 @@ def check(request, idx):
 
                 return redirect('index')
             else:
+                enrollment_info.refused_reason = request.POST['refused_reason']
                 enrollment_info.enroll_status = 2
                 enrollment_info.enroll_date = datetime.datetime.now()
                 enrollment_info.save()

@@ -14,6 +14,20 @@
     .col-sm-12{
         min-height:360px;
     }
+    table > tbody > tr > td > a {
+        overflow: hidden; 
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 300px; 
+        display: inline-block;
+    }
+    table > tbody > tr > .name >span {
+        overflow: hidden; 
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 60px; 
+        display: inline-block;
+    }
 </style>
 {% endblock css %}
 
@@ -48,18 +62,18 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>임치기업</th>
-                                <th>임치 기술명</th>
-                                <th>계약기업</th>
-                                <th>계약기간</th>
-                                <th>상태</th>
+                                <th width="15%">임치기업</th>
+                                <th width="40%">임치 기술명</th>
+                                <th width="15%">계약기업</th>
+                                <th width="15%">계약기간</th>
+                                <th width="15%">상태</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for accepted_list in contract_lists %}
                             {% if accepted_list.enroll_idx.user.user_id == user_id or accepted_list.user.user_id == user_id %}
                                 <tr>
-                                    <td>{{accepted_list.enroll_idx.user.com_name}}</td>
+                                    <td class="name"><span>{{accepted_list.enroll_idx.user.com_name}}</span></td>
 
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#contract{{accepted_list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{accepted_list.enroll_idx.title}}</a>
@@ -119,7 +133,7 @@
                                         </div>
                                     </td>
 
-                                    <td>{{accepted_list.user.com_name}}</td>
+                                    <td class="name"><span>{{accepted_list.user.com_name}}</span></td>
                                     <td>{{accepted_list.term}} 년</td>
                                     {{accepted_list.status | safe}}
                                 </tr>    
@@ -132,12 +146,11 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>임치 기술명</th>
-                                <th>회사명</th>
-                                <th>대표자</th>
-                                <th>계약 기간</th>
-                                <th>신청 날짜</th>
+                                <th width="100px">No</th>
+                                <th width="300px">임치 기술명</th>
+                                <th width="100px">회사명</th>
+                                <th width="100px">계약 기간</th>
+                                <th width="200px">신청 날짜</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,8 +158,7 @@
                             {% if list.enroll_idx.user.user_id == user_id and list.status == 0 %}
                                 <tr>
                                     <td><a href="contract_list/{{list.cont_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a></td>
-                                    <td>{{list.user.com_name}}</td>
-                                    <td>{{list.user.com_head}}</td>
+                                    <td class="name"><span>{{list.user.com_name}}</span></td>
                                     <td>{{list.term}}</td>
                                     <td>{{list.c_date}}</td>
                                 </tr>
