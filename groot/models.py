@@ -81,6 +81,7 @@ class Enrollment(models.Model):
     title = models.CharField(max_length=100)
     term = models.PositiveIntegerField(default=1)
     summary = models.TextField(blank=True, null=True)
+    refused_reason = models.TextField(blank=True, null=True)
     agree_status = models.IntegerField(blank=True, null=True)
     enroll_status = models.IntegerField(null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
@@ -112,6 +113,7 @@ class Extend(models.Model):
     term = models.PositiveIntegerField(default=1)
     status = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
     c_date = models.DateTimeField()
 
@@ -124,6 +126,7 @@ class Expire(models.Model):
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
     status = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
     c_date = models.DateTimeField()
 

@@ -136,6 +136,7 @@ def extend_detail(request, idx):
                 return redirect('index')
             else:
                 extend_infos.accept_date = datetime.datetime.now()
+                extend_infos.refused_reason = request.POST['refused_reason']
                 extend_infos.status = 2
                 extend_infos.save()
                 return redirect('index')
@@ -206,6 +207,7 @@ def expire_detail(request, idx):
                 enroll_infos.save()
                 return redirect('index')
             else:
+                expire_infos.refused_reason = request.POST['refused_reason']
                 expire_infos.accept_date = datetime.datetime.now()
                 expire_infos.status = 2
                 expire_infos.save()
@@ -224,7 +226,9 @@ def admin_log(request):
 def admin_read(request):
 
     if request.session['user_id'] == 'admin':
-        return render(request, 'administrator/admin-read.html', {})
+        enroll_infos = Enrollment.objects.all().filter(enroll_status=1)
+
+        return render(request, 'administrator/admin-read.html', {'enroll_infos':enroll_infos})
     else:
         return redirect('wrong')
 
