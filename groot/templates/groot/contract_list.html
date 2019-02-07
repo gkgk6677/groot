@@ -62,7 +62,7 @@
                                     <td>{{accepted_list.enroll_idx.user.com_name}}</td>
 
                                     <td>
-                                        <a href="#" data-toggle="modal" data-target="#contract{{accepted_list.enroll_idx.enroll_idx}}">{{accepted_list.enroll_idx.title}}</a>
+                                        <a href="#" data-toggle="modal" data-target="#contract{{accepted_list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{accepted_list.enroll_idx.title}}</a>
                                         <!-- The Modal -->
                                         <div class="modal fade" id="contract{{accepted_list.enroll_idx.enroll_idx}}">
                                             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -144,7 +144,7 @@
                         {% for list in contract_infos %}
                             {% if list.enroll_idx.user.user_id == user_id and list.status == 0 %}
                                 <tr>
-                                    <td><a href="contract_list/{{list.cont_idx}}">{{list.enroll_idx.title}}</a></td>
+                                    <td><a href="contract_list/{{list.cont_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a></td>
                                     <td>{{list.user.com_name}}</td>
                                     <td>{{list.user.com_head}}</td>
                                     <td>{{list.term}}</td>
