@@ -2,8 +2,12 @@
 {% load static %}
 
 {% block css %}
+    <!-- 탭 관련 CSS 파일 -->
+    <link href="{%static 'css/tab.css' %}" rel="stylesheet">
+    <!-- Pagination 및 검색을 위한 CSS 파일 -->
+    <link href="{% static 'css/table.css' %}" rel="stylesheet">
+
     <style>
-        .tr_link:hover{color:black; font-weight: bold;}
         .btn-outline-primary:hover{color:white; background-color:#39bfd6;}
         .btn-outline-info:hover{color:white; background-color:#00c8a9;}
         #issue {
@@ -28,44 +32,81 @@
                     <hr class="contents-header-hr">
 
                     <div class="contents">
-                        <table class="table table-hover" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>임치 기술명</th>
-                                    <th>계약 날짜</th>
-                                    <th>만료 날짜</th>
-                                    <th>증명서 발급</th>
-                                </tr>
-                            </thead>
+                        <!-- Tab Menu -->
+                        <ul class="nav nav-tabs" role="tablist" style="font-weight:500;">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#app" role="tab" data-toggle="tab">임치 증명서</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#cont" role="tab" data-toggle="tab">계약 증명서</a>
+                            </li>
+                        </ul>
 
-                            <tbody>
-                            {% for enroll_info in enroll_infos %}
-                                {% with forloop.counter as counter %}
-                                    <tr>
-                                        <td >
-                                            <a href="#" trid="{{enroll_info.enroll_idx}}" class="tr_link" id="{{enroll_info.enroll_idx}}">
-                                                {{counter}}
-                                                <!--{{enroll_info.enroll_idx}}-->
-                                            </a>
-                                        </td>
-                                        <td>{{enroll_info.title}}</td>
-                                        <td>{{enroll_info.enroll_date}}</td>
-                                        <td>{{enroll_info.end_date}}</td>
-                                        <td>
-                                            {% csrf_token %}
-                                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                        </td>
-                                    </tr>
-                                    {% for cont_info in cont_infos %}
-                                        {% if cont_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                        <!-- Tab Contents -->
+                        <div class="tab-content" >
+                            <div role="tabpanel" class="tab-pane active" id="app">
+                                <table class="table table-hover dataTables-example" width="100%">
+                                    {% if enroll_infos %}
+                                    <thead>
+                                        <tr>
+                                            <th width="7%">No</th>
+                                            <th width="33%">임치 기술명</th>
+                                            <th width="20%">임치 날짜</th>
+                                            <th width="20%">만료 날짜</th>
+                                            <th width="20%">증명서 발급</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for enroll_info in enroll_infos %}
+                                        <tr>
+                                            <td>{{enroll_info.title}}</td>
+                                            <td>{{enroll_info.enroll_date}}</td>
+                                            <td>{{enroll_info.end_date}}</td>
+                                            <td>
+                                                {% csrf_token %}
+                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    {% else %}
+                                        임치한 기술이 없습니다.<br><br><br><br><br>
+                                    {% endif %}
+                                    <script>
+                                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                                        var tables = document.getElementsByTagName('tbody');
+                                        var table = tables[tables.length - 1];
+                                        var rows = table.rows;
+                                        for(var i = 0, td; i < rows.length; i++){
+                                            td = document.createElement('td');
+                                            td.appendChild(document.createTextNode(i+1));
+                                            td.style ="vertical-align: middle;"
+                                            rows[i].insertBefore(td, rows[i].firstChild);
+                                        }
+                                    </script>
+                                </table>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="cont">
+                                <table class="table table-hover dataTables-example" width="100%">
+                                    {% if cont_infos %}
+                                    <thead>
+                                        <tr>
+                                            <th width="7%">No</th>
+                                            <th width="28%">계약 기술명</th>
+                                            <th width="14%">계약 기업</th>
+                                            <th width="18%">계약 날짜</th>
+                                            <th width="18%">만료 날짜</th>
+                                            <th width="15%">증명서 발급</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for cont_info in cont_infos %}
                                             <tr id="tr_show" class="tr{{cont_info.enroll_idx.enroll_idx}}" style="{display:none}">
-                                                <td style="padding-left:9%;">
-                                                    <span style="font-size: 20px; color: Dodgerblue;">
-                                                    <i class="fa fa-angle-right"></i>
-                                                    </span>
-                                                </td>
+                                                <td>{{cont_info.enroll_idx.title}}</td>
                                                 <td>{{cont_info.user.com_name}}</td>
                                                 <td>{{cont_info.c_date}}</td>
                                                 <td>{{cont_info.end_date}}</td>
@@ -76,12 +117,26 @@
                                                     <!--</a>-->
                                                 </td>
                                             </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endwith %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                        {% endfor %}
+                                    </tbody>
+                                    {% else %}
+                                        계약된 기술이 없습니다.<br><br><br><br><br>
+                                    {% endif %}
+                                    <script>
+                                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                                        var tables = document.getElementsByTagName('tbody');
+                                        var table = tables[tables.length - 1];
+                                        var rows = table.rows;
+                                        for(var i = 0, td; i < rows.length; i++){
+                                            td = document.createElement('td');
+                                            td.appendChild(document.createTextNode(i+1));
+                                            td.style ="vertical-align: middle;"
+                                            rows[i].insertBefore(td, rows[i].firstChild);
+                                        }
+                                    </script>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -93,6 +148,19 @@
 {% endblock content %}
 
 {% block js %}
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 5, 10, 15 ]
+    });
+});
+</script>
+
 <script>
     $('button[type=submit]').click(function() {
         let trid = $(this).attr('trid');
@@ -127,15 +195,15 @@
         return false;
     });
 </script>
-<script>
-    $(function() {
-        $('.tr_link').click(function() {
-            let trid = $(this).attr('trid');
-            $('.tr'+trid).toggle();
-        });
+<!--<script>-->
+    <!--$(function() {-->
+        <!--$('.tr_link').click(function() {-->
+            <!--let trid = $(this).attr('trid');-->
+            <!--$('.tr'+trid).toggle();-->
+        <!--});-->
         <!--$('.tr'+trid').hide();-->
 
-        <!--임치목록 1부터 나타내기-->
+        <!--&lt;!&ndash;임치목록 1부터 나타내기&ndash;&gt;-->
         <!--var tables = document.getElementsByTagName('tr');-->
         <!--var table = tables[tables.length - 1];-->
         <!--var rows = table.rows;-->
@@ -145,7 +213,7 @@
             <!--rows[i].insertBefore(td, rows[i].firstChild);-->
         <!--}-->
 
-        <!--$('.tr_link').hover(function() { 돋보기 뜨는거-->
+        <!--$('.tr_link').hover(function() { &lt;!&ndash;돋보기 뜨는거&ndash;&gt;-->
             <!--let trid = $(this).attr('trid');-->
             <!--let icon = `<span style="font-size: 20px; color: Dodgerblue;">-->
                            <!--<i class="fa fa-search-plus"></i>-->
@@ -153,6 +221,6 @@
             <!--$('#'+trid).after(icon);-->
         <!--});-->
         <!--$('.tr_link').html('{{enroll_info.enroll_idx}}');-->
-    });
-</script>
+    <!--});-->
+<!--</script>-->
 {% endblock js %}
