@@ -4,7 +4,7 @@ import json
 import operator
 import os
 from functools import wraps, reduce
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 import requests
 from django.shortcuts import render, redirect
@@ -32,6 +32,9 @@ from urllib.parse import quote
 from django.views.generic import View
 from .render import Render
 import os
+
+from cryptography.fernet import Fernet
+import pyotp
 
 # Create your views here.
 
@@ -1095,4 +1098,31 @@ def contract_list_detail(request, idx):
             contract_infos.accept_date = datetime.datetime.now()
             contract_infos.save()
         return redirect('mypage')
+
+@csrf_exempt
+def otpmaker(request):
+    if request.method == 'GET':
+        user_id = request.session['user_id']
+        return render(request, 'groot/mypage.html', {'user_id': user_id})
+    else:
+        user_id = request.session['user_id']
+        user_info = User.objects.get(user_id=user_id)
+        otp = pyotp.random_base32()
+        key = b'PvyhpBY3ACtXhj_wm9ueKhFSYyKAz4ntMc3p6sKYvuI='
+        cipher_suite = Fernet(key)
+        ciphered_text = cipher_suite.encrypt(b"%s" % bytes(otp.encode('utf-8')))
+        with open('otp/%s.bin' % user_id, 'wb') as file_object:
+            file_object.write(ciphered_text)
+        otpsave = User.objects.get(user_id=user_id)
+        result_dict = {}
+
+        if user_info.otp == None:
+            otpsave.otp = "Issued"
+            otpsave.save()
+            data = pyotp.totp.TOTP(otp).provisioning_uri(user_id, issuer_name="Groot OTP App")
+            output = {"otp": otp, 'data': data}
+            return JsonResponse(output)
+        else:
+            result_dict['result'] = 'Already Issued'
+            return JsonResponse(result_dict)
 
