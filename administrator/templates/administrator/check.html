@@ -42,6 +42,21 @@
                                 </div>
                             </div>
                         </div>
+                        <table>
+                            <thead>
+                                <th>임치물</th>
+                                <th>유사도</th>
+                            </thead>
+                            <tbody>
+                                {% for value in test %}
+                                    <tr>
+                                        <td>{{value.0}}</td>
+                                        <td>{{value.1}}</td>
+                                        <td>{{value.2}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                         <form action="" method="POST" style="text-align:center;">
                             {% csrf_token %}
                             <div class="" style="margin-top:80px; text-align:center;">

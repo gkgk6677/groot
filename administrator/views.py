@@ -214,13 +214,18 @@ def check(request, idx):
 
             request_count = 0
             result = []
+            test = []
 
             for val in range(1,len(one_row)):
                 if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
                     result.append({titlelist[val] : mydoclist[val]})
                     request_count += 1
 
-            return render(request, 'administrator/check.html', {'result':result, 'request_count':request_count, 'one_row':one_row})
+            for val in range(1,len(one_row)):
+                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
+                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100)[0:5] + '%')])
+
+            return render(request, 'administrator/check.html', {'test':test, 'result':result, 'request_count':request_count, 'one_row':one_row})
         else:
             if request.POST.get('yes'):
                 enrollment_info.enroll_status = 1
@@ -278,3 +283,8 @@ def enrollments_detail(request, idx):
         return render(request, 'administrator/enrollments-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'enroll_infos':enroll_infos})
     else:
         return redirect('wrong')
+
+def admin_user(request):
+    user_infos = User.objects.all()
+    
+    return render(request, 'administrator/admin-user.html', {'user_infos':user_infos})
