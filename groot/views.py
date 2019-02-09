@@ -834,8 +834,9 @@ def validate_intro(request):
 def validate_show(request, idx):
     user_id = request.session['user_id']
     enroll_info = Enrollment.objects.get(enroll_idx=idx)
-
+    file_info = File.objects.all().filter(enroll_idx=idx)
     if request.method == 'POST' :
+
         upload_file = request.FILES['validate_file']
         hashSHA = hashlib.sha256
 
@@ -855,7 +856,7 @@ def validate_show(request, idx):
             hash = hashSHA(textdata).hexdigest()
             name = upload_file.name
             print(hash)
-            template = get_template('groot/validate_complete.html')
+            template = get_template('groot/validate_show.html')
             os.remove(path + '\\' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
 
             # Hyperledger-Fabric에서 데이터 받아오기
@@ -865,25 +866,25 @@ def validate_show(request, idx):
             result = requests.get(fabric)
 
             parses = result.json() # JSON형식으로 parse(분석)
-
+            method = 'post'
             for parse in parses:
                 txid = parse.get('TxId')
                 if txid == enroll_info.enroll_tx : # 파일등록시 쌓인 content 값 가져오기
                     content = parse.get('Value').get('content')
 
-            try: # 블록에 접근해서 값 비교하기 
+            try: # 블록에 접근해서 값 비교하기
                 if content[name] == hash : # 해쉬 같으면 원본 맞음
-                    value = {'file_name': name, 'ck_val': 0, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx}
-                    return HttpResponse(template.render(value))
+                    value = {'method':method, 'file_name': name, 'ck_val': 0, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx, 'enroll_info' : enroll_info, 'file_info':file_info}
+                    return render(request, 'groot/validate_show.html', value)
                 else : # 해쉬 다르면 위변조 됨
-                    value = {'file_name': name, 'ck_val': 1, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx}
-                    return HttpResponse(template.render(value))
+                    value = {'method':method, 'file_name': name, 'ck_val': 1, 'true_hash': content[name], 'val_hash': hash, 'enroll_info' : enroll_info,'enroll_idx': idx, 'file_info':file_info}
+                    return render(request, 'groot/validate_show.html', value)
             except KeyError : # KeyError는 없는 문서
-                value = {'file_name': name, 'ck_val': 2, 'enroll_idx': idx}
-                return HttpResponse(template.render(value))
-
+                value = {'method':method, 'file_name': name, 'ck_val': 2, 'enroll_idx': idx, 'file_info': file_info, 'enroll_info' : enroll_info,}
+                return render(request, 'groot/validate_show.html', value)
     else:
-        return render(request, 'groot/validate_show.html', {'enroll_info': enroll_info})
+        method = 'get'
+        return render(request, 'groot/validate_show.html',{'file_info':file_info,'enroll_info' : enroll_info, 'method':method })
 
 def news(request):
     return render(request, 'groot/news.html', {})

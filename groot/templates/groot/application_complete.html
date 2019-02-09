@@ -2,7 +2,6 @@
 {% load static %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
 <style>
 .main-raised {
@@ -215,10 +214,10 @@
     <!--================Content Area =================-->
 <section class="register_area p_77">
     <div class="page-header header-filter clear-filter purple-filter" data-parallax="true">
-        <div class="container">
+        <div class="container" style="background-color: #dee2e6;">
           <div class="content">
 
-              <div class="brand" style="padding-top:60px; padding-bottom:30px;">
+              <div class="brand" style="padding-top:60px; padding-bottom:30px; text-align:center;">
 
 
                 <h1><img src="{% static 'img/book.png' %}" style="width: 70px;padding-right: 13px;">기술임치 신청 완료</h1>
@@ -239,7 +238,7 @@
         <div class="section section-basic">
           <div class="container">
                         <h2>' {{enroll_tech}} ' 제출이 완료되었습니다</h2>
-                        <button  onclick="location.href='mypage';" class="submit_btn">마이페이지로 가기</button>
+                        <button  onclick="location.href='mypage';" class="submit_btn" style="background: #569bb8;     border: 1px solid #3189ae; font-size: 15px;">마이페이지로 가기</button>
                 </div>
             </div>
           </div>
