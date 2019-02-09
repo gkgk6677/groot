@@ -26,18 +26,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="on">
-                                <a class="on " title="4311118" href="/groot_scan/block/4311118">4,311,118</a>
-                            </td>
-                            <td class="break">26 minutes ago</td>
-                            <td>1</td>
-                            <td>
-                                <a class="on ellipsis" title="4311118" href="/groot_scan/block/4311118">
-                                    0x9b5521dd859fc15650da328814755e8c65431ad965b50b01ffe0be0281113112
-                                </a>
-                            </td>
-                        </tr>
+                        {% for block in blocks %}
+                            {% for b in block %}
+                                <tr>
+                                    <td class="on">
+                                        <a class="on " title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">{{b.block_number}}</a>
+                                    </td>
+                                    <td class="break">26 minutes ago</td>
+                                    <td>1</td>
+                                    <td>
+                                        <a class="on ellipsis" title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">
+                                            0x{{b.data_hash}}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div class="sort-holder">

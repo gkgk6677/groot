@@ -8,20 +8,6 @@
 from django.db import models
 
 
-class Attribute(models.Model):
-    attribute_idx = models.IntegerField(primary_key=True)
-    amount = models.IntegerField()
-    s_date = models.DateTimeField()
-    m_date = models.DateTimeField()
-    inode = models.CharField(max_length=100)
-    file_hash = models.CharField(max_length=100)
-    file_idx = models.ForeignKey('File', models.DO_NOTHING, db_column='file_idx')
-
-    class Meta:
-        managed = False
-        db_table = 'Attribute'
-
-
 class Certificate(models.Model):
     cert_idx = models.CharField(primary_key=True, max_length=100)
     enroll_idx = models.ForeignKey('Enrollment', models.DO_NOTHING, db_column='enroll_idx')
@@ -29,6 +15,7 @@ class Certificate(models.Model):
     term = models.IntegerField()
     end_date = models.DateTimeField()
     c_date = models.DateTimeField(blank=True, null=True)
+    cert_status = models.IntegerField()
 
     class Meta:
         managed = False
@@ -41,6 +28,7 @@ class Contract(models.Model):
     user = models.ForeignKey('User', models.DO_NOTHING)
     term = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     status = models.IntegerField()
     end_date = models.DateTimeField(blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
@@ -73,6 +61,7 @@ class Enrollment(models.Model):
     enroll_status = models.IntegerField()
     agree_status = models.IntegerField(blank=True, null=True)
     summary = models.TextField(blank=True, null=True)
+    refused_reason = models.TextField(blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)
@@ -89,6 +78,7 @@ class Expire(models.Model):
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
     status = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
     c_date = models.DateTimeField()
 
@@ -103,6 +93,7 @@ class Extend(models.Model):
     term = models.IntegerField()
     status = models.IntegerField()
     reason = models.TextField()
+    refused_reason = models.TextField(blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
     c_date = models.DateTimeField()
 
@@ -112,14 +103,12 @@ class Extend(models.Model):
 
 
 class File(models.Model):
-    file_idx = models.IntegerField(primary_key=True)
+    file_idx = models.AutoField(primary_key=True)
     enroll_idx = models.ForeignKey(Enrollment, models.DO_NOTHING, db_column='enroll_idx')
-    pid = models.CharField(max_length=200)
-    mid = models.CharField(max_length=100)
-    type = models.IntegerField(null=True)
-    o_name = models.CharField(max_length=100, null=True)
-    r_name = models.CharField(max_length=100, null=True)
-    c_date = models.DateTimeField(auto_now_add=True)
+    folder_path = models.CharField(max_length=255)
+    file_hash = models.CharField(max_length=64)
+    file_name = models.CharField(max_length=100)
+    c_date = models.DateTimeField()
 
     class Meta:
         managed = False

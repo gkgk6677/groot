@@ -73,6 +73,7 @@ urlpatterns = [
     path('contract_list/<int:idx>', views.contract_list_detail, name="contract_list_detail"),
     # path('login3', views.login3, name="login3"),
     path('download/<int:idx>', views.download, name='download'),
+    path('otpmaker/', views.otpmaker, name='otpmaker'),
 
 ]
 

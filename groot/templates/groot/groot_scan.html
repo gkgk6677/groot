@@ -85,7 +85,7 @@
                                             <span style="font-size:15px">  (건) </span>
                                         </p>
                                         <hr class="hr">
-                                        <p class="subTitle c">GROOT Transactions<em>{{results|length}}</em></p>
+                                        <p class="subTitle c">GROOT Transactions<em>{{transactions|length}}</em></p>
                                     </li>
                                     <li class="right">
                                         <p class="subTitle">Daily Transactions</p>
@@ -119,22 +119,26 @@
                                                 </p>
                                                 <div class="list-group" style="height: 400px;">
                                                     <ul class="list">
-                                                        <li>
-                                                            <p class="icon">
-                                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgCAYAAADVenpJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVlJREFUeNrs2TFuwjAYgFGMMoNyCWfIkDE3zpCb5AjxJSyYK9JUHSqhDrQqDpT3FkYL+5P9I8KukBjj2/oRdtxknucqhLDce52q4HfaC+Dx7G2BAHhh1VYLd11XtW27OIJPwzBsMiNtFsA4jpcSQ86zWIdkTwACQAAIgHJD4Dp8GMQeUNM0lxKDoRvAE4AAeFnhegZIKfnD5h+7Pm83gCcAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAAB8GtViUX6vj/knE+2+3Z1XR+naTq7ARAAAuCZZ4BvnFNKR9v/Jcb4MSMd3AAIAAEgAARA+V8B6zS6/PUiOWc7/fM9O61n4QZAAAiAe3kXYAC/Fi11kj61BwAAAABJRU5ErkJggg==" alt="block-img">
-                                                                <span>BLOCK</span>
-                                                                <span>
-                                                                    <a class="on " title="3824785" href="/groot_scan/block/3824785">3,824,785</a>
-                                                                </span>
-                                                            </p>
-                                                            <p class="a">Hash
-                                                                <em>
-                                                                    <a class="on " title="3824785" href="/groot_scan/block/3824785">0x23a2d15870501fb88dd0f6834eed219b25c8751c31d822136fc74f6a8e5241b6</a>
-                                                                </em>
-                                                            </p>
-                                                            <p class="b">Transactions<em>1</em></p>
-                                                            <p class="c">Time Stamp<em>2019-01-21 23:13:28 (UTC+9)</em></p>
-                                                        </li>
+                                                        {% for block in blocks %}
+                                                            {% for b in block %}
+                                                                <li>
+                                                                    <p class="icon">
+                                                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgCAYAAADVenpJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVlJREFUeNrs2TFuwjAYgFGMMoNyCWfIkDE3zpCb5AjxJSyYK9JUHSqhDrQqDpT3FkYL+5P9I8KukBjj2/oRdtxknucqhLDce52q4HfaC+Dx7G2BAHhh1VYLd11XtW27OIJPwzBsMiNtFsA4jpcSQ86zWIdkTwACQAAIgHJD4Dp8GMQeUNM0lxKDoRvAE4AAeFnhegZIKfnD5h+7Pm83gCcAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAAB8GtViUX6vj/knE+2+3Z1XR+naTq7ARAAAuCZZ4BvnFNKR9v/Jcb4MSMd3AAIAAEgAARA+V8B6zS6/PUiOWc7/fM9O61n4QZAAAiAe3kXYAC/Fi11kj61BwAAAABJRU5ErkJggg==" alt="block-img">
+                                                                        <span>BLOCK</span>
+                                                                        <span>
+                                                                            <a class="on " title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">{{b.block_number}}</a>
+                                                                        </span>
+                                                                    </p>
+                                                                    <p class="a">Hash
+                                                                        <em>
+                                                                            <a class="on " title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">0x{{b.data_hash}}</a>
+                                                                        </em>
+                                                                    </p>
+                                                                    <p class="b">Transactions<em>{{b.transactions}}</em></p>
+                                                                    <p class="c">Time Stamp<em></em></p>
+                                                                </li>
+                                                            {% endfor %}
+                                                        {% endfor %}
                                                     </ul>
                                                 </div>
                                             </li>
@@ -146,19 +150,19 @@
                                                 </p>
                                                 <div class="list-group" style="height: 400px;">
                                                     <ul class="list">
-                                                        {% for result in results %}
-                                                            {% for r in result %}
+                                                        {% for transaction in transactions %}
+                                                            {% for tx in transaction %}
                                                                 <li>
                                                                     <p class="icon ">
                                                                         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABgCAYAAADW4bYkAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAoBJREFUeNrs3T9IG2Ech/Fc7oK3uLm6XgxkdGsLoksDhVIlYMbWpXOhFuqSSdGls2CHrnXr4FIIiDoIQkkgf+4KgQ5dSukgChKapt8MgrwVa8Rc8h7PA+EObxDuw++95CUQJwiCXopiz3GcrTAM3wz7/6S51aOp1+utZrPZnWKx6AKcXOSVarX6sVAoTAxtpWCJHovluuJ53tN6vX42dOAoihxu+f33v0ES8okmuqD7/5MlOhk1jOV6VsgH+Xx+GuAElMlkHulwbCDPdDqdI735ygJseXre/vJ9f0Gnn41L/Qk+lPEswJZXq9XONclPtDTvGpM8pUNFyPMA2z/JnVKptCzkbQN5Uq+9XC73DGDLK5fLf8IwfKnTDePSRLfb3dUkvwA4Aekj0lsdXvUH+MqfXU3yeyG/BjgZyO/S6fRzLdm/jSV7S8ibACegVqv1QYclvS4M5IH3rwEe0/RM/qRJfqzTUwN5oP1rgMd7kvc9z5vT6Q/j0mK73d7TNE8CbHmNRuOL67oP9Uz+Zkxy/zNyJQiCKYAtr9lsfvV9/0HqDvvXAFuSnrvfb9q/1iTPAGx5N+1f9yf5uv1rgC1r0P1rgO2c5FvvXwNsaVf2r9eNS5f71ysAJ6AoitZS1+9f7wh51eMWjaY4vuwo5E0mOOEBDDDZHM/g+N4MxfJ9c/PZzgSzRBPABDABTAATwAQwwAQwAUwAE8AEMAEMMAFMABPABDABTAATwAATwAQwAUwAE8AEMMAEMAFMABPABDABDDABTAATwAQwAUwAE8AAE8AEMAFMABPABDDABDABTAATwAQwAQwwtwBgApgAppH0z+8Hx/Hb8sQEE8AEMKX+CjAAQ6ziiQmGPlIAAAAASUVORK5CYII=" alt="transaction-img">
                                                                         <span>SUCCESS</span>
                                                                     </p>
-                                                                    <p class="a">TX Hash<em>
-                                                                        <a title="{{r.TxId}}" href="/groot_scan/transaction/{{r.TxId}}">
-                                                                            {{r.TxId}}
-                                                                        </a></em>
+                                                                    <p class="a">TX Hash
+                                                                        <em>
+                                                                            <a title="{{r.TxId}}" href="/groot_scan/transaction/{{r.TxId}}">0x{{tx.TxId}}</a>
+                                                                        </em>
                                                                     </p>
-                                                                    <p class="c">Time Stamp<em>{{r.Timestamp}}</em></p>
+                                                                    <p class="c">Time Stamp<em>{{tx.Timestamp}}</em></p>
                                                                 </li>
                                                             {% endfor %}
                                                         {% endfor %}
