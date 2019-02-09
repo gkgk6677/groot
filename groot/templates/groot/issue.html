@@ -26,7 +26,7 @@
                     <div class="contents-header">
                         <div class="contents-header-left">증명서 발급</div>
                         <div class="contents-header-right">
-                            <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a class="header-right-last" href="/read">증명서 발급</a>
+                            <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a class="header-right-last" href="/issue">증명서 발급</a>
                         </div>
                     </div>
                     <hr class="contents-header-hr">
@@ -53,7 +53,7 @@
                                             <th width="33%">임치 기술명</th>
                                             <th width="20%">임치 날짜</th>
                                             <th width="20%">만료 날짜</th>
-                                            <th width="20%">증명서 발급</th>
+                                            <th width="20%">&nbsp발급&nbsp/&nbsp보기&nbsp</th>
                                         </tr>
                                     </thead>
 
@@ -65,14 +65,28 @@
                                             <td>{{enroll_info.end_date}}</td>
                                             <td>
                                                 {% csrf_token %}
-                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                {% if cert_infos %}
+                                                    {% for cert_info in cert_infos %}
+                                                        {% if cert_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                                            {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
+                                                                {{cert_info.cert_status | safe}}
+                                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                            {% else %}
+                                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                                {{cert_info.cert_status | safe}}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                     {% else %}
-                                        임치한 기술이 없습니다.<br><br><br><br><br>
+                                        <br><br><br><br><br><br><br><br><br><h3>임치한 기술이 없습니다.</h3>
                                     {% endif %}
                                     <script>
                                         // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
@@ -99,7 +113,7 @@
                                             <th width="14%">계약 기업</th>
                                             <th width="18%">계약 날짜</th>
                                             <th width="18%">만료 날짜</th>
-                                            <th width="15%">증명서 발급</th>
+                                            <th width="15%">&nbsp발급&nbsp/&nbsp보기&nbsp</th>
                                         </tr>
                                     </thead>
 
@@ -111,16 +125,29 @@
                                                 <td>{{cont_info.c_date}}</td>
                                                 <td>{{cont_info.end_date}}</td>
                                                 <td>
-                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                    <!--<a href="show_cont/{{enroll_info.enroll_idx}}-{{contract_info.cont_idx}}">-->
-                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                                    <!--</a>-->
+                                                    {% csrf_token %}
+                                                    {% if cert_infos %}
+                                                        {% for cert_info in cert_infos %}
+                                                            {% if cert_info.cont_idx.cont_idx == cont_info.cont_idx %}
+                                                                {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
+                                                                    {{cert_info.cert_status | safe}}
+                                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                                {% else %}
+                                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                                    {{cert_info.cert_status | safe}}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
                                     {% else %}
-                                        계약된 기술이 없습니다.<br><br><br><br><br>
+                                    <br><br><br><br><br><br><br><br><br><h3>계약된 기술이 없습니다.</h3>
                                     {% endif %}
                                     <script>
                                         // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성

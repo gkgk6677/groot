@@ -27,6 +27,7 @@ class Certificate(models.Model):
     term = models.IntegerField()
     end_date = models.DateTimeField()
     c_date = models.DateTimeField(blank=True, null=True)
+    cert_status = models.IntegerField(null=True)
 
     class Meta:
         managed = False

@@ -542,11 +542,18 @@ def issue(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
     contract_infos = Contract.objects.all()
+    cert_infos = Certificate.objects.all()
     cont_info = []
+    cert_info = []
+    cert_lists = []
 
     for contract_info in contract_infos:
         if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
             cont_info.append(contract_info)
+
+    for c_info in cert_infos:
+        if c_info.enroll_idx.user.user_id == user_id :
+            cert_info.append(c_info)
 
     if request.method == 'POST' :
         enroll_idx = request.POST.get('enroll_id')
@@ -614,13 +621,14 @@ def issue(request):
 
             certificate = Certificate()
             certificate.enroll_idx = Enrollment.objects.get(enroll_idx=enroll_idx)  # foreign key이므로!
+            certificate.cert_status = 0
             if cont_idx != "0" :
                 certificate.cont_idx = Contract.objects.get(cont_idx=cont_idx)  # foreign key이므로!
             else :
                 pass
-            certificate.term = 7
+            certificate.term = 30
             certificate.c_date = datetime.datetime.now()
-            certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=7)
+            certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=30)
 
             # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
             unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
@@ -638,7 +646,14 @@ def issue(request):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
     else :
-        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info})
+        for cert in cert_info :
+            if cert.cert_status == 0 : # 발급된 상태
+                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+            else : # 발급기간 만료
+                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+            cert_lists.append(cert)
+
+        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos':cert_lists})
 
 class app_pdf(View) :
     def get(self, request, idx, *args, **kwargs):
@@ -672,7 +687,7 @@ def get_title() : # 임치된 title을 불러오는 함수
 
 def get_tx() : # 모든 tx 불러오는 함수
     titles = get_title()
-    groot_scan = []
+    groot_tscan = []
     for title in titles:
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
         fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
@@ -702,11 +717,36 @@ def get_tx() : # 모든 tx 불러오는 함수
             timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
             timestamp = timestamp + datetime.timedelta(hours=9)
             timestamp = str(timestamp) + timestamp_mil
-            groot_scan.append([{"TxId": txid, "Timestamp": timestamp}])
+            groot_tscan.append([{"TxId": txid, "Timestamp": timestamp}])
 
-    groot_scan = sorted(groot_scan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
+    groot_tscan = sorted(groot_tscan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
 
-    return groot_scan
+    return groot_tscan
+
+def get_block(): # 블록정보를 가져오는 함수
+    groot_bscan = []
+    i = 0
+    while True :
+        # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
+        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        result = requests.get(fabric)
+        block_parse = result.json()
+
+        if block_parse.get('error') :
+            break
+        else :
+            block_num = block_parse.get('info').get('block_number')
+            previous_hash = block_parse.get('info').get('previous_hash')
+            data_hash = block_parse.get('info').get('data_hash')
+            transactions = block_parse.get('info').get('transactions')
+            tx = block_parse.get('data')
+            groot_bscan.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash,
+                                 "transactions": transactions, "data": tx}])
+            i += 1
+
+    # groot_scan = sorted(groot_scan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
+
+    return groot_bscan
 
 def groot_scan(request):
     # # Hyperledger-Fabric에서 전체 결과 받아오기
@@ -733,16 +773,20 @@ def groot_scan(request):
     #
     # for block_parse in block_parses :
     #     titles.append(block_parse.get('Key'))
-    groot_scan = get_tx()
-    number = get_title()
 
-    return render(request, 'groot/groot_scan.html', {'results': groot_scan, 'number':number})
+    # number = titles
+    number = get_title()
+    transactions = get_tx()
+    blocks = get_block()
+
+    return render(request, 'groot/groot_scan.html', {'number':number, 'transactions': transactions, 'blocks':blocks})
 
 def groot_block(request):
-    return render(request, 'groot/groot_block.html', {})
+    blocks = get_block()
+    return render(request, 'groot/groot_block.html', {'blocks':blocks})
 
 def groot_block_detail(request, height):
-    return render(request, 'groot/groot_block_detail.html', {})
+    return render(request, 'groot/groot_block_detail.html', {'height':height})
 
 def groot_transaction(request):
     transaction = get_tx()
@@ -759,12 +803,6 @@ def groot_transaction(request):
     return render(request, 'groot/groot_transaction.html', {'transactions':transaction})
 
 def groot_transaction_detail(request, txid):
-    # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-    # fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
-    # result = requests.get(fabric)
-    # tx_parses = result.json()
-
-
     return render(request, 'groot/groot_transaction_detail.html', {'txid':txid})
 
 def read(request):
