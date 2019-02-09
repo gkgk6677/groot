@@ -59,7 +59,7 @@ def logout(request):
 
 def admin_application(request): 
     if request.session['user_id'] == 'admin':
-        app_info = Enrollment.objects.all().filter(enroll_status=0)
+        app_info = Enrollment.objects.all().filter(enroll_status=0).order_by('-c_date')
 
         if request.method == 'GET':
             return render(request, 'administrator/admin-application.html', {'app_info':app_info})
@@ -81,7 +81,7 @@ def application_detail(request, idx):
 
 def admin_extend(request):
     if request.session['user_id'] == 'admin':
-        extend_info = Extend.objects.all().filter(status=0)
+        extend_info = Extend.objects.all().filter(status=0).order_by('-c_date')
 
         return render(request, 'administrator/admin-extend.html', {'extend_info':extend_info})
     else:
@@ -131,7 +131,7 @@ def extend_detail(request, idx):
 def admin_expire(request):
 
     if request.session['user_id'] == 'admin':
-        expire_infos = Expire.objects.all().filter(status=0)
+        expire_infos = Expire.objects.all().filter(status=0).order_by('-c_date')
 
         return render(request, 'administrator/admin-expire.html', {'expire_infos':expire_infos})
     else:
@@ -170,7 +170,7 @@ def expire_detail(request, idx):
 def admin_read(request):
 
     if request.session['user_id'] == 'admin':
-        enroll_infos = Enrollment.objects.all().filter(enroll_status=1)
+        enroll_infos = Enrollment.objects.all().filter(enroll_status=1).order_by('-c_date')
 
         return render(request, 'administrator/admin-read.html', {'enroll_infos':enroll_infos})
     else:
@@ -267,7 +267,7 @@ def check(request, idx):
 def enrollments(request):
 
     if request.session['user_id'] == 'admin':
-        enroll_infos = Enrollment.objects.all().filter(enroll_status=1)
+        enroll_infos = Enrollment.objects.all().filter(enroll_status=1).order_by('-c_date')
 
         return render(request, 'administrator/enrollments.html', {'enroll_infos':enroll_infos})
     else:
@@ -285,6 +285,6 @@ def enrollments_detail(request, idx):
         return redirect('wrong')
 
 def admin_user(request):
-    user_infos = User.objects.all()
+    user_infos = User.objects.all().order_by('-c_date')
     
     return render(request, 'administrator/admin-user.html', {'user_infos':user_infos})
