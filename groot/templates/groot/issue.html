@@ -14,6 +14,9 @@
             color:#2F89AE;
             border-bottom: 3px solid #2F89AE; 
         }
+        .col-sm-12{
+            min-height:380px;
+        }  
     </style>
 {% endblock css %}
 
@@ -46,7 +49,6 @@
                         <div class="tab-content" >
                             <div role="tabpanel" class="tab-pane active" id="app">
                                 <table class="table table-hover dataTables-example" width="100%">
-                                    {% if enroll_infos %}
                                     <thead>
                                         <tr>
                                             <th width="7%">No</th>
@@ -58,22 +60,19 @@
                                     </thead>
 
                                     <tbody>
-                                    {% for enroll_info in enroll_infos %}
-                                        <tr>
-                                            <td>{{enroll_info.title}}</td>
-                                            <td>{{enroll_info.enroll_date}}</td>
-                                            <td>{{enroll_info.end_date}}</td>
-                                            <td>
-                                                {% csrf_token %}
-                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
+                                        {% for enroll_info in enroll_infos %}
+                                            <tr>
+                                                <td>{{enroll_info.title}}</td>
+                                                <td>{{enroll_info.enroll_date}}</td>
+                                                <td>{{enroll_info.end_date}}</td>
+                                                <td>
+                                                    {% csrf_token %}
+                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
-                                    {% else %}
-                                        임치한 기술이 없습니다.<br><br><br><br><br>
-                                    {% endif %}
                                     <script>
                                         // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
                                         var tables = document.getElementsByTagName('tbody');
@@ -91,7 +90,6 @@
 
                             <div role="tabpanel" class="tab-pane" id="cont">
                                 <table class="table table-hover dataTables-example" width="100%">
-                                    {% if cont_infos %}
                                     <thead>
                                         <tr>
                                             <th width="7%">No</th>
@@ -119,9 +117,6 @@
                                             </tr>
                                         {% endfor %}
                                     </tbody>
-                                    {% else %}
-                                        계약된 기술이 없습니다.<br><br><br><br><br>
-                                    {% endif %}
                                     <script>
                                         // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
                                         var tables = document.getElementsByTagName('tbody');

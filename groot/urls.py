@@ -74,7 +74,5 @@ urlpatterns = [
     # path('login3', views.login3, name="login3"),
     path('download/<int:idx>', views.download, name='download'),
 
-
-
 ]
 

@@ -15,4 +15,5 @@ urlpatterns = [
     path('index/extend/<int:idx>', views.extend_detail, name="extend_detail"),
     path('index/application/check/<int:idx>', views.check, name="check"),
     path('index/wrong', views.wrong, name="wrong"),
+    path('index/user', views.admin_user, name='admin_user'),
 ]

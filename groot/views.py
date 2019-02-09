@@ -140,7 +140,9 @@ def mypage(request):
         if (contract_info.enroll_idx.user.user_id == user_id and contract_info.enroll_idx.enroll_status == 1 and contract_info.status == 0):
             contract_count_for_me += 1
 
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
+    test = [['임치명', '유사도'],['임치명2', '유사도2']]
+
+    return render(request, 'groot/mypage.html', {'test':test,'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
 
 
 def list(request):
@@ -320,7 +322,6 @@ def download(request, idx):
         response['Content-Disposition'] = 'attachment; {}'.format(file_expr)
     os.remove(zippath)
     return response
-
 
 @my_login_required
 def application(request):

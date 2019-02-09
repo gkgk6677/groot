@@ -11,7 +11,7 @@ class User(models.Model):
     com_head = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    phone_num = models.IntegerField()
+    phone_num = models.CharField(max_length=20)
     homepage = models.CharField(max_length=100)
     c_date = models.DateTimeField(auto_now_add=True)
 
