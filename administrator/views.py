@@ -214,19 +214,14 @@ def check(request, idx):
             one_row = result[0] # 유사도 분석 결과의 첫번째 배열 값 ex([1, 0.45, 0.75])
 
             request_count = 0
-            result = []
             test = []
 
             for val in range(1,len(one_row)):
                 if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
-                    result.append({titlelist[val] : mydoclist[val]})
+                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100)[0:5] + ' %')])
                     request_count += 1
 
-            for val in range(1,len(one_row)):
-                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
-                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100)[0:5] + ' %')])
-
-            return render(request, 'administrator/check.html', {'test':test, 'result':result, 'request_count':request_count, 'one_row':one_row})
+            return render(request, 'administrator/check.html', {'test':test, 'request_count':request_count })
         else:
             if request.POST.get('yes'):
                 enrollment_info.enroll_status = 1
