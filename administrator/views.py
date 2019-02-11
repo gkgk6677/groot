@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import datetime, requests, json
 from groot.models import *
@@ -225,8 +226,7 @@ def check(request, idx):
             if request.POST.get('yes'):
                 enrollment_info.enroll_status = 1
                 enrollment_info.enroll_date = datetime.datetime.now()
-                enrollment_info.end_date = datetime.datetime.now() + + datetime.timedelta(
-                    days=(365 * int(enrollment_info.term)))
+                enrollment_info.end_date = datetime.datetime.now() + datetime.timedelta(days=(365 * int(enrollment_info.term)))
                 contents_list = File.objects.filter(enroll_idx=idx)
                 file_name = ''
                 file_hash = ''
