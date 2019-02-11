@@ -91,19 +91,19 @@
                                     {% else %}
                                         <br><br><br><br><br><br><br><br><br><h3>임치한 기술이 없습니다.</h3>
                                     {% endif %}
-                                    <script>
-                                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
-                                        var tables = document.getElementsByTagName('tbody');
-                                        var table = tables[tables.length - 1];
-                                        var rows = table.rows;
-                                        for(var i = 0, td; i < rows.length; i++){
-                                            td = document.createElement('td');
-                                            td.appendChild(document.createTextNode(i+1));
-                                            td.style ="vertical-align: middle;"
-                                            rows[i].insertBefore(td, rows[i].firstChild);
-                                        }
-                                    </script>
                                 </table>
+                                <script>
+                                    <!--Table 맨 앞 td 태그에 자동으로 인덱스 생성-->
+                                    var tables = document.getElementsByTagName('tbody');
+                                    var table = tables[tables.length - 1];
+                                    var rows = table.rows;
+                                    for(var i = 0, td; i < rows.length; i++){
+                                        td = document.createElement('td');
+                                        td.appendChild(document.createTextNode(i+1));
+                                        td.style ="vertical-align: middle;"
+                                        rows[i].insertBefore(td, rows[i].firstChild);
+                                    }
+                                </script>
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="cont">
@@ -153,7 +153,7 @@
                                     <br><br><br><br><br><br><br><br><br><h3>계약된 기술이 없습니다.</h3>
                                     {% endif %}
                                     <script>
-                                        // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                                        <!--Table 맨 앞 <td> 태그에 자동으로 인덱스 생성-->
                                         var tables = document.getElementsByTagName('tbody');
                                         var table = tables[tables.length - 1];
                                         var rows = table.rows;

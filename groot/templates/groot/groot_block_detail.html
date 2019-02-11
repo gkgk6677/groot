@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="content-wrap">
+	{% for b in blo %}
 	<div class="screen0">
 		<div class="wrap-holder">
 			<p class="title">
@@ -12,62 +13,39 @@
 			</p>
 			<div class="contents">
 				<table class="table-typeB detail">
-				<tbody>
-				<tr>
-					<td>
-						Block Height
-					</td>
-					<td>
-						<p class="prev ">
-							<em class="img"></em>
-						</p>
-						<em class="value">{{blocks|length}}</em>
-						<p class="next disabled">
-							<em class="img"></em>
-						</p>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Time Stamp
-					</td>
-					<td>
-						2019-01-31 01:35:43<em>(UTC+9, 34 seconds ago)</em>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Transactions
-					</td>
-					<td>
-						<span>1 Transactions</span> in this block
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Hash
-					</td>
-					<td>
-						0x284838d7444f094f1f015fd7dbfe7cd37699bebbe029f64b541cead1e0e94e86
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Prev Hash
-					</td>
-					<td>
-						<a class="on " title="4400983" href="/block/4400983">0xc02ab07670c80304871dfc575ba56b126a89db95b919f61324fc8cba4f7ae9fb</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Block size
-					</td>
-					<td>
-						1,267 bytes
-					</td>
-				</tr>
-				</tbody>
+					<tbody>
+						<tr>
+							<td> Block Height </td>
+							<td>
+								<!--만약 0번 블록이면 prev 비활성화, 마지막 블록이면 next 비활성화-->
+								<a class="prev" href="/groot_scan/block/{{height}}"> <i class="fas fa-caret-left"></i> </a>
+									<em class="value">{{height}}</em>
+								<a class="next" href="/groot_scan/block/{{height}}"> <i class="fas fa-caret-right"></i> </a>
+							</td>
+						</tr>
+						<tr>
+							<td> Time Stamp </td>
+							<td> {{b.timestamp}} <em>(UTC+9, 34 seconds ago)</em> </td>
+						</tr>
+						<tr>
+							<td> Transactions </td>
+							<td> <span>{{b.transactions}} Transactions</span> in this block </td>
+						</tr>
+						<tr>
+							<td> Hash </td>
+							<td> 0x{{b.current_hash}} </td>
+						</tr>
+						<tr>
+							<td> Prev Hash </td>
+							<td>
+								<a class="on " title="{{height}}" href="/block/{{height}}">0x{{b.previous_hash}}</a>
+							</td>
+						</tr>
+						<tr>
+							<td> Block size </td>
+							<td> 1,267 bytes </td>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>
@@ -81,44 +59,28 @@
 			</div>
 			<div class="contents">
 				<p class="txt">
-					<span>Latest<em>1</em> txns from a total of<em class="mint">1 transactions</em></span>
+					<span>Latest<em>{{b.transactions}}</em> txns from a total of<em class="mint">1 transactions</em></span>
 				</p>
 				<table class="table-typeD">
-				<thead>
-				<tr>
-					<th>
-						Tx Hash
-					</th>
-					<th>
-						From
-					</th>
-					<th class="table-sign">
-					</th>
-					<th>
-						To
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td class=" on">
-						<a title="0x5bdd7d7ad5b849a9b8fb54b9569a7aa26035e2fab06eee51c778f189d1c16830" href="/transaction/0x5bdd7d7ad5b849a9b8fb54b9569a7aa26035e2fab06eee51c778f189d1c16830"><span class="ellipsis">0x5bdd7d7ad5b849a9b8fb54b9569a7aa26035e2fab06eee51c778f189d1c16830</span></a>
-					</td>
-					<td class=" on">
-						<span class="ellipsis"><a class="on" title="hx60dd7caeb663f8676177d5c3aa0f461b23e4785f" href="/address/hx60dd7caeb663f8676177d5c3aa0f461b23e4785f">hx60dd7caeb663f8676177d5c3aa0f461b23e4785f</a></span>
-					</td>
-					<td class="table-sign">
-						<i class="img"></i>
-					</td>
-					<td class="icon on">
-						<i class="img"></i><span class="ellipsis"><a class="on" title="cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512" href="/contract/cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512">cx12ffc5fb6d5c3c1ddf9d6375dcb50ca7bae14512</a></span>
-					</td>
-				</tr>
-				</tbody>
+					<thead>
+						<tr>
+							<th> Tx Hash </th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class=" on">
+								<a title="{{b.data.Transaction_ID}}" href="/transaction/{{b.data.Transaction_ID}}">
+									<span class="ellipsis">{{b.data.Transaction_ID}}</span>
+								</a>
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
+	{% endfor %}
 </div>
 {% endblock content %}
 
