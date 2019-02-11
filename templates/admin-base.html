@@ -30,12 +30,19 @@
 
         <!-- Custom Fonts -->
         <link href="{%static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+
+        <!-- Loading CSS-->
+        <link rel="stylesheet" href="{%static 'css/loader.css' %}">
         
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         {% block css %}
         {% endblock css %}
     </head>
     <body>
+        <!--================Loading Area =================-->
+        <div id="load" style="display:none;">
+            <img src="{% static 'img/loading.gif' %}" alt="loading">
+        </div>
         <div id="wrapper">
             <!-- Navigation -->
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -122,6 +129,9 @@
         <script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
         <script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
         <script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+        <!-- loader Javascript-->
+        <script src="{% static 'js/loading_common.js' %}"></script>
 
         <script>
         $(document).ready(function() {

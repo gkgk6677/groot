@@ -168,14 +168,12 @@
 }
 
 
-#table {display:table; width:100%}
-.row {display:table-row;}
+#table {display:table; width:100%; padding-top:50px; text-align: center}
 .cell {display:table-cell; padding:3px; border:1px solid #DDD;}
 .nice-select ul.list{overflow-y: auto; height: 200px;}
 
 caption{display: none}
 
-#table{width: 700px; height: 853px; margin: 5px auto; padding: 5px}
 #table table{width: 100%; table-layout: fixed; border-collapse: collapse; border-spacing: 0}
 #table thead th{height: 70px; font-size: 24px; font-weight: bold}
 #table th{background: #fafafa; border: 1px solid #dee0e1; height: 50px; padding: 5px; text-align: center}
@@ -186,6 +184,7 @@ caption{display: none}
 #table .input .radio + .radio{margin-left: 10px}
 #table #id_summary {min-height: 150px}
 #table #id_term{width:50px;}
+.reason{height:300px;}
 
 #table .td span {
     position: absolute;
@@ -197,4 +196,8 @@ caption{display: none}
     border-radius: 0.5em;
     padding: 0 .5em 0 .5em;
     font-size: 0.75em;
-}  
+}
+.button{
+    margin:50px auto 50px auto;
+    text-align: center;
+}
