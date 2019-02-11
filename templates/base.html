@@ -22,10 +22,16 @@
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
         <link href="{%static 'css/admin_font.css' %}" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <!-- Loading CSS-->
+        <link rel="stylesheet" href="{%static 'css/loader.css' %}">
         {% block css %}
         {% endblock css %}
     </head>
     <body>
+        <!--================Loading Area =================-->
+        <div id="load" style="display:none;">
+	        <img src="{% static 'img/loading.gif' %}" alt="loading">
+        </div>
         <!--================Header Menu Area =================-->
         <header class="header_area">
             <div class="main_menu" id="mainNav">
@@ -85,6 +91,7 @@
 
 
         <!-- Optional JavaScript -->
+
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
         <script src="{% static 'js/popper.js' %}"></script>
@@ -100,6 +107,8 @@
         <script src="{% static 'vendors/counter-up/jquery.waypoints.min.js' %}"></script>
         <script src="{% static 'vendors/counter-up/jquery.counterup.min.js' %}"></script>
         <script src="{% static 'js/theme.js' %}"></script>
+                <!-- loader Javascript-->
+        <script src="{% static 'js/loading_common.js' %}"></script>
         {% block js %}
         {% endblock js %}
     </body>
