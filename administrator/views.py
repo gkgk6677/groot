@@ -207,7 +207,7 @@ def check(request, idx):
             tfidf_vectorizer = TfidfVectorizer(min_df=1)
             tfidf_matrix = tfidf_vectorizer.fit_transform(doc_nouns_list)
 
-            document_distances =  (tfidf_matrix.T * tfidf_matrix)
+            document_distances =  (tfidf_matrix * tfidf_matrix.T)
 
             result = document_distances.toarray()
 
@@ -218,7 +218,7 @@ def check(request, idx):
 
             for val in range(1,len(one_row)):
                 if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
-                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100)[0:5] + ' %')])
+                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100) + ' %')])
                     request_count += 1
 
             return render(request, 'administrator/check.html', {'test':test, 'request_count':request_count })
