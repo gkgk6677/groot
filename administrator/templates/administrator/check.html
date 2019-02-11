@@ -40,14 +40,11 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <div>
-                            <a href="/administrator/index/enrollments"><button class="btn btn-default" style="width: 990px">View Details...</button></a>
-                        </div>
-                        <form action="" method="POST" style="text-align:center;">
+                        <form action="" method="POST" style="text-align:center; margin-bottom: 50px">
                             {% csrf_token %}
                             <div class="" style="margin-top:80px; text-align:center;">
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn submit_btn" data-toggle="modal" data-target="#acceptModal">승인</button>
+                                <button type="button" class="btn submit_btn btn-primary" data-toggle="modal" data-target="#acceptModal">승인</button>
                                     
                                 <!-- Modal -->
                                 <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -70,7 +67,7 @@
                                 </div>
                                 </div>
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn submit_btn" data-toggle="modal" data-target="#deniedModal">반려</button>
+                                <button type="button" class="btn submit_btn btn-danger" data-toggle="modal" data-target="#deniedModal">반려</button>
                                     
                                 <!-- Modal -->
                                 <div class="modal fade" id="deniedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -93,7 +90,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                                                    <button type="submit" name="no" value="no" class="btn btn-primary" onclick="denied();">반려</button>
+                                                    <button type="submit" name="no" value="no" class="btn btn-danger" onclick="denied();">반려</button>
                                                 </div>
                                             </form>
                                         </div>
