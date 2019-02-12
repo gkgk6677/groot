@@ -16,7 +16,7 @@
                 <div class="panel panel-default">
                     
                         {% if request_count == 0 %}
-                            <div class='alert alert-success'><p>요청된 임치물의 요약글에 대해 높은 유사도를 가진 내용이 없습니다.</p></div>
+                            <div class='alert alert-success'><p>신청된 임치물의 요약글에 대해 높은 유사도를 가진 내용이 없습니다.</p></div>
                         {% else %}
                             <div class="alert alert-danger"><p>유사도가 높게 확인된 임치물이 {{request_count}} 건 검색되었습니다.</p></div>
                         {% endif %}
@@ -57,7 +57,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body" style="margin:20px;">
-                                        해당 요청에 대한 임치승인을 승인하시겠습니까?
+                                        해당 신청에 대한 임치승인을 승인하시겠습니까?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -80,7 +80,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body" style="margin:20px;">
-                                                해당 요청에 대한 임치승인을 반려하시겠습니까?
+                                                해당 신청에 대한 임치승인을 반려하시겠습니까?
                                             </div>
                                             <form action="#" method="POST">
                                                 {% csrf_token %}

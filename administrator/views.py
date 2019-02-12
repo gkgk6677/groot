@@ -103,9 +103,6 @@ def extend_detail(request, idx):
             return render(request, 'administrator/extend-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'extend_date':extend_date, 'extend_infos':extend_infos, 'enroll_infos':enroll_infos})
         else:
             if request.POST.get('yes'):
-                extend_infos.accept_date = datetime.datetime.now()
-                extend_infos.status = 1
-                extend_infos.save()
                 enroll_infos.term += extend_infos.term
                 enroll_infos.end_date += datetime.timedelta(days=(365 * int(extend_infos.term)))
                 enroll_infos.extend_status = 'possible'
@@ -117,8 +114,10 @@ def extend_detail(request, idx):
                          + str(extend_infos.term) + "@" + "3"
                 f = requests.get(fabric)
                 print(f.text)  # cmd 창에 보여질 값
-                # extend_infos.extend_tx = f.text[1:-1]
-                # extend_infos.save()
+                extend_infos.accept_date = datetime.datetime.now()
+                extend_infos.status = 1
+                extend_infos.extend_tx = f.text[1:-1]
+                extend_infos.save()
 
                 return redirect('index')
             else:
@@ -157,8 +156,6 @@ def expire_detail(request, idx):
                 expire_infos.accept_date = datetime.datetime.now()
                 expire_infos.status = 1
                 expire_infos.save()
-                enroll_infos.enroll_date = None
-                enroll_infos.end_date = None
                 enroll_infos.enroll_status = 3
                 enroll_infos.expire_status = 'possible'
                 enroll_infos.save()

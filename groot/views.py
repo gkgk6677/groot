@@ -128,7 +128,7 @@ def mypage(request):
         if (extend_info.enroll_idx.user.user_id == user_id and extend_info.enroll_idx.enroll_status == 1 and extend_info.status == 0):
             extend_count += 1
 
-    # 계약 요청 수 계산
+    # 계약 신청 수 계산
 
     for contract_info in contract_infos:
         if (contract_info.user.user_id == user_id and contract_info.status == 0):
@@ -146,7 +146,7 @@ def mypage(request):
         if ((contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1) or (contract_info.user.user_id == user_id and contract_info.status == 1)):
             contract_is_value += 1
 
-    # 내게 들어온 계약 요청 현황 카운트
+    # 내게 들어온 계약 신청 현황 카운트
 
     for contract_info in contract_infos:
         if (contract_info.enroll_idx.user.user_id == user_id and contract_info.enroll_idx.enroll_status == 1 and contract_info.status == 0):
@@ -996,8 +996,6 @@ def application_list(request):
         else:
             enroll_info.agree_status = '동의'
 
-        if enroll_info.enroll_date:
-            enroll_info.enroll_date = enroll_info.enroll_date.date()
         if enroll_info.end_date:
             enroll_info.end_date = enroll_info.end_date.date()
 
@@ -1015,6 +1013,8 @@ def application_list(request):
             enroll_info.enroll_status = "<div style='color:red'>반려</div>"
         elif enroll_info.enroll_status == 1 and enroll_info.end_date < now_date:
             enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
+        else:
+            enroll_info.enroll_status = "<div style='color:red'>해지</div>"
         enroll_lists.append(enroll_info)
 
     return render(request, 'groot/application_list.html', {'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
@@ -1032,33 +1032,36 @@ def request_list(request):
         status = ''
         if (extend_info.enroll_idx.user.user_id == user_id):
             if extend_info.status == 0:
-                extend_info.status = "<td style='color:green'>대기중</td>"
+                extend_info.status = "<td style='color:green;font-weight:500'>대기중</td>"
+                extend_info.enroll_idx.end_date += datetime.timedelta(days=(365 * int(extend_info.term)))
             elif extend_info.status == 1:
-                extend_info.status = "<td style='color:blue'>승인</td>"
+                extend_info.status = "<td style='color:blue;font-weight:500'>승인</td>"
             else:
-                extend_info.status = "<td style='color:red'>반려</td>"
+                extend_info.status = "<td style='color:red;font-weight:500'>반려</td>"
+                extend_info.enroll_idx.end_date += datetime.timedelta(days=(365 * int(extend_info.term)))
+
             extend_lists.append(extend_info)
 
     for contract_info in contract_infos:
         status = ''
         if (contract_info.user.user_id == user_id):
             if contract_info.status == 0:
-                contract_info.status = "<td style='color:green'>대기중</td>"
+                contract_info.status = "<td style='color:green;font-weight:500'>대기중</td>"
             elif contract_info.status == 1:
-                contract_info.status = "<td style='color:blue'>승인</td>"
+                contract_info.status = "<td style='color:blue;font-weight:500'>승인</td>"
             else:
-                contract_info.status = "<td style='color:red'>반려</td>"
+                contract_info.status = "<td style='color:red;font-weight:500'>반려</td>"
             contract_lists.append(contract_info)
 
     for expire_info in expire_infos:
         status = ''
         if expire_info.enroll_idx.user.user_id == user_id:
             if expire_info.status == 0:
-                expire_info.status = "<td style='color:green'>대기중</td>"
+                expire_info.status = "<td style='color:green;font-weight:500'>대기중</td>"
             elif expire_info.status == 1:
-                expire_info.status = "<td style='color:blue'>승인</td>"
+                expire_info.status = "<td style='color:blue;font-weight:500'>승인</td>"
             else:
-                expire_info.status = "<td style='color:red'>반려</td>"
+                expire_info.status = "<td style='color:red;font-weight:500'>반려</td>"
             expire_lists.append(expire_info)
 
 

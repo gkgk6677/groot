@@ -119,6 +119,7 @@ class Extend(models.Model):
     status = models.IntegerField()
     reason = models.TextField()
     refused_reason = models.TextField(blank=True, null=True)
+    extend_tx = models.CharField(max_length=100,blank=True, null=True)
     accept_date = models.DateTimeField(blank=True, null=True)
     c_date = models.DateTimeField()
 

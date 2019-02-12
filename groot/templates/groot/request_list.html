@@ -70,7 +70,7 @@
                             <tr>
                                 <th width='10%'>No</th>
                                 <th width='35%'>임치 기술명</th>
-                                <th width='15%'>계약기간</th>
+                                <th width='15%'>연장기간</th>
                                 <th width='25%'>신청날짜</th>
                                 <th width='15%'>신청상태</th>
                             </tr>
@@ -79,7 +79,7 @@
                         <tbody>
                         {% for list in extend_lists %}
                             <tr>
-                                {% if list.status == "<td style='color:green'>대기중</td>" or list.status == "<td style='color:blue'>승인</td>" %}
+                                {% if list.status == "<td style='color:green;font-weight:500'>대기중</td>" or list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#extend{{list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a>
                                         <!-- The Modal -->
@@ -89,7 +89,7 @@
                                                 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" style='color:#2092a7'>연장 요청 사유</h4>
+                                                        <h4 class="modal-title" style='color:#2092a7'>연장 신청 사유</h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
                                                     
@@ -102,13 +102,38 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>연장 기간</td>
+                                                                    <td>
+                                                                        {{list.term}} 년 <br><hr>
+                                                                        {{list.enroll_idx.enroll_date | date:"Y년 M d일"}} <span style="color:black;font-weight:500;">~ {{list.enroll_idx.end_date | date:"Y년 M d일"}}</span>
+                                                                    </td>
+                                                                </tr>
+                                                                {% if list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
+                                                                    <tr>
+                                                                        <td>Transaction ID</td>
+                                                                        {% if list.extend_tx %}
+                                                                            <td>{{list.extend_tx}}</td>
+                                                                        {% else %}
+                                                                            <td>-</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>승인 시간</td>
+                                                                        <td>{{list.accept_date}}</td>
+                                                                    </tr>
+                                                                {% endif %}
                                                             </thead>
                                                         </table>
                                                         <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
@@ -145,12 +170,23 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>연장 기간</td>
+                                                                    <td>
+                                                                        {{list.term}} 년 <br><hr>
+                                                                        {{list.enroll_idx.enroll_date | date:"Y년 M d일"}} <span style="color:black;font-weight:500;">~ {{list.enroll_idx.end_date | date:"Y년 M d일"}}</span>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>반려 사유</td>
@@ -196,19 +232,19 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th width="50%">No</th>
-                                <th width="300%">임치 기술명</th>
-                                <th width="100%">임치기업</th>
-                                <th width="80%">계약기간</th>
-                                <th width="220%">신청날짜</th>
-                                <th width="80%">신청상태</th>
+                                <th width="5%">No</th>
+                                <th width="30%">임치 기술명</th>
+                                <th width="15%">임치기업</th>
+                                <th width="15%">계약기간</th>
+                                <th width="20%">신청날짜</th>
+                                <th width="15%">신청상태</th>
                             </tr>
                         </thead>
                         
                         <tbody>
                         {% for list in contract_lists %}
                             <tr>
-                                {% if list.status == "<td style='color:green'>대기중</td>" or list.status == "<td style='color:blue'>승인</td>" %}
+                                {% if list.status == "<td style='color:green;font-weight:500'>대기중</td>" or list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#contract{{list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a>
                                         <!-- The Modal -->
@@ -218,7 +254,7 @@
                                                 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" style='color:#2092a7'>계약 요청 사유</h4>
+                                                        <h4 class="modal-title" style='color:#2092a7'>계약 신청 사유</h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
                                                     
@@ -231,13 +267,39 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td>임치 기업</td>
+                                                                    <td>{{list.enroll_idx.user.com_name}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>계약 기간</td>
+                                                                    <td>{{list.term}} 년</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
+                                                                </tr>
+                                                                {% if list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
+                                                                    <tr>
+                                                                        <td>Transaction ID</td>
+                                                                        {% if list.contract_tx %}
+                                                                            <td>{{list.contract_tx}}</td>
+                                                                        {% else %}
+                                                                            <td>-</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>승인 시간</td>
+                                                                        <td>{{list.accept_date}}</td>
+                                                                    </tr>
+                                                                {% endif %}
                                                             </thead>
                                                         </table>
                                                         <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
@@ -274,12 +336,24 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td>임치 기업</td>
+                                                                    <td>{{list.enroll_idx.user.com_name}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>계약 기간</td>
+                                                                    <td>{{list.term}} 년</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
                                                                 </tr>
                                                                 <tr>
                                                                     <td>반려 사유</td>
@@ -336,7 +410,7 @@
                         <tbody>
                         {% for list in expire_lists %}
                             <tr>
-                                {% if list.status == "<td style='color:green'>대기중</td>" or list.status == "<td style='color:blue'>승인</td>" %}
+                                {% if list.status == "<td style='color:green;font-weight:500'>대기중</td>" or list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#expire{{list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a>
                                         <!-- The Modal -->
@@ -346,7 +420,7 @@
                                                 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" style='color:#2092a7'>해지 요청 사유</h4>
+                                                        <h4 class="modal-title" style='color:#2092a7'>해지 신청 사유</h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
                                                     
@@ -359,13 +433,23 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
+                                                                </tr>
+                                                                {% if list.status == "<td style='color:blue;font-weight:500'>승인</td>" %}
+                                                                    <tr>
+                                                                        <td>승인 시간</td>
+                                                                        <td>{{list.accept_date}}</td>
+                                                                    </tr>
+                                                                {% endif %}
                                                             </thead>
                                                         </table>
                                                         <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
@@ -402,12 +486,16 @@
                                                                     <td>{{list.enroll_idx.title}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td width="20%">요청 사유</td>
+                                                                    <td width="20%">신청 사유</td>
                                                                     <td>{{list.reason}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>요청 시간</td>
+                                                                    <td>신청 시간</td>
                                                                     <td>{{list.c_date}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>상태</td>
+                                                                    {{list.status | safe}}
                                                                 </tr>
                                                                 <tr>
                                                                     <td>반려 사유</td>
