@@ -718,7 +718,7 @@ def get_tx() : # 모든 tx 불러오는 함수
             timestamp = str(timestamp) + timestamp_mil
             groot_tscan.append([{"TxId": txid, "Timestamp": timestamp}])
 
-    groot_tscan = sorted(groot_tscan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
+    groot_tscan = sorted(groot_tscan, key=lambda k: k[0].get('Timestamp'), reverse=True)
 
     return groot_tscan
 
@@ -738,42 +738,34 @@ def get_block(): # 블록정보를 가져오는 함수
             previous_hash = block_parse.get('info').get('previous_hash')
             data_hash = block_parse.get('info').get('data_hash')
             transactions = block_parse.get('info').get('transactions')
+
+            # timestamp = block_parse.get('data')[0]['Timestamp'][0:-5]
+            # timestamp = timestamp.split('T')
+            # timestamp = ' '.join(timestamp)
+            # timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+            # timestamp = timestamp + datetime.timedelta(hours=9)
             tx = block_parse.get('data')
-            groot_bscan.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash,
-                                 "transactions": transactions, "data": tx}])
+            groot_bscan.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash, "current_hash": None, "transactions": transactions, "data": tx}])
             i += 1
 
-    # groot_scan = sorted(groot_scan, key=lambda k: k[0].get('Timestamp'), reverse=True)  # 2019.01.30 기준 transaction 43개
+    for i in range(0, len(groot_bscan)) :
+        if i == len(groot_bscan)-1 :
+            break
+        groot_bscan[i][0]["current_hash"] = groot_bscan[i+1][0].get('previous_hash')
+
+    # groot_bscan = sorted(groot_bscan, key=lambda k: k[0].get('timestamp'), reverse=True) # 기본값은 false로 오름차순 정렬(reverse=True 옵션으로 내림차순 정렬)
 
     return groot_bscan
 
 def groot_scan(request):
-    # # Hyperledger-Fabric에서 전체 결과 받아오기
     # fabric = "http://210.107.78.150:8001/get_all_tech"
     # result = requests.get(fabric)
     # titles = []
     # block_parses = result.json()  # JSON형식으로 parse(분석)
-    # # [
-    # #     {
-    # #         "Key": "testtt",
-    # #         "Record": {
-    # #                       "client": {"dayoung": 4, "fowofi": 3, "sunyou": 5},
-    # #                       "com_num": 123456789, "company": "GROOT",
-    # #                       "content": {
-    # #                             ".DS_Store":"99a697877975794602867c62e076f901972ec79d541c3400f3aa791380b957e9",
-    # # 		                      "01.html":"3230f0f03a0d8c3185c76b9fcd545f62c5793e189202b637af4006effa78d2af"
-    # #                       },
-    # #                       "enroll_date": "2019.01.28", "sort": 33, "status": 4,
-    # #                       "technology": "testtt", "term": 5
-    # #                   }
-    # #     },
-    # #     { ... }, { ... }
-    # # ]
-    #
     # for block_parse in block_parses :
     #     titles.append(block_parse.get('Key'))
-
     # number = titles
+
     number = get_title()
     transactions = get_tx()
     blocks = get_block()
@@ -785,7 +777,15 @@ def groot_block(request):
     return render(request, 'groot/groot_block.html', {'blocks':blocks})
 
 def groot_block_detail(request, height):
-    return render(request, 'groot/groot_block_detail.html', {'height':height})
+    blocks = get_block()
+    block = []
+
+    for i in range(0, len(blocks)) :
+        if blocks[i][0]["block_number"] == str(height) :
+            block.append(blocks[i][0])
+            break
+
+    return render(request, 'groot/groot_block_detail.html', {'height':height, 'blo':block})
 
 def groot_transaction(request):
     transaction = get_tx()

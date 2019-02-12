@@ -1,6 +1,9 @@
 {% extends "groot_scan-base.html" %}
 {% load static %}
 {% block css %}
+<!-- Pagination 및 검색을 위한 CSS 파일 -->
+<link href="{% static 'css/table.css' %}" rel="stylesheet">
+
 <style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
 </style>
@@ -16,7 +19,7 @@
                 </span>
             </p>
             <div class="contents">
-                <table class="table-typeJ">
+                <table class="table-typeJ dataTables-example">
                     <thead>
                         <tr>
                             <th>TxHash</th>
@@ -114,15 +117,16 @@
 {% endblock content %}
 
 {% block js %}
-<!--<script>-->
-    <!--$(function() {-->
-        <!--let timestamp = $('.break').attr('timestamp')[0:19];-->
-        <!--let now_time = {{time}};-->
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
 
-        <!--break = Math.round((timestamp.getTime() - now_time.getTime()) / 1000);-->
-
-
-        <!--$('.break').append(break);-->
-    <!--});-->
-<!--</script>-->
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 5,10,15 ]
+    });
+});
+</script>
 {% endblock js %}
