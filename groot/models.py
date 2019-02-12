@@ -6,7 +6,7 @@ from django.forms import SelectDateWidget
 class User(models.Model):
     user_id = models.CharField(primary_key=True, max_length=100)
     user_pw = models.CharField(max_length=100)
-    com_num = models.IntegerField()
+    com_num = models.CharField(max_length=20)
     com_name = models.CharField(max_length=100)
     com_head = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
@@ -87,6 +87,8 @@ class Enrollment(models.Model):
     refused_reason = models.TextField(blank=True, null=True)
     agree_status = models.IntegerField(blank=True, null=True)
     enroll_status = models.IntegerField(null=True)
+    extend_status = models.CharField(max_length=50,blank=True, null=True)
+    expire_status = models.CharField(max_length=50,blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)

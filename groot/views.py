@@ -79,9 +79,10 @@ def join(request):
         phone_num = request.POST['phone_num']
         homepage = request.POST['homepage']
 
+        revised_com_num = com_num[0:3] + '-' + com_num[3:5] + '-' + com_num[5:10]
         revised_phone_num = phone_num[0:3] + '-' + phone_num[3:7] + '-' + phone_num[7:11]
 
-        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
+        user = User(user_id=user_id, user_pw=user_pw, com_num=revised_com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
         user.status = 0
         user.s_date = timezone.now()
         user.save()
@@ -99,16 +100,22 @@ def mypage(request):
 
     # 임치 현황 값 DB에서 불러오기
     enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
+    enroll_ready_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=0)
     contract_infos = Contract.objects.all()
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
     now_date = datetime.datetime.now()
     enroll_count = 0
+    enroll_ready_count = 0
     extend_count = 0
     contract_count = 0
     expire_count = 0
     contract_is_value = 0
     contract_count_for_me = 0
+
+    # 임치 대기중 리스트
+    for i in enroll_ready_lists:
+        enroll_ready_count += 1
 
     # 임치 계약 수 계산
     for i in enroll_lists:
@@ -145,7 +152,7 @@ def mypage(request):
         if (contract_info.enroll_idx.user.user_id == user_id and contract_info.enroll_idx.enroll_status == 1 and contract_info.status == 0):
             contract_count_for_me += 1
 
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
+    return render(request, 'groot/mypage.html', {'enroll_ready_count':enroll_ready_count, 'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
 
 
 def list(request):
@@ -184,32 +191,17 @@ def login2(request):
 def login3(request):
     if request.method == "POST":
         s = request.POST['s']
+        ck_val = 0
         try:
-            a = Expire.objects.get(enroll_idx=s)
-            if a.status == 0:
-                # 해지 신청이 진행중이므로 안되는 경우
-                ck_val = 0
-                context = {'ck_val': ck_val}
-
-                return HttpResponse(json.dumps(context), content_type='application/json')
-            else:
-                ck_val = 0
-                context = {'ck_val': ck_val}
-                # 해지 테이블에 값이 존재하므로 해지 신청 불가
-                return HttpResponse(json.dumps(context), content_type='application/json')
-
-        except Expire.DoesNotExist:
-            try:
-                b = Contract.objects.get(enroll_idx=s)
-                if b.status == 0 or b.status == 1:
-                    # 기술 계약이 진행중일때 해지 신청 불가
-                    ck_val = 3
-                    context = {'ck_val': ck_val}
-                    return HttpResponse(json.dumps(context), content_type='application/json')
-            except Contract.DoesNotExist:
+            cont_info = Contract.objects.get(enroll_idx=s)
+            if cont_info.status == 1:
+                # 기술 계약이 진행중일때 해지 신청 불가
                 ck_val = 1
                 context = {'ck_val': ck_val}
                 return HttpResponse(json.dumps(context), content_type='application/json')
+        except Contract.DoesNotExist:
+            context = {'ck_val': ck_val}
+            return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 
@@ -401,12 +393,6 @@ def extend(request,idx):
 
 
     if request.method == 'POST':
-        e_date = enrollinfo.end_date
-        enrollinfo.term = request.POST['term']
-
-        enrollinfo.end_date = e_date + datetime.timedelta(days=365 * int(request.POST['term']))
-        # return HttpResponse(enrollment.end_date)
-        enrollinfo.save()
 
         form = ExtendForm(request.POST)
 
@@ -417,8 +403,9 @@ def extend(request,idx):
             extend.status = 0
             extend.reason = form.cleaned_data['reason']
             extend.c_date = datetime.datetime.now()
-
             extend.save()
+            enrollinfo.extend_status = 'impossible'
+            enrollinfo.save()
 
         return redirect('mypage')
 
@@ -952,8 +939,9 @@ def expire(request,idx):
             expire.status = 0
             expire.reason = form.cleaned_data['reason']
             expire.c_date = datetime.datetime.now()
-
             expire.save()
+            enrollinfo.expire_status = 'impossible'
+            enrollinfo.save()
 
         return redirect('mypage')
 
@@ -996,10 +984,10 @@ def upload(request):
 def application_list(request):
 
     user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user=user_id)
-    extend_infos = Extend.objects.all().filter(status=0)
-    expire_infos = Expire.objects.all().filter(status=0)
-    now_date = datetime.datetime.now()
+    enroll_infos = Enrollment.objects.all().filter(user=user_id).order_by('-c_date')
+    extend_infos = Extend.objects.all()
+    expire_infos = Expire.objects.all()
+    now_date = datetime.datetime.now().date()
     enroll_lists = []
 
     for enroll_info in enroll_infos:
@@ -1021,11 +1009,11 @@ def application_list(request):
 
         if enroll_info.enroll_status == 0:
             enroll_info.enroll_status = "<div style='color:green'>대기중</div>"
-        elif enroll_info.enroll_status == 1:
+        elif enroll_info.enroll_status == 1 and enroll_info.end_date > now_date :
             enroll_info.enroll_status = "<div style='color:blue'>승인</div>"
         elif enroll_info.enroll_status == 2:
             enroll_info.enroll_status = "<div style='color:red'>반려</div>"
-        elif enroll_info.end_date < now_date:
+        elif enroll_info.enroll_status == 1 and enroll_info.end_date < now_date:
             enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
         enroll_lists.append(enroll_info)
 

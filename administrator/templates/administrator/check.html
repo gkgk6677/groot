@@ -32,10 +32,10 @@
                             </thead>
                             <tbody>
                                 {% for value in test %}
-                                    <tr height="100px" >
-                                        <td style="vertical-align: middle;">{{value.0}}</td>
-                                        <td style="vertical-align: middle;">{{value.1}}</td>
-                                        <td style="vertical-align: middle;">{{value.2}}</td>
+                                    <tr height="80px" >
+                                        <td style="vertical-align: middle;">{{value.0 | safe}}</td>
+                                        <td style="vertical-align: middle;">{{value.1 | safe}}</td>
+                                        <td style="vertical-align: middle;">{{value.2 | safe}}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
