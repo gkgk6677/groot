@@ -1,9 +1,6 @@
 {% extends "groot_scan-base.html" %}
 {% load static %}
 {% block css %}
-<!-- Pagination 및 검색을 위한 CSS 파일 -->
-<link href="{% static 'css/table.css' %}" rel="stylesheet">
-
 <style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
 </style>
@@ -19,15 +16,12 @@
                 </span>
             </p>
             <div class="contents">
-                <table class="table-typeJ dataTables-example">
+                <table class="table-typeJ">
                     <thead>
                         <tr>
-                            <th>TxHash</th>
-                            <th>Block</th>
-                            <th>Age</th>
-                            <th>From</th>
-                            <th class="table-sign"></th>
-                            <th>To</th>
+                            <th style="width:60%">TxHash</th>
+                            <th style="width:20%">Block</th>
+                            <th style="width:20%">Age</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,29 +29,14 @@
                             {% for tx in transaction %}
                                 <tr>
                                     <td class=" on">
-                                        <a title="{{tx.TxId}}" href="/groot_scan/transaction/{{tx.TxId}}">
-                                            <span class="ellipsis">
-                                                {{tx.TxId}}
-                                            </span>
+                                        <a title="{{tx.transactions.txid}}" href="/groot_scan/transaction/{{tx.transactions.txid}}">
+                                            <span> {{tx.transactions.txid}} </span>
                                         </a>
                                     </td>
                                     <td class="on">
-                                        <a class="on " title="" href="/groot_scan/block/"></a>
+                                        <a class="on " title="{{tx.block_number}}" href="/groot_scan/block/{{tx.block_number}}">{{tx.block_number}}</a>
                                     </td>
-                                    <td class="break">{{tx.Timestamp}} ago</td>
-                                    <td class=" on">
-                                        <span class="ellipsis">
-                                            <a class="on" title="hx60dd7caeb663f8676177d5c3aa0f461b23e4785f" href="/address/hx60dd7caeb663f8676177d5c3aa0f461b23e4785f">
-                                                hx60dd7caeb663f8676177d5c3aa0f461b23e4785f
-                                            </a>
-                                        </span>
-                                    </td>
-                                    <td class="table-sign">
-                                        <i class="img"></i>
-                                    </td>
-                                    <td class="icon on">
-                                        <i class="img"></i>
-                                    </td>
+                                    <td class="break">{{tx.transactions.timestamp}} ago</td>
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -117,16 +96,4 @@
 {% endblock content %}
 
 {% block js %}
-<!-- DataTables JavaScript -->
-<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
-<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
-
-<script>
-$(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        "lengthMenu": [ 5,10,15 ]
-    });
-});
-</script>
 {% endblock js %}

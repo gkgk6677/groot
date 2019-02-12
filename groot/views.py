@@ -689,76 +689,76 @@ def get_title() : # 임치된 title을 불러오는 함수
 
     return title
 
+def get_height() : # 블록높이 가져오는 함수
+    # 전체 블록의 높이와 current_hash, previous_hash 얻어오기
+    fabric_all_block = "http://210.107.78.150:8001/query_tech"
+    result_height = requests.get(fabric_all_block)
+    height_parse = result_height.json()
+
+    height = height_parse.get('height').get('low')  # 현재 블록의 높이
+
+    return height
+
 def get_tx() : # 모든 tx 불러오는 함수
-    titles = get_title()
     groot_tscan = []
-    for title in titles:
-        # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-        fabric = "http://210.107.78.150:8001/get_cert_verify/" + title
-        result = requests.get(fabric)
-        tx_parses = result.json()
-        # [
-        #     {
-        #       "TxId": "93fd07b0727289df08b75c0b0059e19dead5793c53cb9d53915f1cbe328c1aee",
-        #       "Value": {
-        #                    "technology": "testtt", "sort": 33, "company": "GROOT", "com_num": 123456789, "term": 5,
-        #                    "content": {
-        #                                   "test1.txt":"6246f69ac47f80f5ecb5a840bfd72dee1db7bc650091a4b773fd366632d8a40b",
-        #                                   "test2.txt":"922e49fa1b9bbd9881420cf985bbb442f714868e28d0e8254f341a7de22337cf"
-        #                               },
-        #                    "enroll_date": "2019.01.28", "status": 1
-        #       },
-        #       "Timestamp": "2019-01-28 02:08:00.88 +0000 UTC",
-        #       "IsDelete": "false"
-        #     },
-        #     { ... }, { ... }
-        # ]
+    transactions = ""
+    height = get_height()
 
-        for tx_parse in tx_parses:
-            txid = tx_parse.get('TxId')
-            timestamp = tx_parse.get('Timestamp')[0:19]
-            timestamp_mil = tx_parse.get('Timestamp')[19:]
-            timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
-            timestamp = timestamp + datetime.timedelta(hours=9)
-            timestamp = str(timestamp) + timestamp_mil
-            groot_tscan.append([{"TxId": txid, "Timestamp": timestamp}])
-
-    groot_tscan = sorted(groot_tscan, key=lambda k: k[0].get('Timestamp'), reverse=True)
-
-    return groot_tscan
-
-def get_block(): # 블록정보를 가져오는 함수
-    groot_bscan = []
-    i = 0
-    while True :
+    for i in range(1, height):
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
         fabric = "http://210.107.78.150:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
-        if block_parse.get('error') :
-            break
-        else :
-            block_num = block_parse.get('info').get('block_number')
-            previous_hash = block_parse.get('info').get('previous_hash')
-            data_hash = block_parse.get('info').get('data_hash')
-            transactions = block_parse.get('info').get('transactions')
+        block_number = block_parse.get('info').get('block_number')
+        for j in range(0, len(block_parse.get('data'))) :
+            timestamp = block_parse.get('data')[j]['Timestamp'][0:-5]
+            timestamp = timestamp.split('T')
+            timestamp = ' '.join(timestamp)
+            timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+            timestamp = timestamp + datetime.timedelta(hours=9)
 
-            # timestamp = block_parse.get('data')[0]['Timestamp'][0:-5]
-            # timestamp = timestamp.split('T')
-            # timestamp = ' '.join(timestamp)
-            # timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
-            # timestamp = timestamp + datetime.timedelta(hours=9)
-            tx = block_parse.get('data')
-            groot_bscan.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash, "current_hash": None, "transactions": transactions, "data": tx}])
-            i += 1
+            txid = block_parse.get('data')[j].get('Transaction_ID')
+
+            transactions = {"timestamp": timestamp, "txid": txid}
+
+        groot_tscan.append([{"block_number": block_number, "transactions":transactions}])
+
+    groot_tscan = sorted(groot_tscan, key=lambda k: k[0].get('transactions').get('timestamp'), reverse=True)  # 기본값은 false로 오름차순 정렬(reverse=True 옵션으로 내림차순 정렬)
+
+    return groot_tscan
+
+def get_block(): # 블록정보를 가져오는 함수
+    groot_bscan = []
+    height = get_height()
+
+    for i in range(0, height) :
+        # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
+        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        result = requests.get(fabric)
+        block_parse = result.json()
+
+        block_num = block_parse.get('info').get('block_number')
+        previous_hash = block_parse.get('info').get('previous_hash')
+        data_hash = block_parse.get('info').get('data_hash')
+        transactions = block_parse.get('info').get('transactions')
+
+        timestamp = block_parse.get('data')[0]['Timestamp'][0:-5]
+        timestamp = timestamp.split('T')
+        timestamp = ' '.join(timestamp)
+        timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+        timestamp = timestamp + datetime.timedelta(hours=9)
+
+        tx = block_parse.get('data')
+        groot_bscan.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash, "current_hash": None,
+                             "timestamp": timestamp, "transactions": transactions, "data": tx}])
 
     for i in range(0, len(groot_bscan)) :
-        if i == len(groot_bscan)-1 :
+        if i == len(groot_bscan)-1 : # 마지막 블록에서 멈추기
             break
         groot_bscan[i][0]["current_hash"] = groot_bscan[i+1][0].get('previous_hash')
 
-    # groot_bscan = sorted(groot_bscan, key=lambda k: k[0].get('timestamp'), reverse=True) # 기본값은 false로 오름차순 정렬(reverse=True 옵션으로 내림차순 정렬)
+    groot_bscan = sorted(groot_bscan, key=lambda k: k[0].get('timestamp'), reverse=True) # 기본값은 false로 오름차순 정렬(reverse=True 옵션으로 내림차순 정렬)
 
     return groot_bscan
 
@@ -779,35 +779,66 @@ def groot_scan(request):
 
 def groot_block(request):
     blocks = get_block()
+    time = datetime.datetime.now()
+
+    for block in blocks :
+        b_timestamp = block[0].get('timestamp')
+        b_diff = time - b_timestamp # 시간차이 구하기
+        b_diff = str(b_diff)[:-7] # milisecond 제외한 값만 보내기
+        print(b_diff)
+        block[0]["timestamp"] = b_diff # 값 update
+
     return render(request, 'groot/groot_block.html', {'blocks':blocks})
 
 def groot_block_detail(request, height):
     blocks = get_block()
     block = []
 
+    m_height = get_height()
+    m_height = int(m_height) - 1  # 현재 블록의 높이(0부터 시작하므로)
+
     for i in range(0, len(blocks)) :
         if blocks[i][0]["block_number"] == str(height) :
+            blocks[i][0]["pre_block"] = int(blocks[i][0]["block_number"]) - 1 # data 추가(이전블록 넘버)
+            blocks[i][0]["next_block"] = int(blocks[i][0]["block_number"]) + 1 # data 추가(다음블록 넘버)
             block.append(blocks[i][0])
             break
 
-    return render(request, 'groot/groot_block_detail.html', {'height':height, 'blo':block})
+    return render(request, 'groot/groot_block_detail.html', {'height':height, 'blo':block, 'm_height':m_height})
 
 def groot_transaction(request):
     transaction = get_tx()
     time = datetime.datetime.now()
 
-    for tx in transaction :
-        timestamp = tx[0].get("Timestamp")[0:19]
-        timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
-        # print(timestamp)
-        diff = time - timestamp # 시간차이 구하기
-        diff = str(diff)[:-7] # milisecond 제외한 값만 보내기
-        tx[0]["Timestamp"] = diff # 값 update
+    for tx in transaction:
+        t_timestamp = tx[0].get('transactions').get('timestamp')
+        t_diff = time - t_timestamp # 시간차이 구하기
+        t_diff = str(t_diff)[:-7] # milisecond 제외한 값만 보내기
+        # print(t_diff)
+        tx[0]["transactions"]["timestamp"] = t_diff # 값 update
 
     return render(request, 'groot/groot_transaction.html', {'transactions':transaction})
 
 def groot_transaction_detail(request, txid):
-    return render(request, 'groot/groot_transaction_detail.html', {'txid':txid})
+    # Hyperledger-Fabric에서 txid 별 data 얻어오기
+    fabric = "http://210.107.78.150:8001/query_tx/" + txid
+    result = requests.get(fabric)
+    parse = result.json()
+
+    block_number = parse.get('block_number')
+    timestamp = parse.get('timestamp')[:-5]
+
+    try :
+        data = parse.get('data').get('value')
+    except AttributeError : # 값이 없으면
+        data = "null"
+        
+    timestamp = timestamp.split('T')
+    timestamp = ' '.join(timestamp)
+    timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+    timestamp = timestamp + datetime.timedelta(hours=9)
+
+    return render(request, 'groot/groot_transaction_detail.html', {'txid':txid, 'block_number':block_number, 'timestamp':timestamp, 'data':data})
 
 def read(request):
     user_id = request.session['user_id']

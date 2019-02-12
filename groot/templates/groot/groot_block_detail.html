@@ -18,9 +18,17 @@
 							<td> Block Height </td>
 							<td>
 								<!--만약 0번 블록이면 prev 비활성화, 마지막 블록이면 next 비활성화-->
-								<a class="prev" href="/groot_scan/block/{{height}}"> <i class="fas fa-caret-left"></i> </a>
+								{% if height == 0 %}
+									<i class="prev fas fa-caret-left"></i>
+								{% else %}
+									<a class="prev" href="/groot_scan/block/{{b.pre_block}}"> <i class="fas fa-caret-left"></i> </a>
+								{% endif %}
 									<em class="value">{{height}}</em>
-								<a class="next" href="/groot_scan/block/{{height}}"> <i class="fas fa-caret-right"></i> </a>
+								{% if height == m_height %}
+									<i class="next fas fa-caret-right"></i>
+								{% else %}
+									<a class="next" href="/groot_scan/block/{{b.next_block}}"> <i class="fas fa-caret-right"></i> </a>
+								{% endif %}
 							</td>
 						</tr>
 						<tr>
@@ -38,7 +46,11 @@
 						<tr>
 							<td> Prev Hash </td>
 							<td>
-								<a class="on " title="{{height}}" href="/block/{{height}}">0x{{b.previous_hash}}</a>
+								{% if height == 0 %}
+									-
+								{% else %}
+									<a class="on " title="{{b.pre_block}}" href="/groot_scan/block/{{b.pre_block}}">0x{{b.previous_hash}}</a>
+								{% endif %}
 							</td>
 						</tr>
 						<tr>
@@ -61,6 +73,7 @@
 				<p class="txt">
 					<span>Latest<em>{{b.transactions}}</em> txns from a total of<em class="mint">1 transactions</em></span>
 				</p>
+				{% for data in b.data %}
 				<table class="table-typeD">
 					<thead>
 						<tr>
@@ -70,13 +83,18 @@
 					<tbody>
 						<tr>
 							<td class=" on">
-								<a title="{{b.data.Transaction_ID}}" href="/transaction/{{b.data.Transaction_ID}}">
-									<span class="ellipsis">{{b.data.Transaction_ID}}</span>
-								</a>
+								{% if height == 0 %}
+									genesis block
+								{% else %}
+									<a title="{{data.Transaction_ID}}" href="/groot_scan/transaction/{{data.Transaction_ID}}">
+										<span class="ellipsis">0x{{data.Transaction_ID}}</span>
+									</a>
+								{% endif %}
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				{% endfor %}
 			</div>
 		</div>
 	</div>

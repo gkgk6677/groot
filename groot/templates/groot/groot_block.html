@@ -1,9 +1,6 @@
 {% extends "groot_scan-base.html" %}
 {% load static %}
 {% block css %}
-<!-- Pagination 및 검색을 위한 CSS 파일 -->
-<link href="{% static 'css/table.css' %}" rel="stylesheet">
-
 <style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
 </style>
@@ -19,13 +16,13 @@
                 </span>
             </p>
             <div class="contents">
-                <table class="table-typeE dataTables-example">
+                <table class="table-typeE">
                     <thead>
                         <tr>
-                            <th>Block</th>
-                            <th>Age</th>
-                            <th>No of Txns</th>
-                            <th>Block Hash</th>
+                            <th style="width:12%">Block</th>
+                            <th style="width:20%">Age</th>
+                            <th style="width:12%">No of Txns</th>
+                            <th style="width:56%">Block Hash</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,8 +32,8 @@
                                     <td class="on">
                                         <a class="on " title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">{{b.block_number}}</a>
                                     </td>
-                                    <td class="break"></td>
-                                    <td>1</td>
+                                    <td class="break">{{b.timestamp}} ago</td>
+                                    <td>{{b.transactions}}</td>
                                     <td>
                                         <a class="on ellipsis" title="{{b.block_number}}" href="/groot_scan/block/{{b.block_number}}">
                                             0x{{b.current_hash}}
@@ -100,16 +97,4 @@
 {% endblock content %}
 
 {% block js %}
-<!-- DataTables JavaScript -->
-<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
-<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
-
-<script>
-$(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        "lengthMenu": [ 5,10,15 ]
-    });
-});
-</script>
 {% endblock js %}
