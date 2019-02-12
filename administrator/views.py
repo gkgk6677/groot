@@ -108,6 +108,7 @@ def extend_detail(request, idx):
                 extend_infos.save()
                 enroll_infos.term += extend_infos.term
                 enroll_infos.end_date += datetime.timedelta(days=(365 * int(extend_infos.term)))
+                enroll_infos.extend_status = 'possible'
                 enroll_infos.save()
 
                 #     0          1        2         3        4        5       6          7            8          9
@@ -125,6 +126,8 @@ def extend_detail(request, idx):
                 extend_infos.refused_reason = request.POST['refused_reason']
                 extend_infos.status = 2
                 extend_infos.save()
+                enroll_infos.extend_status = 'possible'
+                enroll_infos.save()
                 return redirect('index')
     else:
         return redirect('wrong')
@@ -157,6 +160,7 @@ def expire_detail(request, idx):
                 enroll_infos.enroll_date = None
                 enroll_infos.end_date = None
                 enroll_infos.enroll_status = 3
+                enroll_infos.expire_status = 'possible'
                 enroll_infos.save()
                 return redirect('index')
             else:
@@ -164,6 +168,8 @@ def expire_detail(request, idx):
                 expire_infos.accept_date = datetime.datetime.now()
                 expire_infos.status = 2
                 expire_infos.save()
+                enroll_infos.expire_status = 'possible'
+                enroll_infos.save()
                 return redirect('index')
     else:
         return redirect('wrong')

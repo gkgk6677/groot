@@ -55,7 +55,7 @@
                 {% for enroll_info in enroll_infos %}
                     <tr>
                         <td>
-                            <a href="#" data-toggle="modal" data-target="#detail{{enroll_info.enroll_idx}}" style="font-weight:500;">{{enroll_info.title}}</a>
+                            <a class="enroll_title" data-value="{{enroll_info.enroll_idx}}" href="#" data-toggle="modal" data-target="#detail{{enroll_info.enroll_idx}}" style="font-weight:500;">{{enroll_info.title}}</a>
                             <!-- The Modal -->
                             <div class="modal fade" id="detail{{enroll_info.enroll_idx}}">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -124,107 +124,93 @@
                         <td>
                             {% csrf_token %}
                             {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" %}
-
-                                {% if extend_infos %}
-                                    {% for extend_info in extend_infos %}
-                                        {% if extend_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                            <button class="btn btn-outline-danger ck_button" style="padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89);width:50px;text-align: center;" data-toggle="modal" data-target="#request{{enroll_info.enroll_idx}}">
-                                                요청중
-                                            </button>
+                                {% if enroll_info.extend_status == 'impossible' %}
+                                    <button class="btn btn-outline-danger ck_button" style="padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89);width:50px;text-align: center;" data-toggle="modal" data-target="#request{{enroll_info.enroll_idx}}">
+                                        요청중
+                                    </button>
+                                    
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="request{{enroll_info.enroll_idx}}">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
                                             
-                                            <!-- The Modal -->
-                                            <div class="modal fade" id="request{{enroll_info.enroll_idx}}">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                    
-                                                        <!-- Modal Header -->
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title" style='color:#2092a7'>연장 요청 사유</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        </div>
-                                                        
-                                                        <!-- Modal body -->
-                                                        <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
-                                                            <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <td>요청 사유</td>
-                                                                        <td>{{extend_info.reason}}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>요청 시간</td>
-                                                                        <td>{{extend_info.c_date}}</td>
-                                                                    </tr>
-                                                                </thead>
-                                                            </table>
-                                                            <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
-                                                        </div>
-                                                        
-                                                        <!-- Modal footer -->
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
-                                                        </div>
-                                                    </div>
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" style='color:#2092a7'>연장 요청 사유</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                
+                                                <!-- Modal body -->
+                                                <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
+                                                    <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;">
+                                                        <thead>
+                                                            <tr>
+                                                                <td>요청 사유</td>
+                                                                <td>{{extend_info.reason}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>요청 시간</td>
+                                                                <td>{{extend_info.c_date}}</td>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                    <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
+                                                </div>
+                                                
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
                                                 </div>
                                             </div>
-                                        {% else %}
-                                            <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="padding: 6px 3px 6px 3px; font-size:80%; border-color:#39bfd6;width:50px" onclick="ck({{enroll_info.enroll_idx}})"> 연장 </button> 
-                                        {% endif %}
-                                    {% endfor %}
+                                        </div>
+                                    </div>
                                 {% else %}
                                     <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="padding: 6px 3px 6px 3px; font-size:80%; border-color:#39bfd6;width:50px" onclick="ck({{enroll_info.enroll_idx}})"> 연장 </button> 
                                 {% endif %}
-
-                                {% if expire_infos %}
-                                    {% for expire_info in expire_infos %}
-                                        {% if expire_info.enroll_idx.enroll_idx == enroll_info.enroll_idx and expire_info.status == 0 %}
-                                            <button class="btn btn-outline-danger ck_button " style="padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89);width:50px;text-align: center;" data-toggle="modal" data-target="#expire{{enroll_info.enroll_idx}}">
-                                                요청중
-                                            </button>
+                            
+                                {% if enroll_info.expire_status == 'impossible' %}
+                                    <button class="btn btn-outline-danger ck_button " style="padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89);width:50px;text-align: center;" data-toggle="modal" data-target="#expire{{enroll_info.enroll_idx}}">
+                                        요청중
+                                    </button>
+                                    
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="expire{{enroll_info.enroll_idx}}">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
                                             
-                                            <!-- The Modal -->
-                                            <div class="modal fade" id="expire{{enroll_info.enroll_idx}}">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                    
-                                                        <!-- Modal Header -->
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title" style='color:#2092a7'>해지 요청 사유</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        </div>
-                                                        
-                                                        <!-- Modal body -->
-                                                        <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
-                                                            <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <td width="20%">해지 사유</td>
-                                                                        <td>{{expire_info.reason}}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>요청 시간</td>
-                                                                        <td>{{expire_info.c_date}}</td>
-                                                                    </tr>
-                                                                </thead>
-                                                            </table>
-                                                            <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
-                                                        </div>
-                                                        
-                                                        <!-- Modal footer -->
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
-                                                        </div>
-                                                    </div>
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" style='color:#2092a7'>해지 요청 사유</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                
+                                                <!-- Modal body -->
+                                                <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
+                                                    <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;">
+                                                        <thead>
+                                                            <tr>
+                                                                <td width="20%">해지 사유</td>
+                                                                <td>{{expire_info.reason}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>요청 시간</td>
+                                                                <td>{{expire_info.c_date}}</td>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                    <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
+                                                </div>
+                                                
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
                                                 </div>
                                             </div>
-                                        {% else %}
-                                            <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;width:50px" onclick="ck2({{enroll_info.enroll_idx}})"> 해지 </button>
-                                        {% endif %}
-                                    {% endfor %}
+                                        </div>
+                                    </div>
                                 {% else %}
                                     <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;width:50px" onclick="ck2({{enroll_info.enroll_idx}})"> 해지 </button>
                                 {% endif %}
-
                             {% elif enroll_info.enroll_status == "<div style='color:green'>대기중</div>" %}
                                 -
                             {% else %}

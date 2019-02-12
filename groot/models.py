@@ -87,6 +87,8 @@ class Enrollment(models.Model):
     refused_reason = models.TextField(blank=True, null=True)
     agree_status = models.IntegerField(blank=True, null=True)
     enroll_status = models.IntegerField(null=True)
+    extend_status = models.CharField(max_length=50,blank=True, null=True)
+    expire_status = models.CharField(max_length=50,blank=True, null=True)
     enroll_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     enroll_tx = models.CharField(max_length=100, blank=True, null=True)

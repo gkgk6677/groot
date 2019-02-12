@@ -401,12 +401,6 @@ def extend(request,idx):
 
 
     if request.method == 'POST':
-        e_date = enrollinfo.end_date
-        enrollinfo.term = request.POST['term']
-
-        enrollinfo.end_date = e_date + datetime.timedelta(days=365 * int(request.POST['term']))
-        # return HttpResponse(enrollment.end_date)
-        enrollinfo.save()
 
         form = ExtendForm(request.POST)
 
@@ -417,8 +411,9 @@ def extend(request,idx):
             extend.status = 0
             extend.reason = form.cleaned_data['reason']
             extend.c_date = datetime.datetime.now()
-
             extend.save()
+            enrollinfo.extend_status = 'impossible'
+            enrollinfo.save()
 
         return redirect('mypage')
 
@@ -921,8 +916,9 @@ def expire(request,idx):
             expire.status = 0
             expire.reason = form.cleaned_data['reason']
             expire.c_date = datetime.datetime.now()
-
             expire.save()
+            enrollinfo.expire_status = 'impossible'
+            enrollinfo.save()
 
         return redirect('mypage')
 
@@ -966,7 +962,7 @@ def application_list(request):
 
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user=user_id)
-    extend_infos = Extend.objects.all().filter(status=0)
+    extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all().filter(status=0)
     now_date = datetime.datetime.now()
     enroll_lists = []
