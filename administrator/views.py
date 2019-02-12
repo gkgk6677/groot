@@ -253,6 +253,8 @@ def check(request, idx):
                 f = requests.get(fabric)
                 print(f.text)  # cmd 창에 보여질 값
                 enrollment_info.enroll_tx = f.text[1:-1]
+                enrollment_info.extend_status = 'possible'
+                enrollment_info.expire_status = 'possible'
                 enrollment_info.save()
 
                 return redirect('index')

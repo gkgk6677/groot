@@ -3110,6 +3110,15 @@ footer {
 /* 내가 추가한것
 ========================================================================
 */
+
+.title_color_a{
+  color:#3189AE;
+}
+
+.title_color_a:hover{
+  color:rgb(93, 161, 190);
+}
+
 .contents-header {
   display: flex; 
   position: relative;

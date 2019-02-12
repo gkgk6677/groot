@@ -79,9 +79,10 @@ def join(request):
         phone_num = request.POST['phone_num']
         homepage = request.POST['homepage']
 
+        revised_com_num = com_num[0:3] + '-' + com_num[3:5] + '-' + com_num[5:10]
         revised_phone_num = phone_num[0:3] + '-' + phone_num[3:7] + '-' + phone_num[7:11]
 
-        user = User(user_id=user_id, user_pw=user_pw, com_num=com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
+        user = User(user_id=user_id, user_pw=user_pw, com_num=revised_com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
         user.status = 0
         user.s_date = timezone.now()
         user.save()
@@ -99,16 +100,22 @@ def mypage(request):
 
     # 임치 현황 값 DB에서 불러오기
     enroll_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=1)
+    enroll_ready_lists = Enrollment.objects.all().filter(user=user_id, enroll_status=0)
     contract_infos = Contract.objects.all()
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
     now_date = datetime.datetime.now()
     enroll_count = 0
+    enroll_ready_count = 0
     extend_count = 0
     contract_count = 0
     expire_count = 0
     contract_is_value = 0
     contract_count_for_me = 0
+
+    # 임치 대기중 리스트
+    for i in enroll_ready_lists:
+        enroll_ready_count += 1
 
     # 임치 계약 수 계산
     for i in enroll_lists:
@@ -145,7 +152,7 @@ def mypage(request):
         if (contract_info.enroll_idx.user.user_id == user_id and contract_info.enroll_idx.enroll_status == 1 and contract_info.status == 0):
             contract_count_for_me += 1
 
-    return render(request, 'groot/mypage.html', {'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
+    return render(request, 'groot/mypage.html', {'enroll_ready_count':enroll_ready_count, 'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
 
 
 def list(request):
@@ -963,7 +970,7 @@ def application_list(request):
     user_id = request.session['user_id']
     enroll_infos = Enrollment.objects.all().filter(user=user_id)
     extend_infos = Extend.objects.all()
-    expire_infos = Expire.objects.all().filter(status=0)
+    expire_infos = Expire.objects.all()
     now_date = datetime.datetime.now()
     enroll_lists = []
 

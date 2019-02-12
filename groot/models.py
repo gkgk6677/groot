@@ -6,7 +6,7 @@ from django.forms import SelectDateWidget
 class User(models.Model):
     user_id = models.CharField(primary_key=True, max_length=100)
     user_pw = models.CharField(max_length=100)
-    com_num = models.IntegerField()
+    com_num = models.CharField(max_length=20)
     com_name = models.CharField(max_length=100)
     com_head = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
