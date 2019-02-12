@@ -21,6 +21,9 @@
             width: 300px;
             display: inline-block;
         }
+        .table-bordered thead td, .table-bordered thead th {
+            border-bottom-width: 0;
+        }
     </style>
 {% endblock css %}
 
@@ -68,7 +71,7 @@
                                         
                                         <!-- Modal body -->
                                         <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
-                                            <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;vertical-align: middle;">
+                                            <table class="table table-bordered" width="100%" style="text-align: center;vertical-align: middle; border: 2px solid rgb(184, 187, 190)">
                                                 <thead>
                                                     <tr>
                                                         <td width="24%">임치 기술명</td>
@@ -83,11 +86,19 @@
                                                         <td>{{enroll_info.agree_status}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td rowspan="2" style="vertical-align: middle;">임치 기간</td>
-                                                        <td>{{enroll_info.term}} 년</td>
+                                                        <td>상태</td>
+                                                        <td style="font-weight: 500;">{{enroll_info.enroll_status | safe}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>{{enroll_info.enroll_date}} ~ {{enroll_info.end_date}}</td>
+                                                        <td style="vertical-align: middle;">임치 기간</td>
+                                                        <td>
+                                                            {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" %}
+                                                                {{enroll_info.term}} 년<br><hr style="size:10">
+                                                                {{enroll_info.enroll_date}} ~ {{enroll_info.end_date}}
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>임치기술 요약</td>
@@ -115,7 +126,7 @@
                             </div>
                         </td>
                         <td>{{enroll_info.term}} 년</td>
-                        {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" %}
+                        {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" or enroll_info.enroll_status == "<div style='color:red'>기간만료</div>" %}
                             <td>{{enroll_info.end_date}}</td>
                         {% else %}
                             <td>-</td>
@@ -221,6 +232,8 @@
                                 {% endif %}
                             {% elif enroll_info.enroll_status == "<div style='color:green'>대기중</div>" %}
                                 -
+                            {% elif enroll_info.enroll_status == "<div style='color:red'>기간만료</div>" %}
+                                -
                             {% else %}
                                 <button class="btn btn-outline-danger ck_button" style="padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89);width:70px;text-align: center;" data-toggle="modal" data-target="#target{{enroll_info.enroll_idx}}">
                                 반려 사유
@@ -304,21 +317,16 @@
     <script>
         function ck2(s){
             $.ajax({
-            url: '/login3',
-            type: 'POST',
-            dataType : 'json',
-            data: {'s' : s},
-            success: function(result) {
-                if(result.ck_val == 0) {
-                        alert('이미 해지신청이 진행 중 입니다. ')
-                        location.reload()
-                    }else if(result.ck_val == 3) {
+                url: '/login3',
+                type: 'POST',
+                dataType : 'json',
+                data: {'s' : s},
+                success: function(result) {
+                    if(result.ck_val == 1) {
                         alert('해당 임치물에 진행중인 계약이 있습니다. \n기술 계약 해지는 관리자에게 문의하세요.')
-                        location.reload()
                     }
                     else {
-                            location.href="expire/" + s ;
-
+                        location.href="expire/" + s ;
                     }
                 }
             });

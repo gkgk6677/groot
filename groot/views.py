@@ -191,32 +191,17 @@ def login2(request):
 def login3(request):
     if request.method == "POST":
         s = request.POST['s']
+        ck_val = 0
         try:
-            a = Expire.objects.get(enroll_idx=s)
-            if a.status == 0:
-                # 해지 신청이 진행중이므로 안되는 경우
-                ck_val = 0
-                context = {'ck_val': ck_val}
-
-                return HttpResponse(json.dumps(context), content_type='application/json')
-            else:
-                ck_val = 0
-                context = {'ck_val': ck_val}
-                # 해지 테이블에 값이 존재하므로 해지 신청 불가
-                return HttpResponse(json.dumps(context), content_type='application/json')
-
-        except Expire.DoesNotExist:
-            try:
-                b = Contract.objects.get(enroll_idx=s)
-                if b.status == 0 or b.status == 1:
-                    # 기술 계약이 진행중일때 해지 신청 불가
-                    ck_val = 3
-                    context = {'ck_val': ck_val}
-                    return HttpResponse(json.dumps(context), content_type='application/json')
-            except Contract.DoesNotExist:
+            cont_info = Contract.objects.get(enroll_idx=s)
+            if cont_info.status == 1:
+                # 기술 계약이 진행중일때 해지 신청 불가
                 ck_val = 1
                 context = {'ck_val': ck_val}
                 return HttpResponse(json.dumps(context), content_type='application/json')
+        except Contract.DoesNotExist:
+            context = {'ck_val': ck_val}
+            return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 
@@ -968,10 +953,10 @@ def upload(request):
 def application_list(request):
 
     user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user=user_id)
+    enroll_infos = Enrollment.objects.all().filter(user=user_id).order_by('-c_date')
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
-    now_date = datetime.datetime.now()
+    now_date = datetime.datetime.now().date()
     enroll_lists = []
 
     for enroll_info in enroll_infos:
@@ -993,11 +978,11 @@ def application_list(request):
 
         if enroll_info.enroll_status == 0:
             enroll_info.enroll_status = "<div style='color:green'>대기중</div>"
-        elif enroll_info.enroll_status == 1:
+        elif enroll_info.enroll_status == 1 and enroll_info.end_date > now_date :
             enroll_info.enroll_status = "<div style='color:blue'>승인</div>"
         elif enroll_info.enroll_status == 2:
             enroll_info.enroll_status = "<div style='color:red'>반려</div>"
-        elif enroll_info.end_date < now_date:
+        elif enroll_info.enroll_status == 1 and enroll_info.end_date < now_date:
             enroll_info.enroll_status = "<div style='color:red'>기간만료</div>"
         enroll_lists.append(enroll_info)
 

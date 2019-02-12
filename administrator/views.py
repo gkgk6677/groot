@@ -223,8 +223,8 @@ def check(request, idx):
             test = []
 
             for val in range(1,len(one_row)):
-                if (int(one_row[val] * 100) > 30 and int(one_row[val] * 100) != 100):
-                    test.append([titlelist[val], mydoclist[val], (str(one_row[val] * 100) + ' %')])
+                if (int(one_row[val] * 100) > 30):
+                    test.append([titlelist[val], mydoclist[val],(str(one_row[val] * 100)[0:5] + ' %')])
                     request_count += 1
 
             return render(request, 'administrator/check.html', {'test':test, 'request_count':request_count })
