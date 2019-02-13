@@ -16,7 +16,7 @@ def index(request):
             extend_status = Extend.objects.all()
             update_status = Update.objects.all()
             expire_status = Expire.objects.all()
-            enroll_infos = Enrollment.objects.all().order_by('-c_date')[0:10]
+            enroll_infos = Enrollment.objects.all().order_by('-c_date')[0:6]
             file_infos = File.objects.all()
 
             count_enroll = 0

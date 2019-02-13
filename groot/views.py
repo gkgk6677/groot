@@ -38,7 +38,7 @@ import matplotlib.pyplot as plt # 그래프
 import sys # 블록 크기
 
 from cryptography.fernet import Fernet
-import pyotp
+# import pyotp
 
 # Create your views here.
 
@@ -91,7 +91,7 @@ def join(request):
         user.s_date = timezone.now()
         user.save()
 
-        value = {'user_id': user_id}
+        value = {'user_id': user_id, 'com_head':com_head}
         template = get_template('groot/welcome.html')
         output = template.render(value)
 
@@ -1214,3 +1214,8 @@ def otpmaker(request):
             result_dict['result'] = 'Already Issued'
             return JsonResponse(result_dict)
 
+def about_us(request):
+    return render(request, 'groot/about_us.html', {})
+
+def about_introduce(request):
+    return render(request, 'groot/about_introduce.html', {})

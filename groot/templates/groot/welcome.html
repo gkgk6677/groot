@@ -1,16 +1,25 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block css %}
+<style>
+    .submit_btn:hover {
+        background: #00c8a9;
+        color: #fff;
+    }
+</style>
 {% endblock css %}
 
 {% block content %}
-    <section class="contact_area p_200" style="padding-bottom: 400px;" >
-        <div class="container">
-            <div class="content" style="text-align:center;">
-                <h2>{{user_id}} 님 환영합니다.</h2>
-                <a href="login" class="genric-btn primary e-large text-upperclass" style="font-size: 1.1em;">로그인하러가기<span class="lnr lnr-arrow-right"></span></a>
+    <section class="p_200">
+        <!-- <div class="container"> -->
+            <div class="content" style="text-align:center;margin-top:50px">
+                <img src="{% static 'img/grootlogo.png' %}" alt="" style="width:300px;margin-bottom: 30px">
+                <h1>환영합니다!</h1><br><br>
+                <h4>' {{com_head}} ' 님 GrootChain에 가입하신 걸 환영합니다</h4>
+                <h4>회원님의 아이디는 ' {{user_id}} '입니다.</h4><br><br><br>
+                <a href="login" class="submit_btn"  style="background: #569bb8;border: 1px solid #3189ae; font-size: 15px;">로그인 하러가기&nbsp;&nbsp;<span class="lnr lnr-arrow-right"></span></a>
             </div>
-        </div>
+        <!-- </div> -->
     </section>
 {% endblock content %}
 
