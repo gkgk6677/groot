@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+<link rel="stylesheet" href="{% static 'css/aboutus.css' %}">
+
+<style>
+.headstyle{
+	margin: 50px 0 55px;
+	text-align:center;
+	font-weight: 800;
+	font-size: 38px
+}
+.bt_m20 {
+    margin-bottom: 30px
+    list-style:none;
+    width: 530px;
+
+}
+.bt_m30 {
+    margin-bottom: 30px !important;
+    list-style:none;
+}
+.bt_m40 {
+    list-style:none;
+}
+.bt_m50 {
+    list-style:none;
+    width: 600px;
+}
+.list02 {
+
+    text-indent: -15px;
+    text-align: left;
+
+}
+
+.list03 {
+    padding-left: 10px;
+    line-height: 22px;
+    text-indent: -15px;
+}
+.list01 {
+
+    text-indent: -15px;
+    text-align: left;
+}
+
+
+
+
+
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<section>
+    <div class="container shadow">
+        <div class="p_120" style="padding-bottom: 40px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="content" class="about_us" style="margin-top: 0px;">
+                        <h3 class="headstyle">기술 임치 제도 소개</h3>
+
+                        <div class="company">
+                            <div class="inner">
+                                <div class="fasoo">
+                                    <p class="sub under_line">기술 임치 제도란?</p>
+                                    <div class="desc box05">
+                                        <p>중소 기업의 핵심기술을 임치센터에 보관하여 중소기업은 기술 유출을 방지하고<br>
+                                            대기업은 해당 중소기업의 파산ㆍ폐업시에도 해당 임치물을 이용할 수 있도록 하는 제도</p>
+                                    </div>
+                                    <h5>관련 법령</h5>
+                                    <h6>대ㆍ중소기업 상생협력 촉진에 관한 법률 제24조의 2(기술자료 임치제도)</h6>
+                                    <ul class="col-7 bt_m30" style="border-style:ridge;">
+                                        <li>1. 수탁ㆍ위탁기업[수탁ㆍ위탁기업 외에 단독 또는 공동으로 기술자료를 임치하고자 하는 기업을<br> 포함한다]은
+                                            전문인력과 설비등을 갖춘 기관으로서 대통령령으로 정하는 기관 [이하＂수치인“이라고 한다]과 서로 합의하여 기술자료를 임치하고자
+                                            <br>하는기업(이하 "임치기업" 이라한다)의 기술자료를 임치할 수 있다.
+                                        </li>
+
+                                        <li>2. 위탁기업은 다음 각 호의 어느 하나에 해당하는 경우에는 수치인에게 수탁기업이 임치한 기술자료를 내줄 것을 요청할 수 있다.
+                                            <ul style="border-style:ridge;">
+                                                <li class="bt_m40">1) 수탁기업이 동의한 경우</li>
+                                                <li class="bt_m40">2) 수탁기업이 파산선고 또는 해산결의로 그 권리가 소멸되거나 사업장을 폐쇄하여 사업을 할 수
+                                                    없는 경우 등 위탁기업과
+                                                    <br>수탁기업이 협의하여 정한 기술자료 교부조건에 부합하는 경우
+                                                </li>
+                                            </ul>
+                                        </li>
+
+
+                                        <li>3. 수치인은 중소벤처기업부장관이 정하는 기술자료 교부조건에 부합하는 경우에 임치기업의 기술자료를 요청한 자에게 이를 교부한다.</li>
+
+                                        <li>4. 정부는 수치인에게 예산의 범위에서 필요한 지원을 할 수 있다.</li>
+
+                                        <li>5. 그 밖에 기술자료의 임치 등에 필요한 사항은 대통령령으로 정한다.</li>
+
+
+                                    </ul>
+                                </div>
+
+                                <div class="sparrow">
+                                    <div class="right">
+                                        <p class="sub under_line">기술제도 이용효과</p>
+                                        <br>
+                                        <div class="bt_m20" style="padding-right: 30px;">
+                                            <h5>개발기술의 효율적인 보호</h5>
+                                            <ul class="list01">
+                                                <li>개발기업의 기술자료가 유출되었을 경우,</li>
+                                                <li style="list-style:none;">기술자료 임치물을 통해 개발기업의 기술 개발사실 입증</li>
+                                                <li>내부직원 및 산업스파이 등에 의해 기술자료가 유출되더라도</li>
+                                                 <li style="list-style:none;">임치물을 통해 개발기업은 해당 기술의 개발사실 입증</li>
+                                            </ul>
+                                            <br>
+                                            <h5>기술 경쟁력 유지</h5>
+                                            <ul class="list02">
+                                                <p>기술보호 효과</p>
+                                                <li>중소기업은 개발기술이 유출되지 않음에 따라 </li>
+                                                 <li style="list-style:none;">개발기술에 대해 기술경쟁력 유지</li>
+                                                <br>
+                                                <p>보험적 효과</p>
+                                                <li>웹 애플리케이션 취약점 동적분석 도구, Sparrow DAST</li>
+                                                <br>
+                                                <p>기술멸실 방지</p>
+                                                <li>기타, 기술자료의 백업기능을 수행함으로써</li>
+                                                    <li style="list-style:none;">해당기술의 멸실ㆍ훼손 등을 방지(기술멸실 방지)</li>
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="dp" style="margin-bottom: 10px;">
+                                    <span class="title">DIGITAL PAGE</span>
+                                    <p class="sub under_line">임치대상물</p>
+
+                                    <div class="object_right">
+                                        <br>
+                                        <div class="bt_m50">
+                                            <h5>기술상 정보</h5>
+                                            <ul class="list01">
+                                                <li>시설 및 제품의 설계도 / 물품의 생산ㆍ제조방법</li>
+                                                <li>물질의 배합방법 / 연구개발 보고서 및 데이터</li>
+                                                <li>SW 소스코드 및 디지털 콘텐츠 등</li>
+                                            </ul>
+                                            <p class="blue left_m10 line_he24">특히 소프트웨어의 발주시 기술자료 임치제도를 이용하면 사용기술에 대한
+                                                안정성을 보장</p>
+                                        </div>
+                                        <div class="bt_m50">
+                                            <h5>경영상 정보</h5>
+                                            <ul class="list01">
+                                                <li>기업의 운영 및 관리와 관련된 기밀서류</li>
+                                                <li>(재무, 회계, 인사, 마케팅, 노무, 생산) 기업의 매출과 관련된 기밀서류</li>
+                                                <li>(원가, 거래처, 각종 보고서 및 매뉴얼)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</section>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

@@ -1,0 +1,54 @@
+.about_us .visual {height: 299px;text-align:center;color:#fff;background-image:url(/static/img/aboutus/aboutus_01.png);background-size:cover;background-position: center;}
+.about_us .visual .tit {display:inline-block;margin-top: 70px;font-size:28px;font-weight:700;}
+.about_us .visual .eng {line-height:1.5;font-size:16px;font-weight:700}
+.about_us .visual .desc:before {content:'';position: absolute;top: -26px;left:190px;width:60px;height:2px;background-color:#fff;}
+.about_us .visual .desc {position: relative;display:inline-block;margin: 45px 0 auto;}
+
+.about_us .about .inner {padding:150px 0;overflow:hidden;}
+.about_us .about .inner div {float:left;margin-left:20px;padding-top:282px;width:353px;text-align:center;background-repeat:no-repeat}
+.about_us .about .inner div:first-child {margin-left:0}
+.about_us .about .inner .about1 {background-image:url(/_images/about/img_about_us_1.jpg)}
+.about_us .about .inner .about2 {background-image:url(/_images/about/img_about_us_2.jpg)}
+.about_us .about .inner .about3 {background-image:url(/_images/about/img_about_us_3.jpg)}
+.about_us .about .inner div .tit {font-size:28px;font-weight:700}
+.about_us .about .inner div .tit:after {bottom:-13px;left: 160px;background-color:#333;}
+.about_us .about .inner div .desc {margin-top:26px;color:#666;letter-spacing:-.2px}
+
+.about_us .company {margin-top: 150px;}
+.about_us .company .inner > div {position:relative;margin-top: 80px;height:570px;z-index:1;background-repeat: no-repeat;}
+.about_us .company .inner > div:first-child {margin-top:0}
+.about_us .company .inner > div:before {content:'';position: absolute;width:170px;height: 521px;top:0;background-color:#eaf1f8;}
+.about_us .company .inner > div:after {content:'';position: absolute;width:431px;height: 441px;top:30px;background-position: bottom;}
+.about_us .company .fasoo:before,
+.about_us .company .dp:before {right:0}
+.about_us .company .sparrow:before {left:0}
+.about_us .company .sparrow {text-align:left;}
+.about_us .company .fasoo:after {right:30px;background-image:url(/static/img/aboutus/imchi_01.png);}
+.about_us .company .sparrow:after {left:30px;background-image:url(/static/img/aboutus/aboutus_light.png)}
+.about_us .company .dp:after {right:52px;background-image:url(/static/img/aboutus/aboutus_03.png)}
+.about_us .company .sparrow .right {float:right;width:480px}
+.about_us .company .title {position:relative;display:inline-block;0 0;z-index:1;font-size:0}
+.about_us .company .fasoo .title {width: 180px;height: 60px;background-size: 100%;text-align:left;background-image:url(/static/img/aboutus/about_groot.png);}
+.about_us .company .sparrow .title {width: 270px;height: 78px;text-align:left;background-size: 100%;background-image:url(/_images/about/img_about_us_sparrow.png);}
+.about_us .company .dp .title {width:357px;height:59px;text-align:left;background-image:url()}
+.about_us .company .title:after {/* content:''; */position:absolute;width:400px;height:2px;background-color:#000;}
+.about_us .company .fasoo .title:after {top:40px;left:320px}
+.about_us .company .sparrow .title:after {top:45px;right:320px}
+.about_us .company .dp .title:after {top:30px;left:390px;width:305px}
+.about_us .company .sub {margin-top:15px;font-size: 20px;font-weight: 700;}
+.about_us .company .sub:after {bottom:-18px;}
+.about_us .company .sparrow .sub:after {left:0;right:auto}
+.about_us .company .desc {margin-top:35px}
+.about_us .company .desc p {color:#666}
+.about_us .company .box_05{padding:25px; border:1px solid #cfdfe8; text-align:left;}
+
+.about_us .company ul {margin-top: 10px; border-style: none;}
+.about_us .company ul li {padding-left:14px;color:#666;);background-repeat:no-repeat;background-position:0px 13px}
+
+.about_us .company .sparrow a {float:right;padding:0;width:180px;text-align:center;background-image:none;}
+.about_us .company .dp a {padding:0;width:180px;text-align:center;background-image:none;}
+
+
+.under_line {position:relative;}
+.under_line:after {content:'';position:absolute;left:0;width:38px;height:2px;background-color:#333;}
+.required {color:#0ba1e7}
