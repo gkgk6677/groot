@@ -14,11 +14,11 @@
         #application_list p {
             color: #3189AE;
         }
-        table > tbody > tr > td > a {
+        table > tbody > tr > td > .enroll_title {
             overflow: hidden; 
             text-overflow: ellipsis;
             white-space: nowrap; 
-            width: 300px;
+            width: 260px;
             display: inline-block;
         }
         .table-bordered thead td, .table-bordered thead th {
@@ -47,9 +47,10 @@
                     <tr>
                         <th width="10%">No</th>
                         <th width="20%">임치 기술명</th>
-                        <th width="13%">기간</th>
-                        <th width="22%">만료 날짜</th>
-                        <th width="15%">상태</th>
+                        <th width="11%">임치물</th>
+                        <th width="12%">기간</th>
+                        <th width="20%">만료 날짜</th>
+                        <th width="12%">상태</th>
                         <th width="20%">처리</th>
                     </tr>
                 </thead>
@@ -129,6 +130,45 @@
                                 </div>
                             </div>
                         </td>
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#file{{enroll_info.enroll_idx}}"><i class="far fa-file-alt fa-2x" style="color:#3189AE;"></i></a>
+
+                            <!-- The Modal -->
+                            <div class="modal fade" id="file{{enroll_info.enroll_idx}}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" style="color:#2092a7">임치물 리스트</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        
+                                        <!-- Modal body -->
+                                        <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
+                                            <table class="table table-bordered" width="100%" style="text-align: center;vertical-align: middle; border: 2px solid rgb(184, 187, 190)">
+                                                <thead>
+                                                    <tr>
+                                                        <td width="24%" style="text-align:left;padding-left:10px">
+                                                            {% for list in file_list %}
+                                                                {% if list.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                                                    <p><i class="far fa-file-alt" style="color:#3189AE;"></i>&nbsp;&nbsp;{{list.file_name}}</p>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <div style="text-align:center;"><img src="{%static 'img/rsz_grootlogo.png' %}"></div>
+                                        </div>
+                                        
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>{{enroll_info.term}} 년</td>
                         {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" or enroll_info.enroll_status == "<div style='color:red'>기간만료</div>" or enroll_info.enroll_status == "<div style='color:red'>해지</div>" %}
                             <td>{{enroll_info.end_date | date:"Y년 M d일"}}</td>
@@ -136,7 +176,7 @@
                             <td>-</td>
                         {% endif %}
                         <td>{{enroll_info.enroll_status | safe}}</td>
-                        <td>
+                        <td style="padding:2px">
                             {% csrf_token %}
                             {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" %}
                                 {% if enroll_info.extend_status == 'impossible' %}

@@ -988,6 +988,7 @@ def application_list(request):
     extend_infos = Extend.objects.all()
     expire_infos = Expire.objects.all()
     now_date = datetime.datetime.now().date()
+    file_list = File.objects.all()
     enroll_lists = []
 
     for enroll_info in enroll_infos:
@@ -1017,7 +1018,7 @@ def application_list(request):
             enroll_info.enroll_status = "<div style='color:red'>해지</div>"
         enroll_lists.append(enroll_info)
 
-    return render(request, 'groot/application_list.html', {'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
+    return render(request, 'groot/application_list.html', {'file_list':file_list, 'expire_infos':expire_infos, 'extend_infos':extend_infos, 'enroll_infos':enroll_lists})
 
 def request_list(request):
     user_id = request.session['user_id']

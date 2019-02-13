@@ -279,8 +279,9 @@ def enrollments_detail(request, idx):
         enroll_infos = Enrollment.objects.get(enroll_idx=idx)
         enroll_enddate = enroll_infos.end_date.date()
         enroll_enrolldate = enroll_infos.enroll_date.date()
+        file_list = File.objects.all().filter(enroll_idx=idx)
 
-        return render(request, 'administrator/enrollments-detail.html', {'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'enroll_infos':enroll_infos})
+        return render(request, 'administrator/enrollments-detail.html', {'file_list':file_list, 'enroll_enrolldate':enroll_enrolldate, 'enroll_enddate':enroll_enddate, 'enroll_infos':enroll_infos})
     else:
         return redirect('wrong')
 
