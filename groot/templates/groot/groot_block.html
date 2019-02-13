@@ -1,6 +1,7 @@
 {% extends "groot_scan-base.html" %}
 {% load static %}
 {% block css %}
+<link href="{% static 'css/groot_table.css' %}" rel="stylesheet">
 <style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
 </style>
@@ -11,12 +12,12 @@
     <div class="screen0">
         <div class="wrap-holder">
             <p class="title">Blocks
-                <span class="right">
+                <span class="right" style="margin-right: 1%; margin-top: 6%;">
                     <em>{{blocks|length}}</em> total blocks
                 </span>
             </p>
             <div class="contents">
-                <table class="table-typeE">
+                <table class="table-typeE dataTables-example">
                     <thead>
                         <tr>
                             <th style="width:12%">Block</th>
@@ -44,52 +45,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="sort-holder">
-                    <p>25<span>(Show)</span>
-                        <em class="img"></em>
-                    </p>
-                    <ul style="display: none;">
-                        <li>
-                            <span>10</span>
-                        </li>
-                        <li>
-                            <span>25</span>
-                        </li>
-                        <li>
-                            <span>50</span>
-                        </li>
-                        <li>
-                            <span>100</span>
-                        </li>
-                    </ul>
-                </div>
-                <ul class="page">
-                    <li>
-                        <span class="start disabled">
-                            <em class="img"></em>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="prev disabled">
-                            <em class="img"></em>
-                        </span>
-                    </li>
-                    <li class="pageNum">
-                        <p>Page</p>
-                        <input type="text" class="txt-type-page over" placeholder="" value="1">
-                        <p> / 172445</p>
-                    </li>
-                    <li>
-                        <span name="next" class="next ">
-                            <em class="img"></em>
-                        </span>
-                    </li>
-                    <li>
-                        <span name="end" class="end ">
-                            <em class="img"></em>
-                        </span>
-                    </li>
-                </ul>
+                <div class="sort-holder"></div>
+                <ul class="page"></ul>
             </div>
         </div>
     </div>
@@ -97,4 +54,16 @@
 {% endblock content %}
 
 {% block js %}
+<!-- DataTables JavaScript -->
+<script src="{% static 'datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatables-plugins/dataTables.bootstrap.js' %}"></script>
+<script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    $('.dataTables-example').DataTable({
+        "lengthMenu": [ 10,15,30 ]
+    });
+});
+</script>
 {% endblock js %}
