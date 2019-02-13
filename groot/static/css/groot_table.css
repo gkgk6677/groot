@@ -1,0 +1,81 @@
+/* 데이터 테이블을 위한 CSS 파일 */
+
+#DataTables_Table_0_length {
+    margin-top: 2%;
+}
+
+.dataTables_length label{
+    justify-content: right;
+    margin:10px;
+    font-weight: 700;
+}
+.dataTables_filter label{
+    position: absolute;
+    right:30px;
+    margin:10px;
+    font-weight: 700;
+}
+#dataTables-example_info{
+    font-weight: 700;
+    position: relative;
+    top:5px;
+    left:30px;
+}
+.dataTables_paginate{
+    position: absolute;
+    right: 30px;
+}
+.form-inline{
+    display: block;
+}
+
+#DataTables_Table_0_info, #DataTables_Table_1_info, #DataTables_Table_2_info{
+    text-align: left;
+    padding-left: 15px;
+    font-weight: 500;
+    margin-top: 2%;
+}
+
+#DataTables_Table_0_filter > label {
+    visibility: hidden;
+}
+
+.pagination{
+    margin-top: -8%;
+    margin-right: 30px;
+}
+
+.pagination > #dataTables-example_previous{
+    border:1px solid #3189AE;
+    border-radius: 0.5rem 0 0 0.5rem;
+    padding: 3px 10px;
+    color: rgb(23, 103, 138);
+}
+.pagination > #dataTables-example_next{
+    border:1px solid #3189AE;
+    border-radius: 0 0.5rem 0.5rem 0;
+    padding: 3px 10px;
+    color: rgb(23, 103, 138);
+}
+.pagination > li{
+    border-top: 1px solid #3189AE;
+    border-bottom: 1px solid #3189AE;
+    padding: 3px 10px;
+    color: rgb(23, 103, 138);
+}
+.pagination > li > a{
+    color: rgb(23, 103, 138);
+}
+.form-control.input-sm{
+    height: 30px;
+    width: 100px;
+    padding: 0 0 0 10px;
+}
+.dataTables_length > label > .form-control {
+    width:70px;
+    margin:0 5px 0 5px;
+}
+.dataTables_filter > label > .form-control {
+    width:200px;
+    margin-left:5px;
+}

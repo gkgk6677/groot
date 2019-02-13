@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="{%static 'css/style.css' %}">
         <link rel="stylesheet" href="{%static 'css/responsive.css' %}">
         <link href="{%static 'css/admin_font.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <!-- Loading CSS-->
         <link rel="stylesheet" href="{%static 'css/loader.css' %}">
@@ -57,6 +58,13 @@
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                             <ul class="nav navbar-nav menu_nav ml-auto">
+                                <li class="nav-item submenu dropdown">
+									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">소개</a>
+									<ul class="dropdown-menu" >
+										<li class="nav-item"><a class="nav-link" href="/about_introduce"><i class="fa fa-balance-scale"></i>&nbsp;&nbsp;임치 제도</a></li>
+										<li class="nav-item"><a class="nav-link" href="/about_us"><i class="far fa-smile-o"></i>&nbsp;&nbsp;About Us</a></li>
+									</ul>
+								</li>
                                 <li class="nav-item"><a class="nav-link-other" href="/application" >기술임치신청</a></li>
                                 <li class="nav-item"><a class="nav-link-other" href="/search" >기술검색</a></li>
                                 <li class="nav-item"><a class="nav-link-other" href="/issue" >증명서 발급</a></li>

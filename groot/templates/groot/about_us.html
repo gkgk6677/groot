@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+<link rel="stylesheet" href="{% static 'css/aboutus.css' %}">
+
+<style>
+.headstyle{
+	margin: 50px 0 55px;
+	text-align:center;
+	font-weight: 800;
+	font-size: 38px
+}
+.bt_m20 {
+    margin-bottom: 30px
+    list-style:none;
+    width: 530px;
+
+}
+.bt_m30 {
+    margin-bottom: 30px !important;
+    list-style:none;
+}
+.bt_m40 {
+    list-style:none;
+}
+.bt_m50 {
+    list-style:none;
+    width: 600px;
+}
+.list02 {
+
+    text-indent: -15px;
+    text-align: left;
+
+}
+
+.list03 {
+    padding-left: 10px;
+    line-height: 22px;
+    text-indent: -15px;
+}
+.list01 {
+
+    text-indent: -15px;
+    text-align: left;
+}
+
+.p {
+width:725px;
+}
+
+
+
+
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<section>
+    <div class="container shadow">
+        <div class="p_120" style="padding-bottom: 40px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="content" class="about_us" style="margin-top: 0px;">
+                        <h3 class="headstyle">About Us</h3>
+                        <div class="visual">
+                            <p class="tit">블록체인을 활용한 디지털 비즈니스를 리드하는 기업, Groot</p>
+                            <p class="eng"><!--xDigital Intelligence for Security and Productivity--></p>
+                            <p class="desc">끊임없이 변화하는 IT환경에서도 본연의 가치를 지키며 <br>자유롭게 발전하는 디지털 세상, 바로 Groot가 그리는
+                                내일입니다.</p>
+                        </div>
+                        <br>
+
+                        <div>
+                            <br><br>
+                            <h2 style="text-align:center"> 주요 기능 </h2>
+
+                            <table style=" margin-left: 100px;margin-top: 50px;">
+
+
+                                <tr>
+                                    <th rowspan="2"><img src="{%static '/img/aboutus/service_01.png' %}"  style="width: 280px;" ></th>
+                                    <th style="padding-left: 50px;"><h4>기술 문서의 위·변조 확인</h4></th>
+                                </tr>
+                                <tr>
+                                    <th style="padding-left: 50px;width: 710px;"><p class="p">Groot에 저장 되는 모든 문서는 Hash 값을 블록에 저장하게 됩니다. <br>
+                                        따라서 원본 검증 페이지를 통해 검증시 사용자가 등록한 문서의 Hash 값과 블록에 저장된 Hash 값을<br> 비교하여 문서의 위·변조 여부를 판단할 수 있습니다.
+                                        블록체인에 저장된 Hash 값은 위변조가 불가능하므로<br> Groot의 원본검증을 통해 고객이 소유한 문서의 신뢰성을 판단 할 수 있습니다.</p></th>
+                                </tr>
+
+
+                                <tr>
+                                    <th rowspan="2"><img src="{%static '/img/aboutus/service_02.png' %}" style="width: 280px;"></th>
+                                    <th style="padding-left: 50px;"><h4>임치 기술 검색 및 계약</h4></th>
+                                </tr>
+                                <tr>
+                                    <th style="padding-left: 50px;width: 710px;"><p>Groot에 임치 신청 되는 기술은 공개 또는 비공개를 선택하게 하고
+                                        공개를 희망한 기술만 검색이 가능하도록하여 <br> Groot 사이트를 이용하는 모든 기업들이 기술 검색을 통해 원하는 기술을 찾고
+                                        해당 기업과 계약을 진행할 수 <br>있도록 하여 중소기업 시장 활성화를 장려합니다.<br>
+                                        또한 계약서를 블록체인에 저장하기 때문에 위·변조가 불가능하므로 Groot를 통해 안전한 거래를 할 수 있습니다.</p></th>
+                                </tr>
+
+                                <tr>
+                                    <th rowspan="2"><img src="{%static '/img/aboutus/service_03.png' %}" style="width: 280px;"></th>
+                                    <th style="padding-left: 50px;"><h4>Groot Scan</h4></th>
+                                </tr>
+                                <tr>
+                                    <th style="padding-left: 50px;width: 710px;"><p>Groot Scan은 하이퍼 레저 패브릭으로 이루어진 Groot의 블록체인 시스템을 볼 수 있습니다.<br>
+                                        블록체인 네트워크에 저장되어있는 블록의 정보, Transaction ID를 확인하여 눈에 보이지 않는 <br>블록체인 네트워크를
+                                        Grootscan을 통해 간접적으로 확인해 볼 수 있습니다.
+                                        </p></th>
+                                </tr>
+
+                                <tr>
+                                    <th rowspan="2"><img src="{%static '/img/aboutus/service_04.png' %}" style="width: 280px;"></th>
+                                    <th style="padding-left: 50px;"><h4>유사도 검사</h4></th>
+                                </tr>
+                                <tr>
+                                    <th style="padding-left: 50px;width: 710px;"><p>Groot는 기술 임치시 기술문서에 대해 자체 유사도 검사를 통해 내용이 비슷한 문서가 존재하는지 판단을 합니다.<br>
+                                        유사성을 확인하여 기술 문서의 등록 여부를 판단하게 되고 유사도가 높게 출력된 기술은 한번 더 확인하게 됩니다.<br>
+                                        기존 외부 기관에서 기술을 검증받아 임치센터에 등록하는 방식의 번거로움을 덜기 위해 Groot는 자체적인 유사도 검사를 진행하여 기술을 등록하고자하는 기업의 시간을 단축시킵니다.
+                                    </p></th>
+                                </tr>
+
+                                <tr>
+                                    <th rowspan="2"><img src="{%static '/img/aboutus/service_05.png' %}" style="width: 280px;"></th>
+                                    <th style="padding-left: 50px;"><h4>하이퍼 레저 패브릭의 장점을 활용하여 기술 임치에 특화된 Groot System</h4>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th style="padding-left: 50px;width: 710px;"><p>Groot의 모든 서비스는 블록체인을 통해 이루어집니다.<br>
+                                        저장된 기술문서의 위변조가 불가능하고 블록에 저장된 시간을 변경 할 수 없으며 과거 기록까지 한번에 살펴 볼 수 있는
+                                        기술임치에 특화되어 있는 기술인 하이퍼 레저 패브릭을 이용한 Groot의 서비스를 이용해 보세요! </p></th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+</section>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
