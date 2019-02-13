@@ -8,6 +8,7 @@
         <link rel="icon" href="{%static 'img/favicon.ico' %}" type="image/ico">
         <title>Groot Blockchain</title>
         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="{%static 'css/bootstrap.css' %}">
 		<!-- <link rel="stylesheet" href="{%static 'main/css/bootstrap_carousel.css' %}">
 		<link rel="stylesheet" href="{%static 'main/css/owl.carousel.css' %}"> -->
@@ -52,6 +53,13 @@
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 							<ul class="nav navbar-nav menu_nav ml-auto">
+								<li class="nav-item submenu dropdown">
+									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">소개</a>
+									<ul class="dropdown-menu" >
+										<li class="nav-item"><a class="nav-link" href="about_introduce"><i class="fa fa-balance-scale"></i>&nbsp;&nbsp;임치 제도</a></li>
+										<li class="nav-item"><a class="nav-link" href="about_us"><i class="far fa-smile-o"></i>&nbsp;&nbsp;About Us</a></li>
+									</ul>
+								</li>
 								<li class="nav-item"><a class="nav-link-other" href="application" >기술임치신청</a></li>
 								<li class="nav-item"><a class="nav-link-other" href="search" >기술검색</a></li>
 								<li class="nav-item"><a class="nav-link-other" href="issue" >증명서 발급</a></li>
@@ -84,7 +92,7 @@
 
 		<!--================Home Banner Area =================-->
 		<section class="section01">
-		
+
 			<div id="carousel-main" class="carousel slide" data-ride="carousel">
 				<!-- Indicators -->
 				<ol class="carousel-indicators">
@@ -92,7 +100,7 @@
 				<li data-target="#carousel-main" data-slide-to="1"></li>
 				<li data-target="#carousel-main" data-slide-to="2"></li>
 				</ol>
-	
+
 				<!-- Wrapper for slides -->
 				<div class="carousel-inner" role="listbox" style="color:white;">
 					<div class="item first active">
@@ -108,10 +116,10 @@
 									<p>GrootChain은 기존의 복잡한 방식을 탈피하여 누구나 쉽고 편리하게 기술을 등록할 수 있습니다.</p>
 									<p>또한 검색 기능을 제공하여 기술 공개를 희망하는 기업에겐 중소 기업의 기술시장 활성화를 장려합니다.</p>
 								</h4>
-							</div><!--headingBox-->							
+							</div><!--headingBox-->
 						</div><!--itemContents-->
 					</div><!--item-->
-		
+
 					<div class="item second">
 						<div class="itemContents">
 							<div class="headingBox">
@@ -131,14 +139,14 @@
 					<div class="item third">
 						<div class="itemContents">
 							<div class="headingBox">
-								<h1 style="font-size:50px;">  
+								<h1 style="font-size:50px;">
 									<span class="nowrap">기술문서의 </span>
 									<span class="nowrap">시점확인·진본 증명 </span>
 									<span class="nowrap">기능이 필요할 때</span>	<br/>
 									<span class="nowrap">GrootChain</span>
 								</h1>
 								<br/>
-								<h4>						
+								<h4>
 									<p>GrootChain은 기술임치가 승인된 시점부터 블록에 저장되어 홈페이지에 정확한 등록 시점을 확인할 수 있습니다.</p>
 									<p>또한 문서의 Hash를 저장된 블록에서 비교하기 때문에 완벽하고 정확한 진본 여부 판단을 가능하게 합니다.</p>
 								</h4>
@@ -146,7 +154,7 @@
 						</div><!--itemContents-->
 					</div><!--item-->
 				</div>
-				
+
 				<!-- Controls -->
 				<a class="left carousel-control" href="#carousel-main" role="button" data-slide="prev">
 					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"><</span>
@@ -157,10 +165,10 @@
 					<span class="sr-only">Next</span>
 				</a>
 			</div>
-			
+
 			<div class="tripleBox">
-				<ul class="group"> 
-					<li> 
+				<ul class="group">
+					<li>
 						<a href="/application" class="cardBox">
 							<h3><i class="fas fa-file-signature"></i>&nbsp;&nbsp;기술임치신청</h3><hr>
 							<h5>
@@ -200,8 +208,8 @@
 					</li>
 				</ul>
 			</div>
-			
-			
+
+
 		</section>
         <!--================End Home Banner Area =================-->
 

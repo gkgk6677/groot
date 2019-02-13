@@ -33,7 +33,7 @@
 						</tr>
 						<tr>
 							<td> Time Stamp </td>
-							<td> {{b.timestamp}} <em>(UTC+9, 34 seconds ago)</em> </td>
+							<td> {{b.timestamp}} <em>(UTC+9, {{b.t_diff}} ago)</em> </td>
 						</tr>
 						<tr>
 							<td> Transactions </td>
@@ -55,7 +55,7 @@
 						</tr>
 						<tr>
 							<td> Block size </td>
-							<td> 1,267 bytes </td>
+							<td> {{block_size}} </td>
 						</tr>
 					</tbody>
 				</table>
@@ -73,7 +73,6 @@
 				<p class="txt">
 					<span>Latest<em>{{b.transactions}}</em> txns from a total of<em class="mint">1 transactions</em></span>
 				</p>
-				{% for data in b.data %}
 				<table class="table-typeD">
 					<thead>
 						<tr>
@@ -86,15 +85,14 @@
 								{% if height == 0 %}
 									genesis block
 								{% else %}
-									<a title="{{data.Transaction_ID}}" href="/groot_scan/transaction/{{data.Transaction_ID}}">
-										<span class="ellipsis">0x{{data.Transaction_ID}}</span>
+									<a title="{{b.tx}}" href="/groot_scan/transaction/{{b.tx}}">
+										<span class="ellipsis">0x{{b.tx}}</span>
 									</a>
 								{% endif %}
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				{% endfor %}
 			</div>
 		</div>
 	</div>
