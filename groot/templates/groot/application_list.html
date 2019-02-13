@@ -48,7 +48,7 @@
                         <th width="10%">No</th>
                         <th width="20%">임치 기술명</th>
                         <th width="11%">임치물</th>
-                        <th width="12%">기간</th>
+                        <th width="10%">기간</th>
                         <th width="20%">만료 날짜</th>
                         <th width="12%">상태</th>
                         <th width="20%">처리</th>
@@ -130,8 +130,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <a href="#" data-toggle="modal" data-target="#file{{enroll_info.enroll_idx}}"><i class="far fa-file-alt fa-2x" style="color:#3189AE;"></i></a>
+                        <td style="padding:2px">
+                            <a href="#" data-toggle="modal" data-target="#file{{enroll_info.enroll_idx}}"><img src="https://img.icons8.com/ios/50/000000/document.png" style="width:25px"></a>
 
                             <!-- The Modal -->
                             <div class="modal fade" id="file{{enroll_info.enroll_idx}}">
@@ -148,12 +148,14 @@
                                             <table class="table table-bordered" width="100%" style="text-align: center;vertical-align: middle; border: 2px solid rgb(184, 187, 190)">
                                                 <thead>
                                                     <tr>
-                                                        <td width="24%" style="text-align:left;padding-left:10px">
-                                                            {% for list in file_list %}
-                                                                {% if list.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                                                    <p><i class="far fa-file-alt" style="color:#3189AE;"></i>&nbsp;&nbsp;{{list.file_name}}</p>
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                        <td width="24%" style="text-align:left;padding:20px">
+                                                            <div style="height:150px;overflow-y:auto">
+                                                                {% for list in file_list %}
+                                                                    {% if list.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
+                                                                        <p><img src="https://img.icons8.com/ios/50/000000/document.png" style="width:20px"></i>&nbsp;&nbsp;{{list.file_name}}</p>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </thead>
@@ -169,7 +171,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{enroll_info.term}} 년</td>
+                        <td style="padding:2px">{{enroll_info.term}} 년</td>
                         {% if enroll_info.enroll_status == "<div style='color:blue'>승인</div>" or enroll_info.enroll_status == "<div style='color:red'>기간만료</div>" or enroll_info.enroll_status == "<div style='color:red'>해지</div>" %}
                             <td>{{enroll_info.end_date | date:"Y년 M d일"}}</td>
                         {% else %}
