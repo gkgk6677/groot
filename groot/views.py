@@ -33,6 +33,10 @@ from django.views.generic import View
 from .render import Render
 import os
 
+# groot_Scan 위한 라이브러리
+import matplotlib.pyplot as plt # 그래프
+import sys # 블록 크기
+
 from cryptography.fernet import Fernet
 import pyotp
 
@@ -668,14 +672,6 @@ class cont_pdf(View):
         params = {'enroll_info': enroll_info, 'user': user, 'cert_info': cert_info, 'contract': contract}
         return Render.render('groot/show_cont.html', params)
 
-def get_title() : # 임치된 title을 불러오는 함수
-    technology = Enrollment.objects.filter(enroll_status=1)
-    title = []
-    for tech in technology :
-        title.append(tech.title)
-
-    return title
-
 def get_height() : # 블록높이 가져오는 함수
     # 전체 블록의 높이와 current_hash, previous_hash 얻어오기
     fabric_all_block = "http://210.107.78.150:8001/query_tech"
@@ -742,6 +738,7 @@ def get_block(): # 블록정보를 가져오는 함수
 
     for i in range(0, len(groot_bscan)) :
         if i == len(groot_bscan)-1 : # 마지막 블록에서 멈추기
+            groot_bscan[i][0]["current_hash"] = groot_bscan[i][0].get('data_hash')
             break
         groot_bscan[i][0]["current_hash"] = groot_bscan[i+1][0].get('previous_hash')
 
@@ -750,19 +747,40 @@ def get_block(): # 블록정보를 가져오는 함수
     return groot_bscan
 
 def groot_scan(request):
-    # fabric = "http://210.107.78.150:8001/get_all_tech"
-    # result = requests.get(fabric)
-    # titles = []
-    # block_parses = result.json()  # JSON형식으로 parse(분석)
-    # for block_parse in block_parses :
-    #     titles.append(block_parse.get('Key'))
-    # number = titles
+    # DB에 등록된 기술 및 블록에 쌓인 시간 조회
+    technology = Enrollment.objects.filter(enroll_status=1)
+    title = [] # 임치된 기술 갯수
+    e_date = [] # 각 기술별 등록 날짜(그래프에 사용)
+    for tech in technology :
+        title.append(tech.title)
+        e_date.append(tech.enroll_date)
 
-    number = get_title()
     transactions = get_tx()
     blocks = get_block()
 
-    return render(request, 'groot/groot_scan.html', {'number':number, 'transactions': transactions, 'blocks':blocks})
+    # 첫 화면 그래프 출력을 위한 코드
+    today = datetime.date.today()
+    day_x = [today] # 일자(최근 10일)
+    count_y = 0 # 일자별 tx 수         
+    canvas = {} # 그래프를 그릴 최종 데이터
+    for i in range(1,10) : # 9번 실행(배열에 10개 값 쌓이도록)
+        day_x.append(today - datetime.timedelta(days=i))
+
+    # 일자별 tx 건수 JSON 배열에 추가
+    for i in range(0,9) :
+        for j in range(0, len(e_date)) :
+            if str(day_x[i]) == datetime.datetime.strftime(e_date[j], '%Y-%m-%d') : # 그래프에 출력하고자 하는 날짜와 임치일자가 같으면
+                count_y = count_y + 1   
+        canvas[day_x[i]] = count_y
+        count_y = 0 # 데이터가 쌓였기 때문에 초기화    
+    print(canvas)
+    
+    for key, val in canvas.items() :
+        plt.plot(key,val)
+    
+    # plt.show()
+    
+    return render(request, 'groot/groot_scan.html', {'number':title, 'transactions': transactions, 'blocks':blocks})
 
 def groot_block(request):
     blocks = get_block()
@@ -772,26 +790,67 @@ def groot_block(request):
         b_timestamp = block[0].get('timestamp')
         b_diff = time - b_timestamp # 시간차이 구하기
         b_diff = str(b_diff)[:-7] # milisecond 제외한 값만 보내기
-        print(b_diff)
         block[0]["timestamp"] = b_diff # 값 update
 
     return render(request, 'groot/groot_block.html', {'blocks':blocks})
 
 def groot_block_detail(request, height):
-    blocks = get_block()
-    block = []
-
     m_height = get_height()
     m_height = int(m_height) - 1  # 현재 블록의 높이(0부터 시작하므로)
+    block = [] # click 한 block 정보만 넣을 배열
+    time = datetime.datetime.now()
 
-    for i in range(0, len(blocks)) :
-        if blocks[i][0]["block_number"] == str(height) :
-            blocks[i][0]["pre_block"] = int(blocks[i][0]["block_number"]) - 1 # data 추가(이전블록 넘버)
-            blocks[i][0]["next_block"] = int(blocks[i][0]["block_number"]) + 1 # data 추가(다음블록 넘버)
-            block.append(blocks[i][0])
+    for i in range(height, height+2) :
+        if i > m_height : # 블록 높이를 초과할 경우 chaincode에 접근하지 않음(에러나니까)
             break
 
-    return render(request, 'groot/groot_block_detail.html', {'height':height, 'blo':block, 'm_height':m_height})
+        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        result = requests.get(fabric)
+        block_parse = result.json()
+
+        block_num = block_parse.get('info').get('block_number')
+        previous_hash = block_parse.get('info').get('previous_hash')
+        data_hash = block_parse.get('info').get('data_hash')
+        transactions = block_parse.get('info').get('transactions')
+
+        # 시간 변환
+        timestamp = block_parse.get('data')[0]['Timestamp'][0:-5]
+        timestamp = timestamp.split('T')
+        timestamp = ' '.join(timestamp)
+        timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+        timestamp = timestamp + datetime.timedelta(hours=9)
+        # 현재시간과의 차이 구하기
+        t_diff = time - timestamp # 시간차이 구하기
+        t_diff = str(t_diff)[:-7] # milisecond 제외한 값만 보내기
+
+        tx = block_parse.get('data')[0].get("Transaction_ID")
+        pre_block = int(block_num) - 1 # data 추가(이전블록 넘버)
+        next_block = int(block_num) + 1 # data 추가(다음블록 넘버)
+        block.append([{"block_number": block_num, "previous_hash": previous_hash, "data_hash": data_hash, "current_hash": None, "timestamp": timestamp,
+                        "t_diff": t_diff, "transactions": transactions, "tx": tx, "pre_block": pre_block, "next_block": next_block}])
+
+    if height == m_height : # 마지막 블록의 current_hash는 data_hash로 대체
+        block[0][0]["current_hash"] = block[0][0].get('data_hash')
+    else : # 아니면 다음 블록의 previous_hash 가져와서 대입
+        block[0][0]["current_hash"] = block[1][0].get('previous_hash')
+
+    # Hyperledger-Fabric에서 txid 별 data 얻어오기
+    tx = block[0][0].get('tx')
+    if tx == '' : # genesis 블록의 경우
+        block_size = 'genesis block'
+    else :
+        fabric = "http://210.107.78.150:8001/query_tx/" + tx
+        result = requests.get(fabric)
+        parse = result.json()
+
+        try :
+            data = parse.get('data').get('value')
+        except AttributeError : # 값이 없으면
+            data = "null"
+
+        block_size = str(sys.getsizeof(data)) + 'bytes' # bytes 크기로 블록 size 구하기
+
+    return render(request, 'groot/groot_block_detail.html', {'height':height, 'blo':block[0], 'm_height':m_height, 'block_size':block_size})
 
 def groot_transaction(request):
     transaction = get_tx()
@@ -807,6 +866,8 @@ def groot_transaction(request):
     return render(request, 'groot/groot_transaction.html', {'transactions':transaction})
 
 def groot_transaction_detail(request, txid):
+    time = datetime.datetime.now()
+
     # Hyperledger-Fabric에서 txid 별 data 얻어오기
     fabric = "http://210.107.78.150:8001/query_tx/" + txid
     result = requests.get(fabric)
@@ -819,13 +880,17 @@ def groot_transaction_detail(request, txid):
         data = parse.get('data').get('value')
     except AttributeError : # 값이 없으면
         data = "null"
-        
+
+    # 시간 변환    
     timestamp = timestamp.split('T')
     timestamp = ' '.join(timestamp)
     timestamp = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
     timestamp = timestamp + datetime.timedelta(hours=9)
+    # 현재시간과의 차이 구하기
+    t_diff = time - timestamp # 시간차이 구하기
+    t_diff = str(t_diff)[:-7] # milisecond 제외한 값만 보내기
 
-    return render(request, 'groot/groot_transaction_detail.html', {'txid':txid, 'block_number':block_number, 'timestamp':timestamp, 'data':data})
+    return render(request, 'groot/groot_transaction_detail.html', {'txid':txid, 'block_number':block_number, 'timestamp':timestamp, 'data':data, 't_diff':t_diff})
 
 def read(request):
     user_id = request.session['user_id']
