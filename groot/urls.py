@@ -74,6 +74,7 @@ urlpatterns = [
     # path('login3', views.login3, name="login3"),
     path('download/<int:idx>', views.download, name='download'),
     path('otpmaker/', views.otpmaker, name='otpmaker'),
-
+    path('about_us', views.about_us, name='about_us'),
+    path('about_introduce', views.about_introduce, name='about_introduce'),
 ]
 

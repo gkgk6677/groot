@@ -34,7 +34,7 @@ from .render import Render
 import os
 
 from cryptography.fernet import Fernet
-import pyotp
+# import pyotp
 
 # Create your views here.
 
@@ -1149,3 +1149,8 @@ def otpmaker(request):
             result_dict['result'] = 'Already Issued'
             return JsonResponse(result_dict)
 
+def about_us(request):
+    return render(request, 'groot/about_us.html', {})
+
+def about_introduce(request):
+    return render(request, 'groot/about_introduce.html', {})
