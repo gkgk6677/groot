@@ -378,11 +378,7 @@ def application(request):
             except FileExistsError as e:
                 pass
 
-            value = {'enroll_tech': user_enrollidx.title}
-            template = get_template('groot/application_complete.html')
-            output = template.render(value)
-
-            return HttpResponse(output)
+            return render(request, 'groot/application_complete.html', {'enroll_tech':user_enrollidx.title})
 
     else:
         create_date = datetime.date.today()
