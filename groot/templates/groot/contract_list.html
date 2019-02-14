@@ -62,8 +62,9 @@
                     <table class="table table-hover dataTables-example" width="100%" style="text-align:center;">
                         <thead>
                             <tr>
-                                <th width="15%">임치기업</th>
+                                <th>No</th>
                                 <th width="40%">임치 기술명</th>
+                                <th width="15%">임치기업</th>
                                 <th width="15%">계약기업</th>
                                 <th width="15%">계약기간</th>
                                 <th width="15%">상태</th>
@@ -73,8 +74,6 @@
                         {% for accepted_list in contract_lists %}
                             {% if accepted_list.enroll_idx.user.user_id == user_id or accepted_list.user.user_id == user_id %}
                                 <tr>
-                                    <td class="name"><span>{{accepted_list.enroll_idx.user.com_name}}</span></td>
-
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#contract{{accepted_list.enroll_idx.enroll_idx}}" style="font-weight:500;">{{accepted_list.enroll_idx.title}}</a>
                                         <!-- The Modal -->
@@ -140,7 +139,7 @@
                                             </div>
                                         </div>
                                     </td>
-
+                                    <td class="name"><span>{{accepted_list.enroll_idx.user.com_name}}</span></td>
                                     <td class="name"><span>{{accepted_list.user.com_name}}</span></td>
                                     <td>{{accepted_list.term}} 년</td>
                                     {{accepted_list.status | safe}}
@@ -148,6 +147,17 @@
                             {% endif %}
                         {% endfor %}
                         </tbody>
+                        <script>
+                            // Table 맨 앞 <td> 태그에 자동으로 인덱스 생성
+                            var tables = document.getElementsByTagName('tbody');
+                            var table = tables[tables.length - 1];
+                            var rows = table.rows;
+                            for(var i = 0, td; i < rows.length; i++){
+                                td = document.createElement('td');
+                                td.appendChild(document.createTextNode(i+1));
+                                rows[i].insertBefore(td, rows[i].firstChild);
+                            }
+                        </script>
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="request">

@@ -1,0 +1,41 @@
+.contents {
+    min-height:574px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.contents-main {
+    padding:20px 60px 20px 60px; 
+    border:2px dotted #B8B6B6;
+}
+
+.contents-body {
+    padding:20px;
+    border:2px dotted #B8B6B6;
+}
+
+.contents .contents-main .contents-main-header {
+    text-align:center;
+    color: #3189AE
+}
+.contents .contents-main .contents-main-body {
+    margin-top:25px;
+}
+
+
+
+#bye {
+    border-color: #3189AE;
+}
+#bye p {
+    color: #3189AE;
+}
+
+.contents-body table{
+    width: 100%;
+    text-align: center;
+}
+
+h4 {
+    margin:auto;
+}

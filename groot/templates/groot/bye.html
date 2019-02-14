@@ -2,14 +2,7 @@
 {% load static %}
 
 {% block css %}
-<style>
-    #bye {
-        border-color: #3189AE;
-    }
-    #bye p {
-        color: #3189AE;
-    }
-</style>
+<link rel="stylesheet" href="{%static 'css/bye.css' %}">
 {% endblock css %}
 
 {% block sidebar %}
@@ -24,36 +17,101 @@
 
 {% block content %}
     <div class="col-lg-9">
-        <div class="contents" style="min-height:574px">
-            <div>
-                <h3 class="mb-30" style="padding-left:50px;color:rgb(88, 88, 88)">회원탈퇴</h3>
-                <hr><br>
-                <div style="text-align:left;padding-left: 20px;">
-                    <h6>·&nbsp;그루트 홈페이지를 탈퇴하시게 되면 임치문서 및 관련된 모든 계약이 해지됩니다.</h6>
-                    <h6>·&nbsp;개인정보보호법 제 30조에 의거하여 탈퇴 시 개인정보를 파기하며 동일한 아이디로 재가입이 불가능합니다.</h6>
-                    <br><hr>
+        <div class="contents">
+            <h1 style="text-align:center">회원 탈퇴</h1><br>
+            <div class="contents-main">
+                <div class="contents-main-header">
+                    <h5><i class="fas fa-exclamation-triangle"></i>&nbsp;회원탈퇴 신청 전 아래 사항을 반드시 확인하시기 바랍니다.</h5>
                 </div>
-                <form id="bye_form" onsubmit="return check()" method="POST">
-                    {% csrf_token %}
-                    <div class="progress-table-wrap">
-                        <div class="progress-table" style="text-align:center;">
-                            <div class="table-head">
-                                <div style="font-weight:500;width: 150px; padding-left: 20px">비밀번호</div>
-                                <div style="padding-left: 40px" ><input type="password" id="pw1" name="pw1" ></div>
-                            </div>
-                            <br>
-                            <div class="table-head">
-                                <div style="font-weight:500;width: 150px; padding-left: 20px">비밀번호 확인</div>
-                                <div style="padding-left: 40px"><input type="password" id="pw2" name="pw2" ></div>
+                <hr>
+                <div class="contents-main-body">
+                    <h6>1. GrootChain에 탈퇴하기 위해서는 <span style="color:rgb(180, 46, 46)">이용중인 회사간 계약을 먼저 해지</span>해주시기 바랍니다.</h6>
+                    <h6>2. 회사간 계약해지를 원하실 경우 Groot 고객센터(0000-0000)에 문의해주십시오.</h6>
+                    <h6>3. 회원탈퇴시 GrootChain에 임치되어있는 <span style="color:rgb(180, 46, 46)">관련 기록은 모두 삭제되며, 복구가 불가능</span>합니다.</h6>
+                </div>
+            </div>
+            <br><br>
+            <h4 style="text-align:left;padding-left: 30px">이용중인 서비스</h4>
+            <hr>
+            <div class="row" style="padding:0 40px 0 40px">
+                <div class="col-lg-6">
+                    <div class="contents-body">
+                        <a href="application_list">
+                            <table>
+                                <tr>
+                                    <td rowspan="4"><i class="far fa-file-alt fa-5x"></i></td>
+                                    <td rowspan="2"><h4>내 임치물</h4></td>
+                                </tr>
+                                <tr></tr>
+                                <tr>
+                                    <td rowspan="2"><h4><span style="font-size: 45px">{{enroll_count}}</span>&nbsp;건</h4></td>
+                                </tr>
+                                <tr></tr>
+                            </table>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="contents-body">
+                        <a href="contract_list">
+                            <table>
+                                <tr>
+                                    <td rowspan="4" width="128"><i class="far fa-handshake fa-5x"></i></td>
+                                    <td rowspan="2"><h4>이용중인 계약</h4></td>
+                                </tr>
+                                <tr></tr>
+                                <tr>
+                                    <td rowspan="2"><h4><span style="font-size: 45px">{{contract_is_value}}</span>&nbsp;건</h4></td>
+                                </tr>
+                                <tr></tr>
+                            </table>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <h4 style="text-align:left;padding-left: 30px">GrootChain 탈퇴</h4>
+            <hr>
+            <h6 style="text-align:center;">회원탈퇴를 위해 비밀번호를 한번 더 입력해주세요.</h6><br>
+            <form id="bye_form" method="POST">
+                {% csrf_token %}
+                <div class="password">
+                    <table width="100%">
+                        <tr>
+                            <td width="45%" style="text-align: right;padding-right: 100px"><h6>비밀번호 확인</h6></td>
+                            <td width="55%" style="padding-left:0"><input type="password" id="pw1" name="pw1" style="width:250px;"></td>
+                        </tr>
+                    </table>
+                </div>
+                <hr>
+                <div style="text-align:center">
+                    <input type="button" onclick="check()" id='bye_check' value="회원탈퇴" class="genric-btn info circle arrow" style="font-size:14px;margin-top:30px">
+
+                    <!-- The Modal -->
+                    <div class="modal fade" id="byes">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title" style="color:#2092a7;margin:0">회원 탈퇴</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                
+                                <!-- Modal body -->
+                                <div class="modal-body" style="padding:30px 30px 20px 30px;">
+                                    <h6>정말 탈퇴하시겠습니까?</h6>
+                                </div>
+                                
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">취소</button>
+                                    <button type="submit" onclick="alert('탈퇴되었습니다.')" value="회원탈퇴" class="btn btn-outline-danger" style="font-size:90%;">탈퇴</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div style="text-align:center">
-                        <input type="submit" value="회원탈퇴" class="genric-btn info circle arrow" style="margin-top:30px">
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock content %}
@@ -64,30 +122,31 @@
         $('#pw1').change(function(){
             $('#pw1').css("background","");
         });
-        $('#pw2').change(function(){
-            $('#pw2').css("background","");
-        });
     })
 
     function check(){
         pw1 = $('#pw1').val();
-        pw2 = $('#pw2').val();
-        if (pw1 != "{{userinfo.user_pw}}" && pw2 != "{{userinfo.user_pw}}"){
-            alert('비밀번호가 틀렸습니다.');
+        if ("{{contract_is_value}}" != 0 ){
+            alert('이용중인 계약이 있습니다.\n먼저 계약을 해지한 후 탈퇴를 신청해주세요.');
+            return false;
+        }
+        if (pw1 == ''){
+            alert('비밀번호를 입력해주세요.');
             $('#pw1').focus();
             $('#pw1').select();
             $('#pw1').css("background","#F6A0A4");
             return false;
         }
-
-        if (pw1 != pw2) {
-            alert('두 비밀번호가 다릅니다.')
-            $('#pw2').focus();
-            $('#pw2').select();
-            $('#pw2').css("background","#F6A0A4");
+        if (pw1 != "{{userinfo.user_pw}}"){
+            alert('비밀번호를 확인해주세요.');
+            $('#pw1').focus();
+            $('#pw1').select();
+            $('#pw1').css("background","#F6A0A4");
             return false;
         }
-        alert('탈퇴되었습니다.');
+        
+        $('#bye_check').attr('data-toggle', 'modal')
+        $('#bye_check').attr('data-target', '#byes')
         return true
     }
 </script>

@@ -38,7 +38,7 @@ import matplotlib.pyplot as plt # 그래프
 import sys # 블록 크기
 
 from cryptography.fernet import Fernet
-# import pyotp
+import pyotp
 
 # Create your views here.
 
@@ -977,14 +977,25 @@ def qna(request):
     return render(request, 'groot/qna.html', {})
 
 def bye(request):
+    user_id = request.session.get('user_id')
+    userinfo = User.objects.get(user_id=user_id)
+    enroll_infos = Enrollment.objects.all()
+    contract_infos = Contract.objects.all()
+    enroll_count = 0
+    contract_is_value = 0
 
-    userinfo = User.objects.get(user_id=request.session.get('user_id'))
+    for enroll_info in enroll_infos:
+        if enroll_info.user.user_id == user_id and enroll_info.enroll_status == 1:
+            enroll_count += 1
+
+    for contract_info in contract_infos:
+        if ((contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1) or (contract_info.user.user_id == user_id and contract_info.status == 1)):
+            contract_is_value += 1
     
     if request.method == 'GET':
-        return render(request, 'groot/bye.html', {'userinfo':userinfo})
+        return render(request, 'groot/bye.html', {'enroll_count':enroll_count, 'contract_is_value':contract_is_value, 'userinfo':userinfo})
     else:
         password = request.POST['pw1']
-        password_check = request.POST['pw2']
 
         del request.session['user_id']
         userinfo.delete() 
