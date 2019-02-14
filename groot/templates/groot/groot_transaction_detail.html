@@ -50,4 +50,16 @@
 {% endblock content %}
 
 {% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script>
+    $(function() {
+        var clipboard = new Clipboard('.clipboard-btn');
+        clipboard.on('success', function(e) {
+            console.log(e);
+        });
+        clipboard.on('error', function(e) {
+            console.log(e);
+        });
+    });
+</script>
 {% endblock js %}

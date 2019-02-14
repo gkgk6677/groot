@@ -707,11 +707,11 @@ def get_tx() : # 모든 tx 불러오는 함수
 
     return groot_tscan
 
-def get_block(): # 블록정보를 가져오는 함수
+def get_block(n): # 블록정보를 가져오는 함수
     groot_bscan = []
     height = get_height()
 
-    for i in range(0, height) :
+    for i in range(height-n, height) :
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
         fabric = "http://210.107.78.150:8001/query_block/" + str(i)
         result = requests.get(fabric)
@@ -743,43 +743,63 @@ def get_block(): # 블록정보를 가져오는 함수
     return groot_bscan
 
 def groot_scan(request):
+    transactions = get_tx()
+    blocks = get_block(20)
+
     # DB에 등록된 기술 및 블록에 쌓인 시간 조회
     technology = Enrollment.objects.filter(enroll_status=1)
     title = [] # 임치된 기술 갯수
     e_date = [] # 각 기술별 등록 날짜(그래프에 사용)
     for tech in technology :
         title.append(tech.title)
-        e_date.append(tech.enroll_date)
 
-    transactions = get_tx()
-    blocks = get_block()
+    for tx in transactions : 
+        e_date.append(tx[0].get('transactions').get('timestamp'))
 
     # 첫 화면 그래프 출력을 위한 코드
     today = datetime.date.today()
     day_x = [today] # 일자(최근 10일)
     count_y = 0 # 일자별 tx 수         
     canvas = {} # 그래프를 그릴 최종 데이터
-    for i in range(1,10) : # 9번 실행(배열에 10개 값 쌓이도록)
+    x, y = [], [] # 배열 초기화
+    for i in range(1,11) : # 9번 실행(배열에 10개 값 쌓이도록)
         day_x.append(today - datetime.timedelta(days=i))
 
     # 일자별 tx 건수 JSON 배열에 추가
-    for i in range(0,9) :
+    for i in range(0,10) :
         for j in range(0, len(e_date)) :
             if str(day_x[i]) == datetime.datetime.strftime(e_date[j], '%Y-%m-%d') : # 그래프에 출력하고자 하는 날짜와 임치일자가 같으면
                 count_y = count_y + 1   
         canvas[day_x[i]] = count_y
         count_y = 0 # 데이터가 쌓였기 때문에 초기화    
-    print(canvas)
+    # print(canvas)
     
     for key, val in canvas.items() :
-        plt.plot(key,val)
-    
-    # plt.show()
+        x.append(str(key)[5:]) # 시간 자르고 day까지만 추가
+        y.append(val)
+
+    x.reverse() # 날짜순 정렬
+    y.reverse() # 값도 다시 정렬
+    fig = plt.figure() # 판 제작
+    plt.plot(x, y, 'wo-', mfc='#17354c') # white, o모양, -선, maker_face_color(구멍뚫기)
+    # plt.grid(True) # 눈금표시
+    fig.patch.set_facecolor('#17354c')
+    fig.set_size_inches(7.5, 2.6)
+
+    ax = fig.add_subplot(1,1,1)
+    ax.set_yticks([0,4,8,12,16,20]) # y축 눈금지정
+    ax.tick_params(color='white', labelcolor='white')
+    ax.spines['top'].set_color('none')
+    ax.spines['left'].set_color('white')
+    ax.spines['bottom'].set_color('white')
+    ax.spines['right'].set_color('none')
+    fig.savefig(r'C:\\Users\어다희\work_django\groot-django\groot\static\groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
     
     return render(request, 'groot/groot_scan.html', {'number':title, 'transactions': transactions, 'blocks':blocks})
 
 def groot_block(request):
-    blocks = get_block()
+    height = get_height()
+    blocks = get_block(height)
     time = datetime.datetime.now()
 
     for block in blocks :
