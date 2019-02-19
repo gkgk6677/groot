@@ -40,6 +40,10 @@ import sys # 블록 크기
 from cryptography.fernet import Fernet
 import pyotp
 
+# query문 날리기 위한 라이브러리
+from django.db import connection
+from collections import namedtuple
+
 # Create your views here.
 
 
@@ -531,12 +535,15 @@ def test(request):
 @csrf_exempt
 def issue(request):
     user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-    contract_infos = Contract.objects.all()
+    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1).order_by('-enroll_date')
+    contract_infos = Contract.objects.all().order_by('-accept_date')
     cert_infos = Certificate.objects.all()
     cont_info = []
     cert_info = []
-    cert_lists = []
+    cert_lists1 = [] # 임치 증명서에 쓰일 리스트
+    cert_lists2 = [] # 계약 증명서에 쓰일 리스트
+    flag1 = {} # 임치 증명서 발급유무를 따질 변수
+    flag2 = {} # 계약 증명서 발급유무를 따질 변수
 
     for contract_info in contract_infos:
         if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
@@ -637,14 +644,31 @@ def issue(request):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
     else :
-        for cert in cert_info :
-            if cert.cert_status == 0 : # 발급된 상태
-                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
-            else : # 발급기간 만료
-                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
-            cert_lists.append(cert)
+        for enroll_info in enroll_infos : # 임치증명서 관련
+            flag1[enroll_info.enroll_idx] = False
+            for cert in cert_info :
+                if cert.cont_idx == None : # 임치증명서에 대해서만 실행
+                    if enroll_info.enroll_idx == cert.enroll_idx.enroll_idx :
+                        flag1[enroll_info.enroll_idx] = True
+                        if cert.cert_status == 0 : # 발급된 상태
+                            cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+                        else : # 발급기간 만료
+                            cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+                        cert_lists1.append(cert)
 
-        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos':cert_lists})
+        for cont in cont_info : # 계약증명서 관련
+            flag2[cont.cont_idx] = False
+            for cert in cert_info :
+                if cert.cont_idx != None : # 계약증명서에 대해서만 실행
+                    if cont.cont_idx == cert.cont_idx.cont_idx :
+                        flag2[cont.cont_idx] = True
+                        if cert.cert_status == 0 : # 발급된 상태
+                            cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+                        else : # 발급기간 만료
+                            cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+                        cert_lists2.append(cert)
+
+        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos1':cert_lists1, 'flag1':flag1, 'cert_infos2':cert_lists2, 'flag2':flag2})
 
 class app_pdf(View) :
     def get(self, request, idx, *args, **kwargs):
