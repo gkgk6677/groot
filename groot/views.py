@@ -1072,6 +1072,13 @@ def a(request):
 
 def search_form(request):
     error = False
+    user_id = request.session['user_id']
+    contract_info = Contract.objects.all().filter(user_id=user_id)
+    cont_lists = [] # 계약에 쓰일 리스트
+    flag1 = {} # 계약 여부를 따질 변수
+
+
+
     if 'q' in request.GET:
         q = request.GET['q']
         if not q:
@@ -1080,17 +1087,53 @@ def search_form(request):
             if 's_option' in request.GET:
                 s_option = request.GET['s_option']
                 if s_option == '1':
-                    result = Enrollment.objects.filter(Q(title__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(title__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
                 elif s_option == '2' :
-                    result = Enrollment.objects.filter(Q(summary__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(summary__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
                 elif s_option == '3' :
-                    result = Enrollment.objects.filter(Q(title__icontains=q) | Q(summary__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(title__icontains=q) | Q(summary__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
 
     return render(request, 'groot/search.html', {'error': error})
 
