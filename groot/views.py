@@ -132,11 +132,16 @@ def mypage_otp(request):
 
 def need_otp(request):
     try:
-        request.session['otp']
+        request.session['user_id']
     except KeyError:
-        return HttpResponse('해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)')
+        return HttpResponse('false')
     else:
-        return True
+        try:
+            request.session['otp']
+        except KeyError:
+            return HttpResponse('해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)')
+        else:
+            return True
 
 def logout(request) :
     try:
@@ -662,7 +667,7 @@ def issue(request):
             # Hyperledger-Fabric에서 데이터 받아오기
             #    0          1        2         3        4        5           6         7          8           9           10
             # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+            fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
             result = requests.get(fabric)
 
             parses = result.json()  # JSON형식으로 parse(분석)
@@ -732,7 +737,7 @@ def issue(request):
                 # Hyperledger-Fabric에서 데이터 받아오기
                 #    0          1        2         3        4        5           6         7          8           9           10
                 # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
                 result = requests.get(fabric)
 
                 parses = result.json()  # JSON형식으로 parse(분석)
@@ -865,7 +870,7 @@ class cont_pdf(View):
 
 def get_height() : # 블록높이 가져오는 함수
     # 전체 블록의 높이와 current_hash, previous_hash 얻어오기
-    fabric_all_block = "http://210.107.78.150:8001/query_tech"
+    fabric_all_block = "http://210.107.78.147:8001/query_tech"
     result_height = requests.get(fabric_all_block)
     height_parse = result_height.json()
 
@@ -880,7 +885,7 @@ def get_tx() : # 모든 tx 불러오는 함수
 
     for i in range(1, height):
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -908,7 +913,7 @@ def get_block(n): # 블록정보를 가져오는 함수
 
     for i in range(height-n, height) :
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -939,7 +944,7 @@ def get_block(n): # 블록정보를 가져오는 함수
 
 def groot_scan(request):
     transactions = get_tx()
-    blocks = get_block(20)
+    blocks = get_block(5)
 
     # DB에 등록된 기술 및 블록에 쌓인 시간 조회
     technology = Enrollment.objects.filter(enroll_status=1)
@@ -1015,7 +1020,7 @@ def groot_block_detail(request, height):
         if i > m_height : # 블록 높이를 초과할 경우 chaincode에 접근하지 않음(에러나니까)
             break
 
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -1050,7 +1055,7 @@ def groot_block_detail(request, height):
     if tx == '' : # genesis 블록의 경우
         block_size = 'genesis block'
     else :
-        fabric = "http://210.107.78.150:8001/query_tx/" + tx
+        fabric = "http://210.107.78.147:8001/query_tx/" + tx
         result = requests.get(fabric)
         parse = result.json()
 
@@ -1080,7 +1085,7 @@ def groot_transaction_detail(request, txid):
     time = datetime.datetime.now()
 
     # Hyperledger-Fabric에서 txid 별 data 얻어오기
-    fabric = "http://210.107.78.150:8001/query_tx/" + txid
+    fabric = "http://210.107.78.147:8001/query_tx/" + txid
     result = requests.get(fabric)
     parse = result.json()
 
@@ -1171,7 +1176,7 @@ def validate_show(request, idx):
                 # Hyperledger-Fabric에서 데이터 받아오기
                 #    0          1        2         3        4        5           6         7          8           9           10
                 # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
                 result = requests.get(fabric)
 
                 parses = result.json() # JSON형식으로 parse(분석)
@@ -1443,7 +1448,7 @@ def contract_list_detail(request, idx):
             # Hyperledger fabric 연결
             #     0          1        2         3        4        5       6          7            8          9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/add_client/" + enrollment_info.title + "@" \
+            fabric = "http://210.107.78.147:8001/add_client/" + enrollment_info.title + "@" \
                      + contract_infos.user.user_id + "@" \
                      + str(contract_infos.term) + "@" + "4"
             f = requests.get(fabric)

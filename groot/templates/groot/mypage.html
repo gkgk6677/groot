@@ -175,7 +175,7 @@
                         <!-- Modal body -->
                         <div class="modal-body" style="font-size: 15px;font-weight: 500;text-align:left;padding:30px 30px 30px 30px;">
                             <p>&nbsp; 귀하의 Google 인증기 앱으로 하단의 QR코드를 스캔하여 귀하의 장치와 Groot Chain 간의 보안 링크를 생성하시기 바랍니다. 코드 스캔 후 귀하의  장치에 6자리 코드가 나타나면, 하단에 코드를 입력해주세요.</p>
-                            <p>&nbsp; 복구코드를 별도로 적어두고 안전하게 보관하세요. 추후 OTP분실 시 다시 등록할 수 있는 코드입니다.</p>
+                            <p>&nbsp; 하단 복구코드를 별도로 적어두고 안전하게 보관하세요. 추후 OTP분실 시 다시 등록할 수 있는 코드입니다.</p>
                             <form method="POST">
                                 {% csrf_token %}
                                 <div style="text-align:center;">
@@ -238,7 +238,7 @@
             success: function(result) {
                 if(result == '로그인 되었습니다.') {
                     alert('OTP가 정상적으로 발급되었습니다. 다시 로그인해주십시오.')
-                    location='main'
+                    location='/login'
                 } else {
                 alert(result)
                 }

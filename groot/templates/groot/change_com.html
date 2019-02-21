@@ -28,8 +28,8 @@
             <h3 class="mb-30" style="padding-left:40px;color:rgb(88, 88, 88)">기업정보 변경</h3>
             <hr><br>
             <div style="text-align:left;padding-left: 20px;">
-                <h6>·&nbsp;변경하고자 하는 정보를 입력 후 변경 버튼을 누르세요.</h6>
-                <h6>·&nbsp;이메일주소, 회사 주소, 연락처에 대해 변경된 사항을 입력하여 정보를 수정할 수 있습니다.</h6>
+                <p style="font-size:17px">·&nbsp;변경하고자 하는 정보를 입력 후 변경 버튼을 누르세요.<br>
+                ·&nbsp;이메일주소, 회사 주소, 연락처에 대해 변경된 사항을 입력하여 정보를 수정할 수 있습니다.</p>
                 <br><hr>
             </div>
             <div class="row">
@@ -39,22 +39,22 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="mt-10">
-                                <input type="text" id="email" name="email"  placeholder="변경할 이메일 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 이메일 주소를 입력하세요.'" class="form-control single-input">
+                                <input type="text" style="border: 1px solid rgb(109, 109, 109);" id="email" name="email"  placeholder="변경할 이메일 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 이메일 주소를 입력하세요.'" class="form-control single-input">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="mt-10">
-                                <input type="text" id="address" name="address"  placeholder="변경할 회사 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 회사 주소를 입력하세요.'" class="form-control single-input">
+                                <input type="text" style="border: 1px solid rgb(109, 109, 109);" id="address" name="address"  placeholder="변경할 회사 주소를 입력하세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 회사 주소를 입력하세요.'" class="form-control single-input">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="mt-10">
-                                <input type="text" id="phone_num" name="phone_num"  placeholder="변경할 연락처를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 연락처를 입력해주세요.'" class="form-control single-input">
+                                <input type="text" style="border: 1px solid rgb(109, 109, 109);" id="phone_num" name="phone_num"  placeholder="변경할 연락처를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '변경할 연락처를 입력해주세요.'" class="form-control single-input">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="mt-10">
-                                <button type="submit" class="genric-btn info circle" style="position:relative;top:80px;">변경</a>
+                                <button type="submit" class="genric-btn info circle" style="font-size:17px;position:relative;top:80px;">변경</a>
                             </div>
                         </div>
                     </form>

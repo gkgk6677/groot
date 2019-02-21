@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css %}
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+<style>
+	section {
+		font-family: 'Noto Sans KR', sans-serif;
+		font-size: 23px;
+	}
+</style>
 {% endblock css %}
 
 {% block content %}
@@ -13,7 +20,7 @@
 						<h3 class="title_color">회원가입</h3>
 					</div>
 
-					<form method='POST' id="joinForm" >  <!--action="#"-->
+					<form method='POST' id="joinForm" style="font-size:14px;font-weight:500;">  <!--action="#"-->
 						{% csrf_token %}
 						<div class="form-group">
 							<div class="input-group input_box d-flex flex-row">

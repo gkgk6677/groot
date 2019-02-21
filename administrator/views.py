@@ -110,7 +110,7 @@ def extend_detail(request, idx):
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/change_term/" + enroll_infos.title + "@" \
+                fabric = "http://210.107.78.147:8001/change_term/" + enroll_infos.title + "@" \
                          + str(extend_infos.term) + "@" + "3"
                 f = requests.get(fabric)
                 print(f.text)  # cmd 창에 보여질 값
@@ -240,7 +240,7 @@ def check(request, idx):
 
                 #     0          1        2         3        4        5       6          7            8          9
                 # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/add_cont/" + enrollment_info.title + "@" \
+                fabric = "http://210.107.78.147:8001/add_cont/" + enrollment_info.title + "@" \
                          + str(enrollment_info.sort_idx.sort_idx) + "@" \
                          + enrollment_info.user.com_name + "@" \
                          + str(enrollment_info.user.com_num) + "@" \

@@ -6,10 +6,13 @@
 {% endblock css %}
 
 {% block sidebar %}
-<div style="padding-left:40px;"><h1>계약서 승인 페이지</h1></div><br><hr>
-<div style="padding-right:40px;text-align:right">
-    <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/request_list">서비스 신청 현황</a>
-</div>    
+<div class="contents-header">
+    <div class="contents-header-left">계약서 승인 페이지</div>
+    <div class="contents-header-right">
+        <a href="/main"><i class="fas fa-home"></i></a> &nbsp; > &nbsp; <a href="/mypage">마이페이지</a> &nbsp; > &nbsp; <a href="/request_list">서비스 신청 현황</a>
+    </div>
+</div>
+<hr class="contents-header-hr"> 
 {% endblock sidebar %}
 
 {% block content %}
@@ -93,7 +96,7 @@
                                         <tr>
                                             <th style="text-align:center;" colspan="5">기술 계약 사유 및 사용 목적</th>
                                         </tr>
-                                        <tr>
+                                        <tr style="height:200px">
                                             <td colspan="5">{{contract_infos.reason}}</td>
                                         </tr>
                                         <tr style="text-align:center;">

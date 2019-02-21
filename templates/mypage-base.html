@@ -35,6 +35,13 @@
                 color:white;
             }
         </style>
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+        <style>
+            section {
+                font-family: 'Noto Sans KR', sans-serif;
+                font-size: 15px;
+            }
+        </style>
         {% block css %}
         {% endblock css %}
     </head>
@@ -93,7 +100,7 @@
 									</ul>
 								</li>
                                 <li class="nav-item"><a class="nav-link-other otp-nead" href="/application" >기술임치신청</a></li>
-                                <li class="nav-item"><a class="nav-link-other" href="/search" >기술검색</a></li>
+                                <li class="nav-item"><a class="nav-link-other otp-nead" href="/search" >기술검색</a></li>
                                 <li class="nav-item"><a class="nav-link-other otp-nead" href="/issue" >증명서 발급</a></li>
                                 <li class="nav-item submenu dropdown">
                                     <a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">임치문서관리</a>
@@ -180,7 +187,8 @@
 
         <!--================Footer Area =================-->
         <footer>
-            <center><span style="color:white;">Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by</span> <span><b style="color:#2F89AE">Team Groot</b></span></center>
+            <center style="margin-bottom:5px"><span style="color:white;">Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved by</span> <span><b style="color:#2F89AE">Team Groot</b></span></center>
+            <center style="color:white"><span><i class="fas fa-envelope"></i>&nbsp;&nbsp;groot-admin@groot.co.kr</span>&nbsp;&nbsp;&nbsp;&nbsp;<span><i class="fas fa-phone"></i>&nbsp;&nbsp;1544-9001</span></center>
         </footer>
         <!--================End Footer Area =================-->
 
@@ -211,6 +219,10 @@
                         if(result == '해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)') {
                             alert(result)
                             location='/mypage'
+                        }
+                        else if(result == 'false'){
+                            alert('로그인이 필요한 서비스입니다 로그인해주세요.')
+                            location='login'
                         }
                     }
                 })
