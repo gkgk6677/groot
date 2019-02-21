@@ -662,7 +662,7 @@ def issue(request):
             # Hyperledger-Fabric에서 데이터 받아오기
             #    0          1        2         3        4        5           6         7          8           9           10
             # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+            fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
             result = requests.get(fabric)
 
             parses = result.json()  # JSON형식으로 parse(분석)
@@ -732,7 +732,7 @@ def issue(request):
                 # Hyperledger-Fabric에서 데이터 받아오기
                 #    0          1        2         3        4        5           6         7          8           9           10
                 # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
                 result = requests.get(fabric)
 
                 parses = result.json()  # JSON형식으로 parse(분석)
@@ -865,7 +865,7 @@ class cont_pdf(View):
 
 def get_height() : # 블록높이 가져오는 함수
     # 전체 블록의 높이와 current_hash, previous_hash 얻어오기
-    fabric_all_block = "http://210.107.78.150:8001/query_tech"
+    fabric_all_block = "http://210.107.78.147:8001/query_tech"
     result_height = requests.get(fabric_all_block)
     height_parse = result_height.json()
 
@@ -880,7 +880,7 @@ def get_tx() : # 모든 tx 불러오는 함수
 
     for i in range(1, height):
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -908,7 +908,7 @@ def get_block(n): # 블록정보를 가져오는 함수
 
     for i in range(height-n, height) :
         # Hyperledger-Fabric에서 각 Key 별 history 얻어오기
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -939,7 +939,7 @@ def get_block(n): # 블록정보를 가져오는 함수
 
 def groot_scan(request):
     transactions = get_tx()
-    blocks = get_block(20)
+    blocks = get_block(1)
 
     # DB에 등록된 기술 및 블록에 쌓인 시간 조회
     technology = Enrollment.objects.filter(enroll_status=1)
@@ -955,7 +955,7 @@ def groot_scan(request):
     today = datetime.date.today()
     day_x = [today] # 일자(최근 10일)
     count_y = 0 # 일자별 tx 수         
-    canvas = {} # 그래프를 그릴 최종 데이터
+    canvas = [] # 그래프를 그릴 최종 데이터
     x, y = [], [] # 배열 초기화
     for i in range(1,11) : # 9번 실행(배열에 10개 값 쌓이도록)
         day_x.append(today - datetime.timedelta(days=i))
@@ -965,14 +965,15 @@ def groot_scan(request):
         for j in range(0, len(e_date)) :
             if str(day_x[i]) == datetime.datetime.strftime(e_date[j], '%Y-%m-%d') : # 그래프에 출력하고자 하는 날짜와 임치일자가 같으면
                 count_y = count_y + 1   
-        canvas[day_x[i]] = count_y
+        canvas.append({day_x[i] : count_y})
         count_y = 0 # 데이터가 쌓였기 때문에 초기화    
     # print(canvas)
     
-    for key, val in canvas.items() :
-        x.append(str(key)[5:]) # 시간 자르고 day까지만 추가
-        y.append(val)
-
+    for c in canvas :
+        for key, val in c.items() :
+            x.append(str(key)[5:]) # 시간 자르고 day까지만 추가
+            y.append(val)
+    #x.sort() #날짜 정렬
     x.reverse() # 날짜순 정렬
     y.reverse() # 값도 다시 정렬
     fig = plt.figure() # 판 제작
@@ -988,7 +989,7 @@ def groot_scan(request):
     ax.spines['left'].set_color('white')
     ax.spines['bottom'].set_color('white')
     ax.spines['right'].set_color('none')
-    fig.savefig(r'C:\\Users\Seo\Desktop\seo\My project\groot-django\groot\static\groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
+    fig.savefig(r'groot/static/groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
     
     return render(request, 'groot/groot_scan.html', {'number':title, 'transactions': transactions, 'blocks':blocks})
 
@@ -1015,7 +1016,7 @@ def groot_block_detail(request, height):
         if i > m_height : # 블록 높이를 초과할 경우 chaincode에 접근하지 않음(에러나니까)
             break
 
-        fabric = "http://210.107.78.150:8001/query_block/" + str(i)
+        fabric = "http://210.107.78.147:8001/query_block/" + str(i)
         result = requests.get(fabric)
         block_parse = result.json()
 
@@ -1050,7 +1051,7 @@ def groot_block_detail(request, height):
     if tx == '' : # genesis 블록의 경우
         block_size = 'genesis block'
     else :
-        fabric = "http://210.107.78.150:8001/query_tx/" + tx
+        fabric = "http://210.107.78.147:8001/query_tx/" + tx
         result = requests.get(fabric)
         parse = result.json()
 
@@ -1080,7 +1081,7 @@ def groot_transaction_detail(request, txid):
     time = datetime.datetime.now()
 
     # Hyperledger-Fabric에서 txid 별 data 얻어오기
-    fabric = "http://210.107.78.150:8001/query_tx/" + txid
+    fabric = "http://210.107.78.147:8001/query_tx/" + txid
     result = requests.get(fabric)
     parse = result.json()
 
@@ -1171,7 +1172,7 @@ def validate_show(request, idx):
                 # Hyperledger-Fabric에서 데이터 받아오기
                 #    0          1        2         3        4        5           6         7          8           9           10
                 # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                fabric = "http://210.107.78.147:8001/get_cert_verify/" + enroll_info.title
                 result = requests.get(fabric)
 
                 parses = result.json() # JSON형식으로 parse(분석)
@@ -1443,7 +1444,7 @@ def contract_list_detail(request, idx):
             # Hyperledger fabric 연결
             #     0          1        2         3        4        5       6          7            8          9
             # Technology   Sort   Company   Com_num   Term   Content   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/add_client/" + enrollment_info.title + "@" \
+            fabric = "http://210.107.78.147:8001/add_client/" + enrollment_info.title + "@" \
                      + contract_infos.user.user_id + "@" \
                      + str(contract_infos.term) + "@" + "4"
             f = requests.get(fabric)
