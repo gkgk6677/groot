@@ -17,23 +17,55 @@
                 </div>
 
             <div class="col-md-6">
-                    <form method="post"> <!--id="contactForm" novalidate="novalidate" class="contact_form" action="contact_process.php">-->
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디를 입력해주세요">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" id="user_pw" name="user_pw" placeholder="비밀번호를 입력해주세요">
-                            </div>
-                                <button type="submit" value="submit" class="btn login_btn" style="background: #569bb8;     border: 1px solid #3189ae; font-size: 15px;">로그인</button>
-                    </form>
-                    <div id="contact_find_info">
-                        <a href="#" >아이디 찾기</a><span class="bar">|</span>
-                        <a href="#" >패스워드 찾기</a><span class="bar">|</span>
-                        <a href="join" >회원가입</a>
+                <form method="post"> <!--id="contactForm" novalidate="novalidate" class="contact_form" action="contact_process.php">-->
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="user_id" name="user_id" placeholder="아이디를 입력해주세요">
                     </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="user_pw" name="user_pw" placeholder="비밀번호를 입력해주세요">
+                    </div>
+                    <button type="submit" value="submit" class="btn login_btn" style="background: #569bb8;border: 1px solid #3189ae; font-size: 15px;">로그인</button>
+                </form>
+                <div id="contact_find_info">
+                    <a href="#" >아이디 찾기</a><span class="bar">|</span>
+                    <a href="#" >패스워드 찾기</a><span class="bar">|</span>
+                    <a href="join" >회원가입</a>
+                </div>
             </div>
         </div>
+
+        <div class="modal fade" id="test">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="color:#2092a7">OTP 인증</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
+                        <h5><span style="color:#3189ae">OTP 인증정보</span>를 이용하고 있습니다.</h5>
+                        <h5>핸드폰 앱에 생성된 6자리 OTP 인증코드를 입력해주세요.</h5><br>
+                        <h5><i class="fas fa-envelope">문의 : </i>&nbsp;groot-admin@groot.co.kr</h5><br>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div style="text-align:center">
+                                <input type="password" name="otp" style="width: 150px;margin-right: 10px;">
+                                <input type="submit" name="otp" value="로그인" class="genric-btn info" style="border-radius: 0.25rem;padding:4px;width:15%;height: 34px;line-height:normal;">
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <br><br><br>
     </section>
 
@@ -51,12 +83,35 @@
             type: 'post',
             data: $('form').serialize(),
             success: function(result) {
-                alert(result)
+                
                 if(result == '로그인 하셨습니다.') {
+                    alert(result)
                     location='main'
                 } else if(result == '관리자 페이지로 접속합니다.') {
+                    alert(result)
                     location='administrator/index'
+                } else if(result == 'OTP입력 페이지로 이동합니다.'){
+                    $('#test').modal('show');
+                }else {
+                alert(result)
+                location.reload()
+                }
+            }
+        })
+        return false
+    })
+    $('input[type=submit]').click(function() {
+        $.ajax({
+            url: '/login_otp',
+            type: 'post',
+            data: $('form').serialize(),
+            success: function(result) {
+                
+                if(result == '로그인 되었습니다.') {
+                    alert(result)
+                    location='main'
                 } else {
+                alert(result)
                 location.reload()
                 }
             }
@@ -64,4 +119,5 @@
         return false
     })
     </script>
+    
 {% endblock js %}

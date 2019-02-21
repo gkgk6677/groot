@@ -27,6 +27,33 @@
         {% endblock css %}
     </head>
     <body>
+        <div class="modal hide" id="testmain">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="color:#2092a7">OTP 인증</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body" style="text-align:left;padding:40px 30px 30px 30px;">
+                        <h4><span style="color:#3189ae">OTP 인증정보</span>를 이용하고 있습니다.</h4>
+                        <h4>핸드폰 앱에 생성된 6자리 OTP 인증코드를 입력해주세요.</h4>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="password" name="otp">
+                            <input type="submit" name="otp">
+                        </form>
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--================Header Menu Area =================-->
         <header class="header_area">
             <div class="main_menu" id="mainNav">
@@ -49,14 +76,14 @@
 										<li class="nav-item"><a class="nav-link" href="/about_us"><i class="far fa-smile-o"></i>&nbsp;&nbsp;About Us</a></li>
 									</ul>
 								</li>
-                                <li class="nav-item"><a class="nav-link-other" href="/application" id="application" >기술임치신청</a></li>
+                                <li class="nav-item"><a class="nav-link-other otp-nead" href="/application" id="application" >기술임치신청</a></li>
                                 <li class="nav-item"><a class="nav-link-other" href="/search" id="search">기술검색</a></li>
-                                <li class="nav-item"><a class="nav-link-other" href="/issue" id="issue">증명서 발급</a></li>
+                                <li class="nav-item"><a class="nav-link-other otp-nead" href="/issue" id="issue">증명서 발급</a></li>
                                 <li class="nav-item submenu dropdown">
                                     <a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="file">임치문서관리</a>
                                     <ul class="dropdown-menu" >
-                                        <li class="nav-item"><a class="nav-link" href="/read" id="file-read"><i class="far fa-file-alt"></i>&nbsp;&nbsp;문서열람</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="/validate" id="file-validate"><i class="far fa-check-square"></i>&nbsp;&nbsp;원본검증</a></li>
+                                        <li class="nav-item"><a class="nav-link otp-nead" href="/read" id="file-read"><i class="far fa-file-alt"></i>&nbsp;&nbsp;문서열람</a></li>
+                                        <li class="nav-item"><a class="nav-link otp-nead" href="/validate" id="file-validate"><i class="far fa-check-square"></i>&nbsp;&nbsp;원본검증</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item"><a class="nav-link-other" href="/groot_scan">Groot Scan</a></li>
@@ -65,7 +92,7 @@
                                         <a class="nav-link-other" href="#" data-toggle="dropdown" style="padding-top:6px;margin-left: 2px;"><i class="fas fa-user fa-2x" style="color:#2F89AE"></i></a>
                                         <ul class="dropdown-menu">
                                             <li class="nav-item"><a class="nav-link" href="/mypage"><i class="far fa-user"></i>&nbsp;&nbsp;마이페이지</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;로그아웃</a></li>
+                                            <li class="nav-item"><a class="nav-link logout" href="/logout"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;로그아웃</a></li>
                                         </ul>
                                     </li>
                                 {% else %}
@@ -76,6 +103,7 @@
                     </div>
                 </nav>
             </div>
+            
 
         </header>
         <!--================Header Menu Area =================-->
@@ -108,6 +136,32 @@
         <script src="{% static 'vendors/counter-up/jquery.waypoints.min.js' %}"></script>
         <script src="{% static 'vendors/counter-up/jquery.counterup.min.js' %}"></script>
         <script src="{% static 'js/theme.js' %}"></script>
+        <script>
+            $(".otp-nead").click(function(){
+                $.ajax({
+                    url: '/need_otp',
+                    success: function(result) {
+                        if(result == '해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)') {
+                            alert(result)
+                            location='/mypage'
+                        }
+                    }
+                })
+            }
+            )
+            $(".logout").click(function(){
+                $.ajax({
+                    url: '/logout',
+                    success: function(result) {
+                        if(result == '로그아웃 되었습니다.') {
+                            alert(result)
+                            location='/main'
+                        }
+                    }
+                })
+            }
+            )
+        </script>
         {% block js %}
         {% endblock js %}
     </body>

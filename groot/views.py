@@ -44,12 +44,25 @@ import pyotp
 
 
 def groot(request):
-    return render(request, 'groot/main.html', {})
+    try:
+        request.session['user_id']
+    except KeyError:
+        return render(request, 'groot/main.html', {})
+    else:
+        userinfo = request.session['user_id']
+        return render(request, 'groot/main.html', {'userinfo':userinfo})
+
+
+    # if request.session['user_id']:
+    #     userinfo = request.session['user_id']
+    #     return render(request, 'groot/main.html', {'userinfo':userinfo})
+    # else:
+    #     return render(request, 'groot/main.html', {})
 
 def login(request):
     if request.method =='GET':
         return render(request, 'groot/login.html', {})
-    else:
+    else: #POST
         user_id = request.POST['user_id']
         user_pw = request.POST['user_pw']
 
@@ -62,12 +75,75 @@ def login(request):
                 request.session['user_id'] = user_id
                 return HttpResponse('관리자 페이지로 접속합니다.')
             else:
-                request.session['user_id'] = user_id
-                return HttpResponse('로그인 하셨습니다.')
+                userinfo = User.objects.get(user_id=user_id)
+                if userinfo.otp == 'Issued':
+                    return HttpResponse('OTP입력 페이지로 이동합니다.')
+                elif userinfo.otp == None:
+                    request.session['user_id'] = user_id
+                    return HttpResponse('로그인 하셨습니다.')
+
+def login_otp(request):
+    user_id = request.POST['user_id']
+    key = b'PvyhpBY3ACtXhj_wm9ueKhFSYyKAz4ntMc3p6sKYvuI='
+    cipher_suite = Fernet(key)
+    with open('otp/%s.bin' % user_id, 'rb') as file_object:
+        for line in file_object:
+            encryptedpwd = line
+    uncipher_text = cipher_suite.decrypt(encryptedpwd)
+    otpkey = bytes(uncipher_text).decode("utf-8")
+    totp = pyotp.TOTP(otpkey)
+    nowotp = totp.now()
+
+    if request.method == 'GET':
+        return render(request, 'groot/login_otp.html',{})
+    else:
+        otp = request.POST['otp']
+        if otp == nowotp:
+            request.session['otp'] = 'true'
+            request.session['user_id'] = user_id
+            return HttpResponse('로그인 되었습니다.')
+        else:
+            return HttpResponse('OTP 인증번호를 다시 확인해주십시오.')
+
+def mypage_otp(request):
+    user_id = request.session['user_id']
+    key = b'PvyhpBY3ACtXhj_wm9ueKhFSYyKAz4ntMc3p6sKYvuI='
+    cipher_suite = Fernet(key)
+    with open('otp/%s.bin' % user_id, 'rb') as file_object:
+        for line in file_object:
+            encryptedpwd = line
+    uncipher_text = cipher_suite.decrypt(encryptedpwd)
+    otpkey = bytes(uncipher_text).decode("utf-8")
+    totp = pyotp.TOTP(otpkey)
+    nowotp = totp.now()
+    otpsave = User.objects.get(user_id=user_id)
+    otp = request.POST['otp']
+    if otp == nowotp:
+        otpsave.otp = 'Issued'
+        otpsave.save()
+        del request.session['user_id']
+        return HttpResponse('로그인 되었습니다.')
+    else:
+        return HttpResponse('OTP 인증번호를 다시 확인해주십시오.')
+
+def need_otp(request):
+    try:
+        request.session['otp']
+    except KeyError:
+        return HttpResponse('해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)')
+    else:
+        return True
 
 def logout(request) :
-    del request.session['user_id']
-    return redirect('main')
+    try:
+        request.session['otp']
+    except KeyError:
+        del request.session['user_id']
+        return HttpResponse('로그아웃 되었습니다.')
+    else:
+        del request.session['user_id']
+        del request.session['otp']
+        return HttpResponse('로그아웃 되었습니다.')
 
 def join(request):
     if request.method == 'GET':
@@ -158,6 +234,17 @@ def mypage(request):
 
     return render(request, 'groot/mypage.html', {'enroll_ready_count':enroll_ready_count, 'userinfo':userinfo, 'contract_is_value':contract_is_value, 'contract_count_for_me':contract_count_for_me, 'expire_count':expire_count, 'extend_count':extend_count, 'user_id':user_id, 'contract_count':contract_count, 'enroll_count':enroll_count})
 
+def otp_pwcheck(request):
+    user_id = request.session['user_id']
+    userinfo = User.objects.get(user_id=user_id)
+    pw = request.POST['user_pw']
+    if pw == userinfo.user_pw:
+        del request.session['otp']
+        userinfo.otp = None
+        userinfo.save()
+        return HttpResponse('성공')
+    else:
+        return HttpResponse('실패')
 
 def list(request):
     user_id = request.session['user_id']
@@ -324,97 +411,106 @@ def download(request, idx):
 
 @my_login_required
 def application(request):
-    if request.method == 'POST':
-        form = EnrollmentForm(request.POST)
-        # return HttpResponse(end_date)
-        if form.is_valid():
-
-            enrollment = Enrollment()
-            u = User.objects.get(user_id=request.session.get('user_id'))
-
-            enrollment.title = form.cleaned_data['title']
-            enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
-            enrollment.term = form.cleaned_data['term']
-            enrollment.user_id = User()
-            enrollment.user = u
-            enrollment.enroll_status = 0
-            enrollment.agree_status = request.POST['agree_radio']
-            enrollment.c_date = datetime.datetime.now()
-            enrollment.summary = form.cleaned_data['summary']
-            # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
-            enrollment.save()
-
-            user_foldername = request.session.get('user_id')
-            com_foldername = u.com_name
-            user_enrollidx = Enrollment.objects.filter(user_id=user_foldername).order_by('-pk')[0]
-            files = request.FILES.getlist('my_file')
-            flist = request.POST['listing']
-            hashSHA = hashlib.sha256
-
-            try:
-                fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                
-                os.makedirs(fpath, exist_ok=True)
-                # os.chdir(fpath)
-
-                flists = flist.split(";")
-                for i in range(len(flists) - 1):
-                    rpath = fpath + '/' + flists[i]
-                    print(rpath, os.path.dirname(rpath))
-                    os.makedirs(os.path.dirname(rpath), exist_ok=True)
-
-                    with open(rpath, "wb") as f:
-                        for c in files[i].chunks():
-                            f.write(c)
-                    with open(rpath, 'rb', encoding=None) as f:
-                        textdata = f.read()
-
-                    dbfile = File()
-                    dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
-                    dbfile.folder_path = os.path.dirname(rpath)
-                    dbfile.file_hash = hashSHA(textdata).hexdigest()
-                    dbfile.file_name = files[i].name
-                    dbfile.save()
-
-            except FileExistsError as e:
-                pass
-
-            return render(request, 'groot/application_complete.html', {'enroll_tech':user_enrollidx.title})
-
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
     else:
-        create_date = datetime.date.today()
-        form = EnrollmentForm(initial={'c_date':create_date})
-        user = User.objects.get(user_id=request.session.get('user_id'))
-    return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
+        if request.method == 'POST':
+            form = EnrollmentForm(request.POST)
+            # return HttpResponse(end_date)
+            if form.is_valid():
+
+                enrollment = Enrollment()
+                u = User.objects.get(user_id=request.session.get('user_id'))
+
+                enrollment.title = form.cleaned_data['title']
+                enrollment.sort_idx = SortMst.objects.get(sort_idx = request.POST['sort_idx']) # SortMst에 들어가면서 문자로 바뀜
+                enrollment.term = form.cleaned_data['term']
+                enrollment.user_id = User()
+                enrollment.user = u
+                enrollment.enroll_status = 0
+                enrollment.agree_status = request.POST['agree_radio']
+                enrollment.c_date = datetime.datetime.now()
+                enrollment.summary = form.cleaned_data['summary']
+                # enrollment.end_date = datetime.datetime.now() + datetime.timedelta(days=365 * int(request.POST['term']))
+                enrollment.save()
+
+                user_foldername = request.session.get('user_id')
+                com_foldername = u.com_name
+                user_enrollidx = Enrollment.objects.filter(user_id=user_foldername).order_by('-pk')[0]
+                files = request.FILES.getlist('my_file')
+                flist = request.POST['listing']
+                hashSHA = hashlib.sha256
+
+                try:
+                    fpath = 'uploaded_files/'+str(enrollment.sort_idx.sort_idx)+'/' + str(com_foldername) + '/' + str(enrollment.title) #str(user_enrollidx.enroll_idx)                
+                    os.makedirs(fpath, exist_ok=True)
+                    # os.chdir(fpath)
+
+                    flists = flist.split(";")
+                    for i in range(len(flists) - 1):
+                        rpath = fpath + '/' + flists[i]
+                        print(rpath, os.path.dirname(rpath))
+                        os.makedirs(os.path.dirname(rpath), exist_ok=True)
+
+                        with open(rpath, "wb") as f:
+                            for c in files[i].chunks():
+                                f.write(c)
+                        with open(rpath, 'rb', encoding=None) as f:
+                            textdata = f.read()
+
+                        dbfile = File()
+                        dbfile.enroll_idx = Enrollment.objects.get(enroll_idx=user_enrollidx.enroll_idx)
+                        dbfile.folder_path = os.path.dirname(rpath)
+                        dbfile.file_hash = hashSHA(textdata).hexdigest()
+                        dbfile.file_name = files[i].name
+                        dbfile.save()
+
+                except FileExistsError as e:
+                    pass
+
+                return render(request, 'groot/application_complete.html', {'enroll_tech':user_enrollidx.title})
+
+        else:
+            create_date = datetime.date.today()
+            form = EnrollmentForm(initial={'c_date':create_date})
+            user = User.objects.get(user_id=request.session.get('user_id'))
+        return render(request, 'groot/application.html', {'form': form, 'user':user, 'create_date':create_date})
 
 
 def extend(request,idx):
-    enrollinfo = Enrollment.objects.get(enroll_idx=idx)
-    edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
-
-
-    if request.method == 'POST':
-
-        form = ExtendForm(request.POST)
-
-        if form.is_valid():
-            extend = Extend()
-            extend.enroll_idx = enrollinfo
-            extend.term = form.cleaned_data['term']
-            extend.status = 0
-            extend.reason = form.cleaned_data['reason']
-            extend.c_date = datetime.datetime.now()
-            extend.save()
-            enrollinfo.extend_status = 'impossible'
-            enrollinfo.save()
-
-        return redirect('mypage')
-
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
     else:
-        create_date = datetime.date.today()
+        enrollinfo = Enrollment.objects.get(enroll_idx=idx)
+        edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
 
-        form = ExtendForm()
+        if request.method == 'POST':
 
-    return render(request, 'groot/extend.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
+            form = ExtendForm(request.POST)
+
+            if form.is_valid():
+                extend = Extend()
+                extend.enroll_idx = enrollinfo
+                extend.term = form.cleaned_data['term']
+                extend.status = 0
+                extend.reason = form.cleaned_data['reason']
+                extend.c_date = datetime.datetime.now()
+                extend.save()
+                enrollinfo.extend_status = 'impossible'
+                enrollinfo.save()
+
+            return redirect('mypage')
+
+        else:
+            create_date = datetime.date.today()
+
+            form = ExtendForm()
+
+        return render(request, 'groot/extend.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
 
 
 @csrf_exempt
@@ -530,121 +626,126 @@ def test(request):
 @my_login_required
 @csrf_exempt
 def issue(request):
-    user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-    contract_infos = Contract.objects.all()
-    cert_infos = Certificate.objects.all()
-    cont_info = []
-    cert_info = []
-    cert_lists = []
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
+    else:
+        user_id = request.session['user_id']
+        enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
+        contract_infos = Contract.objects.all()
+        cert_infos = Certificate.objects.all()
+        cont_info = []
+        cert_info = []
+        cert_lists = []
 
-    for contract_info in contract_infos:
-        if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
-            cont_info.append(contract_info)
+        for contract_info in contract_infos:
+            if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
+                cont_info.append(contract_info)
 
-    for c_info in cert_infos:
-        if c_info.enroll_idx.user.user_id == user_id :
-            cert_info.append(c_info)
+        for c_info in cert_infos:
+            if c_info.enroll_idx.user.user_id == user_id :
+                cert_info.append(c_info)
 
-    if request.method == 'POST' :
-        enroll_idx = request.POST.get('enroll_id')
-        cont_idx = request.POST.get('cont_id')
-        enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
+        if request.method == 'POST' :
+            enroll_idx = request.POST.get('enroll_id')
+            cont_idx = request.POST.get('cont_id')
+            enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
 
-        # Hyperledger-Fabric에서 데이터 받아오기
-        #    0          1        2         3        4        5           6         7          8           9           10
-        # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-        fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
-        result = requests.get(fabric)
+            # Hyperledger-Fabric에서 데이터 받아오기
+            #    0          1        2         3        4        5           6         7          8           9           10
+            # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
+            fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+            result = requests.get(fabric)
 
-        parses = result.json()  # JSON형식으로 parse(분석)
-        block = None
-        # [
-        #   {
-        #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
-        #       "Value":{
-        #                  "technology":"TEST2","sort":13,
-        #                   "company":"LG","com_num":156181987,"term":5,
-        #                   "content":["sldkfjs"],
-        #                   "client":{
-        #                       "dahee":3
-        #                   },
-        #                  "enroll_date":"2018.01.11",
-        #                  "status":1,
-        #       },
-        #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
-        #       "IsDelete":"false"
-        #   },
-        #   { ... }, { ... }, ...
-        #  ]
+            parses = result.json()  # JSON형식으로 parse(분석)
+            block = None
+            # [
+            #   {
+            #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
+            #       "Value":{
+            #                  "technology":"TEST2","sort":13,
+            #                   "company":"LG","com_num":156181987,"term":5,
+            #                   "content":["sldkfjs"],
+            #                   "client":{
+            #                       "dahee":3
+            #                   },
+            #                  "enroll_date":"2018.01.11",
+            #                  "status":1,
+            #       },
+            #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
+            #       "IsDelete":"false"
+            #   },
+            #   { ... }, { ... }, ...
+            #  ]
 
-        try :
-            # 임치 증명서 일 때
-            if cont_idx == "0" :
-                ck_val = 1
-                type = 0
-                for parse in parses:
-                    txid = parse.get('TxId')
-                    if txid == enroll_info.enroll_tx : # txid가 DB에 저장되어있는 enroll_tx와 일치 할 경우 해당 JSON을 block에 저장!
-                        block = parse
+            try :
+                # 임치 증명서 일 때
+                if cont_idx == "0" :
+                    ck_val = 1
+                    type = 0
+                    for parse in parses:
+                        txid = parse.get('TxId')
+                        if txid == enroll_info.enroll_tx : # txid가 DB에 저장되어있는 enroll_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                            block = parse
 
-                cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=None)
-                if cert_info.end_date <= datetime.datetime.now():
-                    ck_val = 2  # 유효기간보다 날짜가 더 크면 만료
+                    cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=None)
+                    if cert_info.end_date <= datetime.datetime.now():
+                        ck_val = 2  # 유효기간보다 날짜가 더 크면 만료
 
-            # 계약 증명서 일 때
-            elif cont_idx != "0" :
-                cont_info = Contract.objects.get(cont_idx=cont_idx)
-                ck_val = 1
-                type = 1
+                # 계약 증명서 일 때
+                elif cont_idx != "0" :
+                    cont_info = Contract.objects.get(cont_idx=cont_idx)
+                    ck_val = 1
+                    type = 1
 
-                for parse in parses:
-                    txid = parse.get('TxId')
-                    if txid == cont_info.contract_tx : # txid가 DB에 저장되어있는 cont_tx와 일치 할 경우 해당 JSON을 block에 저장!
-                        block = parse
+                    for parse in parses:
+                        txid = parse.get('TxId')
+                        if txid == cont_info.contract_tx : # txid가 DB에 저장되어있는 cont_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                            block = parse
 
-                cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=cont_idx)
-                if cert_info.end_date <= datetime.datetime.now():
-                    ck_val = 2
+                    cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=cont_idx)
+                    if cert_info.end_date <= datetime.datetime.now():
+                        ck_val = 2
 
-        except Certificate.DoesNotExist:
-            ck_val = 0
+            except Certificate.DoesNotExist:
+                ck_val = 0
 
-            certificate = Certificate()
-            certificate.enroll_idx = Enrollment.objects.get(enroll_idx=enroll_idx)  # foreign key이므로!
-            certificate.cert_status = 0
-            if cont_idx != "0" :
-                certificate.cont_idx = Contract.objects.get(cont_idx=cont_idx)  # foreign key이므로!
-            else :
-                pass
-            certificate.term = 30
-            certificate.c_date = datetime.datetime.now()
-            certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=30)
+                certificate = Certificate()
+                certificate.enroll_idx = Enrollment.objects.get(enroll_idx=enroll_idx)  # foreign key이므로!
+                certificate.cert_status = 0
+                if cont_idx != "0" :
+                    certificate.cont_idx = Contract.objects.get(cont_idx=cont_idx)  # foreign key이므로!
+                else :
+                    pass
+                certificate.term = 30
+                certificate.c_date = datetime.datetime.now()
+                certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=30)
 
-            # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
-            unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
-            unix_time = [str(i) for i in str(unix_time)]
-            tx = block.get('TxId')
-            tx = [str(i) for i in str(tx)]
-            random_val = unix_time + tx
-            random_val = random.sample(random_val, len(random_val))
-            certificate.cert_idx = ''.join(random_val)
+                # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
+                unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
+                unix_time = [str(i) for i in str(unix_time)]
+                tx = block.get('TxId')
+                tx = [str(i) for i in str(tx)]
+                random_val = unix_time + tx
+                random_val = random.sample(random_val, len(random_val))
+                certificate.cert_idx = ''.join(random_val)
 
-            print(''.join(random_val))
-            certificate.save()
+                print(''.join(random_val))
+                certificate.save()
 
-        context = {'ck_val':ck_val, 'type':type}
-        return HttpResponse(json.dumps(context), content_type='application/json')
+            context = {'ck_val':ck_val, 'type':type}
+            return HttpResponse(json.dumps(context), content_type='application/json')
 
-    else :
-        for cert in cert_info :
-            if cert.cert_status == 0 : # 발급된 상태
-                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
-            else : # 발급기간 만료
-                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
-            cert_lists.append(cert)
+        else :
+            for cert in cert_info :
+                if cert.cert_status == 0 : # 발급된 상태
+                    cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+                else : # 발급기간 만료
+                    cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+                cert_lists.append(cert)
 
-        return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos':cert_lists})
+            return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos':cert_lists})
 
 class app_pdf(View) :
     def get(self, request, idx, *args, **kwargs):
@@ -793,7 +894,7 @@ def groot_scan(request):
     ax.spines['left'].set_color('white')
     ax.spines['bottom'].set_color('white')
     ax.spines['right'].set_color('none')
-    fig.savefig(r'C:\\Users\어다희\work_django\groot-django\groot\static\groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
+    fig.savefig(r'C:\\Users\Seo\Desktop\seo\My project\groot-django\groot\static\groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
     
     return render(request, 'groot/groot_scan.html', {'number':title, 'transactions': transactions, 'blocks':blocks})
 
@@ -908,89 +1009,97 @@ def groot_transaction_detail(request, txid):
 
     return render(request, 'groot/groot_transaction_detail.html', {'txid':txid, 'block_number':block_number, 'timestamp':timestamp, 'data':data, 't_diff':t_diff})
 
+@my_login_required
 def read(request):
-    user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-    contract_infos = Contract.objects.all().filter(user_id=user_id)
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
+    else:
+        user_id = request.session['user_id']
+        enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
+        contract_infos = Contract.objects.all().filter(user_id=user_id)
 
-    if request.method == 'POST' :
-        enroll_idx = request.POST.get('enroll_id')
-        cont_idx = request.POST.get('cont_id')
-        enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
-    else :
-        return render(request, 'groot/read.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
+        if request.method == 'POST' :
+            enroll_idx = request.POST.get('enroll_id')
+            cont_idx = request.POST.get('cont_id')
+            enroll_info = Enrollment.objects.get(enroll_idx=enroll_idx)
+        else :
+            return render(request, 'groot/read.html', {'enroll_infos': enroll_infos, 'contract_infos': contract_infos})
 
 
 @my_login_required
 def validate_intro(request):
-    user_id = request.session['user_id']
-    enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-
-    return render(request, 'groot/validate_intro.html', {'enroll_infos': enroll_infos})
-
-def validate_show(request, idx):
-    user_id = request.session['user_id']
-    enroll_info = Enrollment.objects.get(enroll_idx=idx)
-    file_info = File.objects.all().filter(enroll_idx=idx)
-    if request.method == 'POST' :
-
-        upload_file = request.FILES['validate_file']
-        hashSHA = hashlib.sha256
-
-        try:
-            path = 'validate\\' + user_id + '\\' + str(idx)
-            os.makedirs(path, exist_ok=True) # 다중파일 경로 생성(기존 파일이 존재해도 애러발생 안시킴)
-
-            with open(path + '\\' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
-                for chunk in upload_file.chunks():  # chunks가 호출되면 파일의 크기가 얼마든 다 쪼개냄
-                    file.write(chunk)  # 그걸 for문으로 청크청크해서 write해줌(장고 공식문서에 나와있는 파일 업로드 하는 코드)
-        except FileExistsError:
-            pass
-        else :
-            with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
-                textdata = file.read()
-
-            hash = hashSHA(textdata).hexdigest()
-            name = upload_file.name
-            print(hash)
-            template = get_template('groot/validate_show.html')
-            os.remove(path + '\\' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
-
-            # Hyperledger-Fabric에서 데이터 받아오기
-            #    0          1        2         3        4        5           6         7          8           9           10
-            # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
-            fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
-            result = requests.get(fabric)
-
-            parses = result.json() # JSON형식으로 parse(분석)
-            method = 'post'
-            for parse in parses:
-                txid = parse.get('TxId')
-                if txid == enroll_info.enroll_tx : # 파일등록시 쌓인 content 값 가져오기
-                    content = parse.get('Value').get('content')
-
-            try: # 블록에 접근해서 값 비교하기
-                if content[name] == hash : # 해쉬 같으면 원본 맞음
-                    value = {'method':method, 'file_name': name, 'ck_val': 0, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx, 'enroll_info' : enroll_info, 'file_info':file_info}
-                    return render(request, 'groot/validate_show.html', value)
-                else : # 해쉬 다르면 위변조 됨
-                    value = {'method':method, 'file_name': name, 'ck_val': 1, 'true_hash': content[name], 'val_hash': hash, 'enroll_info' : enroll_info,'enroll_idx': idx, 'file_info':file_info}
-                    return render(request, 'groot/validate_show.html', value)
-            except KeyError : # KeyError는 없는 문서
-                value = {'method':method, 'file_name': name, 'ck_val': 2, 'enroll_idx': idx, 'file_info': file_info, 'enroll_info' : enroll_info,}
-                return render(request, 'groot/validate_show.html', value)
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
     else:
-        method = 'get'
-        return render(request, 'groot/validate_show.html',{'file_info':file_info,'enroll_info' : enroll_info, 'method':method })
+        user_id = request.session['user_id']
+        enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
 
-def news(request):
-    return render(request, 'groot/news.html', {})
+        return render(request, 'groot/validate_intro.html', {'enroll_infos': enroll_infos})
 
-def faq(request):
-    return render(request, 'groot/faq.html', {})
+@my_login_required
+def validate_show(request, idx):
+    try:
+        request.session['otp']
+    except KeyError:
+        return redirect('/wrong')
+    else:
+        user_id = request.session['user_id']
+        enroll_info = Enrollment.objects.get(enroll_idx=idx)
+        file_info = File.objects.all().filter(enroll_idx=idx)
+        if request.method == 'POST' :
 
-def qna(request):
-    return render(request, 'groot/qna.html', {})
+            upload_file = request.FILES['validate_file']
+            hashSHA = hashlib.sha256
+
+            try:
+                path = 'validate\\' + user_id + '\\' + str(idx)
+                os.makedirs(path, exist_ok=True) # 다중파일 경로 생성(기존 파일이 존재해도 애러발생 안시킴)
+
+                with open(path + '\\' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
+                    for chunk in upload_file.chunks():  # chunks가 호출되면 파일의 크기가 얼마든 다 쪼개냄
+                        file.write(chunk)  # 그걸 for문으로 청크청크해서 write해줌(장고 공식문서에 나와있는 파일 업로드 하는 코드)
+            except FileExistsError:
+                pass
+            else :
+                with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
+                    textdata = file.read()
+
+                hash = hashSHA(textdata).hexdigest()
+                name = upload_file.name
+                print(hash)
+                template = get_template('groot/validate_show.html')
+                os.remove(path + '\\' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
+
+                # Hyperledger-Fabric에서 데이터 받아오기
+                #    0          1        2         3        4        5           6         7          8           9           10
+                # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
+                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                result = requests.get(fabric)
+
+                parses = result.json() # JSON형식으로 parse(분석)
+                method = 'post'
+                for parse in parses:
+                    txid = parse.get('TxId')
+                    if txid == enroll_info.enroll_tx : # 파일등록시 쌓인 content 값 가져오기
+                        content = parse.get('Value').get('content')
+
+                try: # 블록에 접근해서 값 비교하기
+                    if content[name] == hash : # 해쉬 같으면 원본 맞음
+                        value = {'method':method, 'file_name': name, 'ck_val': 0, 'true_hash': content[name], 'val_hash': hash, 'enroll_idx': idx, 'enroll_info' : enroll_info, 'file_info':file_info}
+                        return render(request, 'groot/validate_show.html', value)
+                    else : # 해쉬 다르면 위변조 됨
+                        value = {'method':method, 'file_name': name, 'ck_val': 1, 'true_hash': content[name], 'val_hash': hash, 'enroll_info' : enroll_info,'enroll_idx': idx, 'file_info':file_info}
+                        return render(request, 'groot/validate_show.html', value)
+                except KeyError : # KeyError는 없는 문서
+                    value = {'method':method, 'file_name': name, 'ck_val': 2, 'enroll_idx': idx, 'file_info': file_info, 'enroll_info' : enroll_info,}
+                    return render(request, 'groot/validate_show.html', value)
+        else:
+            method = 'get'
+            return render(request, 'groot/validate_show.html',{'file_info':file_info,'enroll_info' : enroll_info, 'method':method })
 
 def bye(request):
     user_id = request.session.get('user_id')
@@ -1042,9 +1151,6 @@ def expire(request,idx):
         form = ExpireForm()
 
     return render(request, 'groot/expire.html', {'edate':edate,'enrollinfo': enrollinfo,'form': form,'create_date':create_date})
-
-def a(request):
-    return render(request, 'groot/a.html', {})
 
 def search_form(request):
     error = False
@@ -1233,10 +1339,11 @@ def otpmaker(request):
         result_dict = {}
 
         if user_info.otp == None:
-            otpsave.otp = "Issued"
-            otpsave.save()
+            # otpsave.otp = "Issued"
+            # otpsave.save()
             data = pyotp.totp.TOTP(otp).provisioning_uri(user_id, issuer_name="Groot OTP App")
-            output = {"otp": otp, 'data': data}
+            validates = pyotp.totp.TOTP(otp).now()
+            output = {"otp": otp, 'data': data, 'validates':validates}
             return JsonResponse(output)
         else:
             result_dict['result'] = 'Already Issued'
@@ -1247,3 +1354,6 @@ def about_us(request):
 
 def about_introduce(request):
     return render(request, 'groot/about_introduce.html', {})
+
+def wrong(request):
+    return render(request, 'groot/wrong.html', {})

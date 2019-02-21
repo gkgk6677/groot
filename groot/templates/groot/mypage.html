@@ -40,19 +40,55 @@
                     </div>
                     <div class="inner-container" style="margin-bottom:20px;padding:30px 20px 35px 20px;">
                         <div class="mb-20">
-                            <span style="float: left;padding-left: 15px;"><h3><i class="fas fa-key"></i>&nbsp;&nbsp;OTP 발급</h3></span>
+                            <span style="float: left;padding-left: 15px;">
+                                <h3>
+                                    <i class="fas fa-key"></i>&nbsp;&nbsp;OTP 발급
+                                    {% if userinfo.otp %}
+                                        <span style="border-radius: 1rem; position:relative;top:-2px; margin-bottom: 10px; margin-left: 10px; padding: 4px 12px 4px 12px; font-size: 15px; background-color: rgb(25, 139, 25) ;color:white">이용중</span>
+                                    {% endif %}
+                                </h3>
+                            </span>
                         </div><hr>
-                        <div style="font-weight:500;padding:0 0 20px 0;">
+                        <div style="font-weight:500;padding:0 0 10px 10px;">
                             <span style="font-size:15px;padding-left: 5px;">OTP 발급을 통해 그루트 서비스를 보다 안전하게 이용하세요.</span><br>
-                            <span style="font-size:15px;padding-left: 5px;">최초 1회만 발급 가능합니다.</span>
+                            <span style="font-size:15px;padding-left: 5px;">인증번호 분실시 Groot고객센터로 문의하세요.</span><br>
+                            <span style="font-size:15px;padding-left: 5px;"><i class="fas fa-envelope"></i>&nbsp;groot-admin@groot.co.kr</span>
                         </div>
-                        <button id="otp_issue" class="genric-btn info circle" style="font-size:14px;position: relative; right: -280px;">발급하기 </button>
-                        {% csrf_token %}
-                        <div id="qrcode">
-                        </div>
-                        <div id="otp">
-                        </div>
+                        {% if userinfo.otp %}
+                            <button data-toggle="modal" data-target="#otp_expire" class="genric-btn danger circle" style="font-size:14px;position: relative; right: -280px;">해제하기</button>
+                        {% else %}
+                            <button id="otp_issue" class="genric-btn info circle" style="font-size:14px;position: relative; right: -280px;">발급하기</button>
+                        {% endif %}
                     </div>
+                    <div class="modal fade" id="otp_expire">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" style="color:#db2525">OTP 해제</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    
+                                    <!-- Modal body -->
+                                    <div class="modal-body" style="font-size: 15px;font-weight: 500;text-align:left;padding:30px 30px 30px 30px;">
+                                        <p>&nbsp;Groot Chain이 제공하는 모든 서비스를 이용하기 위해서는 OTP 인증이 반드시 필요합니다.</p>
+                                        <p>&nbsp;OTP 해지를 원하실 경우 고객정보 확인을 위해 비밀번호를 다시 한 번 입력해주세요.</p><br>
+                                        <form method="POST" id="pw_check">
+                                            {% csrf_token %}
+                                            <div style="text-align:center">
+                                                <input type="password" name="user_pw" style="width:170px;margin-right:10px">
+                                                <input type="submit" id="_check" name="pw" value="해제" class="genric-btn danger" style="border-radius: 0.25rem;padding:4px;width:14%;height: 34px;line-height:normal;">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
                 <div class="col-lg-5">
                     <div class="inner-container" style="margin-bottom:40px;padding:30px 20px 80px 20px;">
@@ -127,18 +163,48 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="otpmodal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="color:#2092a7"><i class="fas fa-key"></i>&nbsp;OTP 발급</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- Modal body -->
+                        <div class="modal-body" style="font-size: 15px;font-weight: 500;text-align:left;padding:30px 30px 30px 30px;">
+                            <p>&nbsp; 귀하의 Google 인증기 앱으로 하단의 QR코드를 스캔하여 귀하의 장치와 Groot Chain 간의 보안 링크를 생성하시기 바랍니다. 코드 스캔 후 귀하의  장치에 6자리 코드가 나타나면, 하단에 코드를 입력해주세요.</p>
+                            <p>&nbsp; 복구코드를 별도로 적어두고 안전하게 보관하세요. 추후 OTP분실 시 다시 등록할 수 있는 코드입니다.</p>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div style="text-align:center;">
+                                    <div id="otp"></div>
+                                    <div id="qrcode"></div><br>
+                                    보안코드 : <input type="text" name="otp">
+                                    <input type="button" id="_optss" name="otpss" value="등록" class="genric-btn info" style="border-radius: 0.25rem;padding:4px;width:14%;height: 34px;line-height:normal;">
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-info" style="font-size:90%; border-color:#39bfd6;" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
 
 {% block js %}
-<script type="text/javascript" src="https://www.webtoolkitonline.com/js/jquery.qrcode-0.6.0.min.js"></script>
+<script type="text/javascript" src="{% static 'js/jquery.qrcode-0.6.0.min.js' %}"></script>
 <script type="text/javascript">
-                 $('#otp_issue').click(function(){
-         $.ajax({
+    $('#otp_issue').click(function(){
+        $.ajax({
             url:'/otpmaker/',
             type:'post',
-            data:$('form').serialize(),
             success: function(res){
                 if (res.result == 'Already Issued'){
                     alert("이미 발급을 받았습니다. 관리자에게 문의하세요.")
@@ -146,21 +212,58 @@
                     var qrcodetext =  res.data
 
                     if (qrcodetext.length != 0) {
-                            $("#qrcode").empty();
-                            $("#qrcode").qrcode({
-                                render : 'image',
-                                color: 'black',
-                                text: qrcodetext
-                                });
-                            }else{
-                               return false;
-                            }
-                    $('#otp').append(`<h2 style="color:#0062cc;">${res.otp}</h2>`)
+                        $('#otpmodal').modal('show');
+                        $("#qrcode").empty();
+                        $("#qrcode").qrcode({
+                            render : 'image',
+                            color: 'black',
+                            text: qrcodetext
+                            });
+                    }else{
+                        return false;
                     }
+                $("#otp").empty();
+                $('#otp').append(`<h4 style="color:#3189AE;">${res.otp}</h4>`)
                 }
-            })
-            return false
-         })
+            }
+        })
+        return false
+    })
+    //$('input[type=submit]').click(function() {
+    $('#_optss').click(function() {
+        $.ajax({
+            url: '/mypage_otp',
+            type: 'post',
+            data: $('form').serialize(),
+            success: function(result) {
+                if(result == '로그인 되었습니다.') {
+                    alert('OTP가 정상적으로 발급되었습니다. 다시 로그인해주십시오.')
+                    location='main'
+                } else {
+                alert(result)
+                }
+            },
+        })
+        return false
+    })
+    $('#_check').click(function() {
+        $.ajax({
+            url: '/otp_pwcheck',
+            type: 'post',
+            data: $('#pw_check').serialize(),
+            success: function(result) {
+                if(result == '성공') {
+                    alert('OTP 서비스가 정상적으로 해지되었습니다.')
+                    location='mypage'
+                } else {
+                alert('비밀번호를 다시 확인해주십시오.')
+                }
+            },
+        })
+        return false
+    })
+
+    
 </script>
 
 {% endblock js %}

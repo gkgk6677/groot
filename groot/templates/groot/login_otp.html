@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% csrf_token %}
+{% load static %}
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+ <!--================Contact Area =================-->
+
+    <section class="contact_area p_200" ><br>
+        <div class="container" style="background-color: #f5f3f1;">
+            <div class="align-items-center">
+                <div class="bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
+
+                    <div class="text-center">
+                        <h2><span style="color:#3189ae">OTP 인증정보</span>를 이용하고 있습니다.</h2>
+                        <h2>핸드폰 앱에 생성된 6자리 OTP 인증코드를 입력해주세요.</h2>
+                        <br><br>
+                        {{user_id}}
+                    </div>
+                </div>
+
+            <div class="col-md-6">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="otp" name="otp" placeholder="OTP 6자리를 입력해주세요">
+                    </div><br>
+                    <button type="submit" value="submit" class="btn login_btn" style="background: #569bb8;border: 1px solid #3189ae; font-size: 15px;">로그인</button>
+                </form>
+            </div>
+        </div>
+        <br><br><br>
+    </section>
+
+<!--================Contact Area =================-->
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'js/contact.js' %}"></script>
+{% endblock js %}
