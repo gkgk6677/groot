@@ -175,7 +175,7 @@
                         {% for list in contract_infos %}
                             {% if list.enroll_idx.user.user_id == user_id and list.status == 0 %}
                                 <tr>
-                                    <td><a href="contract_list/{{list.cont_idx}}" style="font-weight:500;">{{list.enroll_idx.title}}</a></td>
+                                    <td><a href="contract_list/{{list.cont_idx}}" class="otp-nead" style="font-weight:500;">{{list.enroll_idx.title}}</a></td>
                                     <td class="name"><span>{{list.user.com_name}}</span></td>
                                     <td>{{list.term}}</td>
                                     <td>{{list.c_date}}</td>
@@ -208,10 +208,22 @@
 <script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
 
 <script>
-$(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        "lengthMenu": [ 5, 10, 15 ]
+    $(document).ready(function() {
+        $('.dataTables-example').DataTable({
+            "lengthMenu": [ 5, 10, 15 ]
+        });
     });
-});
+    $(".otp-nead").click(function(){
+        $.ajax({
+            url: '/need_otp',
+            success: function(result) {
+                if(result == '해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)') {
+                    // alert(result)
+                    location='/mypage'
+                }
+            }
+        })
+    }
+    )
 </script>
 {% endblock js %}

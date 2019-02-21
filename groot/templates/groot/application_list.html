@@ -149,7 +149,7 @@
                                                 <thead>
                                                     <tr>
                                                         <td width="24%" style="text-align:left;padding:20px">
-                                                            <div style="height:150px;overflow-y:auto">
+                                                            <div style="font-size: 15px;font-weight: 500;height:150px;overflow-y:auto">
                                                                 {% for list in file_list %}
                                                                     {% if list.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
                                                                         <p><img src="https://img.icons8.com/ios/50/000000/document.png" style="width:20px"></i>&nbsp;&nbsp;{{list.file_name}}</p>
@@ -226,7 +226,7 @@
                                         </div>
                                     </div>
                                 {% else %}
-                                    <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button" style="padding: 6px 3px 6px 3px; font-size:80%; border-color:#39bfd6;width:50px" onclick="ck({{enroll_info.enroll_idx}})"> 연장 </button> 
+                                    <button type="submit" id="extend/{{enroll_info.enroll_idx}}" extend_id="{{enroll_info.enroll_idx}}" class="btn btn-outline-primary ck_button otp-nead" style="padding: 6px 3px 6px 3px; font-size:80%; border-color:#39bfd6;width:50px" onclick="ck({{enroll_info.enroll_idx}})"> 연장 </button> 
                                 {% endif %}
                             
                                 {% if enroll_info.expire_status == 'impossible' %}
@@ -274,7 +274,7 @@
                                         </div>
                                     </div>
                                 {% else %}
-                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="font-size:80%; border-color:#00c8a9;width:50px" onclick="ck2({{enroll_info.enroll_idx}})"> 해지 </button>
+                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info otp-nead" style="font-size:80%; border-color:#00c8a9;width:50px" onclick="ck2({{enroll_info.enroll_idx}})"> 해지 </button>
                                 {% endif %}
                             {% elif enroll_info.enroll_status == "<div style='color:green'>대기중</div>" %}
                                 -
@@ -387,10 +387,22 @@
 <script src="{% static 'datatables-responsive/dataTables.responsive.js' %}"></script>
 
 <script>
-$(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        "lengthMenu": [ 5,10,15 ]
+    $(document).ready(function() {
+        $('.dataTables-example').DataTable({
+            "lengthMenu": [ 5,10,15 ]
+        });
     });
-});
+    $(".otp-nead").click(function(){
+        $.ajax({
+            url: '/need_otp',
+            success: function(result) {
+                if(result == '해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)') {
+                    // alert(result)
+                    location='/mypage'
+                }
+            }
+        })
+    }
+    )
 </script>
 {% endblock js %}
