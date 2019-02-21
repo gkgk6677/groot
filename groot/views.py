@@ -960,7 +960,7 @@ def groot_scan(request):
     today = datetime.date.today()
     day_x = [today] # 일자(최근 10일)
     count_y = 0 # 일자별 tx 수         
-    canvas = {} # 그래프를 그릴 최종 데이터
+    canvas = [] # 그래프를 그릴 최종 데이터
     x, y = [], [] # 배열 초기화
     for i in range(1,11) : # 9번 실행(배열에 10개 값 쌓이도록)
         day_x.append(today - datetime.timedelta(days=i))
@@ -970,14 +970,15 @@ def groot_scan(request):
         for j in range(0, len(e_date)) :
             if str(day_x[i]) == datetime.datetime.strftime(e_date[j], '%Y-%m-%d') : # 그래프에 출력하고자 하는 날짜와 임치일자가 같으면
                 count_y = count_y + 1   
-        canvas[day_x[i]] = count_y
+        canvas.append({day_x[i] : count_y})
         count_y = 0 # 데이터가 쌓였기 때문에 초기화    
     # print(canvas)
     
-    for key, val in canvas.items() :
-        x.append(str(key)[5:]) # 시간 자르고 day까지만 추가
-        y.append(val)
-
+    for c in canvas :
+        for key, val in c.items() :
+            x.append(str(key)[5:]) # 시간 자르고 day까지만 추가
+            y.append(val)
+    #x.sort() #날짜 정렬
     x.reverse() # 날짜순 정렬
     y.reverse() # 값도 다시 정렬
     fig = plt.figure() # 판 제작
@@ -993,7 +994,7 @@ def groot_scan(request):
     ax.spines['left'].set_color('white')
     ax.spines['bottom'].set_color('white')
     ax.spines['right'].set_color('none')
-    fig.savefig(r'C:\\Users\Seo\Desktop\seo\My project\groot-django\groot\static\groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
+    fig.savefig(r'groot/static/groot_scan.png', facecolor=fig.get_facecolor(), transparent=True)
     
     return render(request, 'groot/groot_scan.html', {'number':title, 'transactions': transactions, 'blocks':blocks})
 
