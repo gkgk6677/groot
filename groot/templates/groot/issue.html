@@ -68,22 +68,24 @@
                                             <td>{{enroll_info.end_date}}</td>
                                             <td>
                                                 {% csrf_token %}
-                                                {% if cert_infos %}
-                                                    {% for cert_info in cert_infos %}
-                                                        {% if cert_info.enroll_idx.enroll_idx == enroll_info.enroll_idx %}
-                                                            {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
-                                                                {{cert_info.cert_status | safe}}
-                                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                                            {% else %}
-                                                                <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                                {{cert_info.cert_status | safe}}
+                                                {% for key, value in flag1.items %}
+                                                    {% if key == enroll_info.enroll_idx and value == True %}
+                                                        {% for cert_info in cert_infos1 %}
+                                                            {% if cert_info.enroll_idx.enroll_idx == enroll_info.enroll_idx and cert_info.cont_idx == None %}
+                                                                {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
+                                                                    {{cert_info.cert_status | safe}}
+                                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                                {% else %}
+                                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                                    {{cert_info.cert_status | safe}}
+                                                                {% endif %}
                                                             {% endif %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% else %}
-                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                    <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                                {% endif %}
+                                                        {% endfor %}
+                                                    {% elif key == enroll_info.enroll_idx and value == False %}
+                                                        <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-primary" style="width: 70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                        <button type="submit" trid="{{enroll_info.enroll_idx}}" cont_id="0" class="btn btn-outline-info" style="width: 70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -122,29 +124,31 @@
 
                                     <tbody>
                                         {% for cont_info in cont_infos %}
-                                            <tr id="tr_show" class="tr{{cont_info.enroll_idx.enroll_idx}}" style="{display:none}">
+                                            <tr>
                                                 <td>{{cont_info.enroll_idx.title}}</td>
                                                 <td>{{cont_info.user.com_name}}</td>
                                                 <td>{{cont_info.c_date}}</td>
                                                 <td>{{cont_info.end_date}}</td>
                                                 <td>
                                                     {% csrf_token %}
-                                                    {% if cert_infos %}
-                                                        {% for cert_info in cert_infos %}
-                                                            {% if cert_info.cont_idx.cont_idx == cont_info.cont_idx %}
-                                                                {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
-                                                                    {{cert_info.cert_status | safe}}
-                                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                                                {% else %}
-                                                                    <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                                    {{cert_info.cert_status | safe}}
+                                                    {% for key, value in flag2.items %}
+                                                        {% if key == cont_info.cont_idx and value == True %}
+                                                            {% for cert_info in cert_infos2 %}
+                                                                {% if cert_info.cont_idx.cont_idx == cont_info.cont_idx %}
+                                                                    {% if cert_info.cert_status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>" %}
+                                                                        {{cert_info.cert_status | safe}}
+                                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                                    {% else %}
+                                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                                        {{cert_info.cert_status | safe}}
+                                                                    {% endif %}
                                                                 {% endif %}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
-                                                        <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
-                                                    {% endif %}
+                                                            {% endfor %}
+                                                        {% elif key == cont_info.cont_idx and value == False %}
+                                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-primary" style="width:70px; font-size:80%; border-color:#39bfd6;"> 발급 </button>
+                                                            <button type="submit" trid="{{cont_info.enroll_idx.enroll_idx}}" cont_id="{{cont_info.cont_idx}}" class="btn btn-outline-info" style="width:70px; font-size:80%; border-color:#00c8a9;"> 보기 </button>
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -232,16 +236,6 @@ $(document).ready(function() {
             <!--$('.tr'+trid).toggle();-->
         <!--});-->
         <!--$('.tr'+trid').hide();-->
-
-        <!--&lt;!&ndash;임치목록 1부터 나타내기&ndash;&gt;-->
-        <!--var tables = document.getElementsByTagName('tr');-->
-        <!--var table = tables[tables.length - 1];-->
-        <!--var rows = table.rows;-->
-        <!--for(var i = 0, td; i < rows.length; i++){-->
-            <!--td = document.createElement('td');-->
-            <!--td.appendChild(document.createTextNode(i+1));-->
-            <!--rows[i].insertBefore(td, rows[i].firstChild);-->
-        <!--}-->
 
         <!--$('.tr_link').hover(function() { &lt;!&ndash;돋보기 뜨는거&ndash;&gt;-->
             <!--let trid = $(this).attr('trid');-->

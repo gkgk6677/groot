@@ -22,7 +22,15 @@
         }
         .col-sm-12{
             min-height:380px;
-        }  
+        }
+
+.btn-outline-danger_01 {
+    color: #007bff;
+    background-color: transparent;
+    background-image: none;
+    border-color: #007bff
+}
+
     </style>
 {% endblock css %}
 
@@ -86,14 +94,34 @@
                                         <td class="center" style=" vertical-align: middle;">{{ r.summary }}</td>
                                         <td class="center" style=" vertical-align: middle;">{{r.user.com_name}}</td>
                                         <td class="center" style=" vertical-align: middle;"><a href="https://{{r.user.homepage}}">{{ r.user.homepage }}</a></td>
-                
-                                        <td style=" vertical-align: middle;">
-                                            <a href="insert/{{r.enroll_idx}}">
-                                                <button type="button" class="btn btn-outline-info"
-                                                        style="font-size:80%; border-color:#00c8a9;"> 기술 계약 신청
-                                                </button>
-                                            </a>
+
+                                       <td>
+                                            {% csrf_token %}
+                                            {% for key, value in flag1.items %}
+                                               {% if key == r.enroll_idx %}
+                                                  {% if value == 0 or value == 1 %}
+                                                     {% for cont_info in cont_infos1 %}
+                                                        {% if value == 0 %}
+                                                            {% if cont_info.enroll_idx.enroll_idx == r.enroll_idx %}
+                                                                    {% if cont_info.status == "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>" %}
+                                                                        {{cont_info.status | safe}}
+                                                                     {% endif %}
+                                                            {% endif %}
+                                                        {% elif value == 1 %}
+                                                            {% if cont_info.enroll_idx.enroll_idx == r.enroll_idx %}
+                                                                    {% if cont_info.status == "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>" %}
+                                                                        {{cont_info.status | safe}}
+                                                                     {% endif %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                     {% endfor %}
+                                                  {% elif value == 2 %}
+                                                  <a href="insert/{{r.enroll_idx}}"><button type="button" class="btn btn-outline-info" style="width: 96px; font-size:80%; border-color:#39bfd6; text-align: center">기술 계약신청</button></a>
+                                                  {% endif %}
+                                               {% endif %}
+                                            {% endfor %}
                                         </td>
+
                                     </tr>
                 
                                     {% endfor %}

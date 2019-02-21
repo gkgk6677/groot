@@ -40,6 +40,10 @@ import sys # 블록 크기
 from cryptography.fernet import Fernet
 import pyotp
 
+# query문 날리기 위한 라이브러리
+from django.db import connection
+from collections import namedtuple
+
 # Create your views here.
 
 
@@ -632,12 +636,15 @@ def issue(request):
         return redirect('/wrong')
     else:
         user_id = request.session['user_id']
-        enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-        contract_infos = Contract.objects.all()
+        enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1).order_by('-enroll_date')
+        contract_infos = Contract.objects.all().order_by('-accept_date')
         cert_infos = Certificate.objects.all()
         cont_info = []
         cert_info = []
-        cert_lists = []
+        cert_lists1 = [] # 임치 증명서에 쓰일 리스트
+        cert_lists2 = [] # 계약 증명서에 쓰일 리스트
+        flag1 = {} # 임치 증명서 발급유무를 따질 변수
+        flag2 = {} # 계약 증명서 발급유무를 따질 변수
 
         for contract_info in contract_infos:
             if contract_info.enroll_idx.user.user_id == user_id and contract_info.status == 1:
@@ -722,30 +729,117 @@ def issue(request):
                 certificate.c_date = datetime.datetime.now()
                 certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=30)
 
-                # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
-                unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
-                unix_time = [str(i) for i in str(unix_time)]
-                tx = block.get('TxId')
-                tx = [str(i) for i in str(tx)]
-                random_val = unix_time + tx
-                random_val = random.sample(random_val, len(random_val))
-                certificate.cert_idx = ''.join(random_val)
+                # Hyperledger-Fabric에서 데이터 받아오기
+                #    0          1        2         3        4        5           6         7          8           9           10
+                # Technology   Sort   Company   Com_num   Term   File_name   File_hash   Client   Cont_term   Enroll_date   Status
+                fabric = "http://210.107.78.150:8001/get_cert_verify/" + enroll_info.title
+                result = requests.get(fabric)
 
-                print(''.join(random_val))
-                certificate.save()
+                parses = result.json()  # JSON형식으로 parse(분석)
+                block = None
+                # [
+                #   {
+                #       "TxId":"d15ce93db3c2d73297c28734e973e88e26a89f58781b9a886311c12604ce340e",
+                #       "Value":{
+                #                  "technology":"TEST2","sort":13,
+                #                   "company":"LG","com_num":156181987,"term":5,
+                #                   "content":["sldkfjs"],
+                #                   "client":{
+                #                       "dahee":3
+                #                   },
+                #                  "enroll_date":"2018.01.11",
+                #                  "status":1,
+                #       },
+                #       "Timestamp":"2019-01-11 08:05:45.948 +0000 UTC",
+                #       "IsDelete":"false"
+                #   },
+                #   { ... }, { ... }, ...
+                #  ]
 
-            context = {'ck_val':ck_val, 'type':type}
-            return HttpResponse(json.dumps(context), content_type='application/json')
+                try :
+                    # 임치 증명서 일 때
+                    if cont_idx == "0" :
+                        ck_val = 1
+                        type = 0
+                        for parse in parses:
+                            txid = parse.get('TxId')
+                            if txid == enroll_info.enroll_tx : # txid가 DB에 저장되어있는 enroll_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                                block = parse
+
+                        cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=None)
+                        if cert_info.end_date <= datetime.datetime.now():
+                            ck_val = 2  # 유효기간보다 날짜가 더 크면 만료
+
+                    # 계약 증명서 일 때
+                    elif cont_idx != "0" :
+                        cont_info = Contract.objects.get(cont_idx=cont_idx)
+                        ck_val = 1
+                        type = 1
+
+                        for parse in parses:
+                            txid = parse.get('TxId')
+                            if txid == cont_info.contract_tx : # txid가 DB에 저장되어있는 cont_tx와 일치 할 경우 해당 JSON을 block에 저장!
+                                block = parse
+
+                        cert_info = Certificate.objects.get(enroll_idx=enroll_idx, cont_idx=cont_idx)
+                        if cert_info.end_date <= datetime.datetime.now():
+                            ck_val = 2
+
+                except Certificate.DoesNotExist:
+                    ck_val = 0
+
+                    certificate = Certificate()
+                    certificate.enroll_idx = Enrollment.objects.get(enroll_idx=enroll_idx)  # foreign key이므로!
+                    certificate.cert_status = 0
+                    if cont_idx != "0" :
+                        certificate.cont_idx = Contract.objects.get(cont_idx=cont_idx)  # foreign key이므로!
+                    else :
+                        pass
+                    certificate.term = 30
+                    certificate.c_date = datetime.datetime.now()
+                    certificate.end_date = datetime.datetime.now() + datetime.timedelta(days=30)
+
+                    # 난수 생성해 저장하는 과정(str로 변환 후 각각 쪼개서(list로 만들고) random.sample 함수 돌리기
+                    unix_time = calendar.timegm(certificate.c_date.utctimetuple())  # timestamp로 변환
+                    unix_time = [str(i) for i in str(unix_time)]
+                    tx = block.get('TxId')
+                    tx = [str(i) for i in str(tx)]
+                    random_val = unix_time + tx
+                    random_val = random.sample(random_val, len(random_val))
+                    certificate.cert_idx = ''.join(random_val)
+
+                    print(''.join(random_val))
+                    certificate.save()
+
+                context = {'ck_val':ck_val, 'type':type}
+                return HttpResponse(json.dumps(context), content_type='application/json')
 
         else :
-            for cert in cert_info :
-                if cert.cert_status == 0 : # 발급된 상태
-                    cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
-                else : # 발급기간 만료
-                    cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
-                cert_lists.append(cert)
+            for enroll_info in enroll_infos : # 임치증명서 관련
+                flag1[enroll_info.enroll_idx] = False
+                for cert in cert_info :
+                    if cert.cont_idx == None : # 임치증명서에 대해서만 실행
+                        if enroll_info.enroll_idx == cert.enroll_idx.enroll_idx :
+                            flag1[enroll_info.enroll_idx] = True
+                            if cert.cert_status == 0 : # 발급된 상태
+                                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+                            else : # 발급기간 만료
+                                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+                            cert_lists1.append(cert)
 
-            return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos':cert_lists})
+            for cont in cont_info : # 계약증명서 관련
+                flag2[cont.cont_idx] = False
+                for cert in cert_info :
+                    if cert.cont_idx != None : # 계약증명서에 대해서만 실행
+                        if cont.cont_idx == cert.cont_idx.cont_idx :
+                            flag2[cont.cont_idx] = True
+                            if cert.cert_status == 0 : # 발급된 상태
+                                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>발급완료</button>"
+                            else : # 발급기간 만료
+                                cert.cert_status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:70px;text-align: center;'>기간만료</button>"
+                            cert_lists2.append(cert)
+
+            return render(request, 'groot/issue.html', {'enroll_infos': enroll_infos, 'cont_infos': cont_info, 'cert_infos1':cert_lists1, 'flag1':flag1, 'cert_infos2':cert_lists2, 'flag2':flag2})
 
 class app_pdf(View) :
     def get(self, request, idx, *args, **kwargs):
@@ -1154,6 +1248,13 @@ def expire(request,idx):
 
 def search_form(request):
     error = False
+    user_id = request.session['user_id']
+    contract_info = Contract.objects.all().filter(user_id=user_id)
+    cont_lists = [] # 계약에 쓰일 리스트
+    flag1 = {} # 계약 여부를 따질 변수
+
+
+
     if 'q' in request.GET:
         q = request.GET['q']
         if not q:
@@ -1162,17 +1263,53 @@ def search_form(request):
             if 's_option' in request.GET:
                 s_option = request.GET['s_option']
                 if s_option == '1':
-                    result = Enrollment.objects.filter(Q(title__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(title__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
                 elif s_option == '2' :
-                    result = Enrollment.objects.filter(Q(summary__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(summary__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
                 elif s_option == '3' :
-                    result = Enrollment.objects.filter(Q(title__icontains=q) | Q(summary__icontains=q)).distinct()
+                    result = Enrollment.objects.filter(Q(title__icontains=q) | Q(summary__icontains=q)).distinct().order_by('-enroll_date')
                     r_result = result.filter(agree_status=1)
-                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q})
+                    for enroll_info in r_result:  # 계약 정보 관련
+                        flag1[enroll_info.enroll_idx] = 2 #계약 신청 가능
+                        for cont in contract_info:
+                            if enroll_info.enroll_idx == cont.enroll_idx.enroll_idx: #계약이 되어있을때
+                                if cont.status == 0:  # 계약 요청된 상태
+                                    flag1[enroll_info.enroll_idx] = 0
+                                    cont.status = "<button class='btn btn-outline-danger ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:rgb(238, 89, 89); width:96px;text-align: center;'>계약 요청중</button>"
+                                else :  # 계약 완료인 상태
+                                    flag1[enroll_info.enroll_idx] = 1
+                                    cont.status = "<button class='btn btn-outline-danger_01 ck_button disabled' style='padding: 6px 3px 6px 3px;font-size:80%; border-color:#007bff; width:96px;text-align: center;'>계약중</button>"
+                                cont_lists.append(cont)
+
+                    return render(request, 'groot/search_result.html', {'r_result': r_result, 'query': q, 's_option':s_option,'cont_info': contract_info, 'cont_infos1':cont_lists, 'flag1':flag1,})
 
     return render(request, 'groot/search.html', {'error': error})
 
