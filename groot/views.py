@@ -34,6 +34,8 @@ from .render import Render
 import os
 
 # groot_Scan 위한 라이브러리
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt # 그래프
 import sys # 블록 크기
 
@@ -819,13 +821,16 @@ def issue(request):
                     tx = [str(i) for i in str(tx)]
                     random_val = unix_time + tx
                     random_val = random.sample(random_val, len(random_val))
-                    certificate.cert_idx = ''.join(random_val)
+                    random_val = ''.join(random_val)
+                    # 생성된 난수의 hash값을 뽑아냄
+                    random_hash = hashlib.sha256(random_val.encode()).hexdigest()
+                    certificate.cert_idx = random_hash
 
-                    print(''.join(random_val))
+                    print(random_hash)
                     certificate.save()
 
-                context = {'ck_val':ck_val, 'type':type}
-                return HttpResponse(json.dumps(context), content_type='application/json')
+            context = {'ck_val':ck_val, 'type':type}
+            return HttpResponse(json.dumps(context), content_type='application/json')
 
         else :
             for enroll_info in enroll_infos : # 임치증명서 관련
@@ -1175,7 +1180,7 @@ def validate_show(request, idx):
             else :
                 with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
                     textdata = file.read()
-
+                
                 hash = hashSHA(textdata).hexdigest()
                 name = upload_file.name
                 print(hash)
