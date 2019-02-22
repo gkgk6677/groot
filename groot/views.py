@@ -34,6 +34,8 @@ from .render import Render
 import os
 
 # groot_Scan 위한 라이브러리
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt # 그래프
 import sys # 블록 크기
 
