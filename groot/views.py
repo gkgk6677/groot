@@ -141,7 +141,15 @@ def need_otp(request):
         except KeyError:
             return HttpResponse('해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)')
         else:
-            return True
+            return HttpResponse('true')
+
+def need_login(request):
+    try:
+        request.session['user_id']
+    except KeyError:
+        return HttpResponse('false')
+    else:
+        return True
 
 def logout(request) :
     try:
@@ -1258,8 +1266,6 @@ def search_form(request):
     contract_info = Contract.objects.all().filter(user_id=user_id)
     cont_lists = [] # 계약에 쓰일 리스트
     flag1 = {} # 계약 여부를 따질 변수
-
-
 
     if 'q' in request.GET:
         q = request.GET['q']

@@ -116,7 +116,7 @@
                                                         {% endif %}
                                                      {% endfor %}
                                                   {% elif value == 2 %}
-                                                  <a href="insert/{{r.enroll_idx}}"><button type="button" class="btn btn-outline-info" style="width: 96px; font-size:80%; border-color:#39bfd6; text-align: center">기술 계약신청</button></a>
+                                                  <a href="insert/{{r.enroll_idx}}"><button type="button" class="btn btn-outline-info otp-nead" style="width: 96px; font-size:80%; border-color:#39bfd6; text-align: center">기술 계약신청</button></a>
                                                   {% endif %}
                                                {% endif %}
                                             {% endfor %}
@@ -168,6 +168,18 @@
             "lengthMenu": [ 5,10,15 ]
         });
     });
+    $(".otp-nead").click(function(){
+        $.ajax({
+            url: '/need_otp',
+            success: function(result) {
+                if(result == '해당 서비스는 OTP를 발급 받은 후 사용하실 수 있습니다. Mypage    에서 OTP를 발급받아주세요.   (문의 : groot-admin@groot.co.kr)') {
+                    // alert(result)
+                    location='/mypage'
+                }
+            }
+        })
+    }
+    )
     </script>
 
 {% endblock js %}

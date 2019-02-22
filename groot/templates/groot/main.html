@@ -92,7 +92,7 @@
 									</ul>
 								</li>
 								<li class="nav-item"><a class="nav-link-other otp-nead" href="application" >기술임치신청</a></li>
-								<li class="nav-item"><a class="nav-link-other otp-nead" href="search" >기술검색</a></li>
+								<li class="nav-item"><a class="nav-link-other need_login" href="search" >기술검색</a></li>
 								<li class="nav-item"><a class="nav-link-other otp-nead" href="issue" >증명서 발급</a></li>
 								<li class="nav-item submenu dropdown">
 									<a href="#" class="nav-link-other dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">임치문서관리</a>
@@ -274,6 +274,17 @@
 			})
 		}
 		)
+		$(".need_login").click(function(){
+			$.ajax({
+				url: '/need_login',
+				success: function(result){
+					if(result == 'false'){
+						alert('로그인이 필요한 서비스입니다 로그인해주세요.');
+						location='/login'
+					}
+				}
+			})
+		})
 		$(".logout").click(function(){
 			$.ajax({
 				url: '/logout',

@@ -24,6 +24,7 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('login_otp', views.login_otp, name='login_otp'),
     path('need_otp', views.need_otp, name="need_otp"),
+    path('need_login', views.need_login, name="need_login"),
     path('mypage_otp', views.mypage_otp, name="mypage_otp"),
     path('otp_pwcheck', views.otp_pwcheck, name="otp_pwcheck"),
     path('join', views.join, name='join'),
