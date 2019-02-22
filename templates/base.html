@@ -29,11 +29,19 @@
                 font-family: 'Noto Sans KR', sans-serif;
                 font-size: 15px;
             }
+            a.top {
+                width: 50px;
+                position: fixed;
+                right: 40px;
+                bottom: 110px;
+                display: none;
+            }
         </style>
         {% block css %}
         {% endblock css %}
     </head>
     <body>
+        <a href="#" class="top" style="color:#2F89AE"><i class="fas fa-chevron-circle-up fa-4x"></i></a>
         <div class="modal hide" id="testmain">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -114,7 +122,7 @@
 
         </header>
         <!--================Header Menu Area =================-->
-
+        
 
         {% block content %}
         {% endblock content %}
@@ -184,6 +192,17 @@
                 })
             }
             )
+            $( window ).scroll( function() {
+                if ( $( this ).scrollTop() > 200 ) {
+                    $( '.top' ).fadeIn();
+                } else {
+                    $( '.top' ).fadeOut();
+                }
+            } );
+            $( '.top' ).click( function() {
+                $( 'html, body' ).animate( { scrollTop : 0 }, 400 );
+                return false;
+            } );
         </script>
         {% block js %}
         {% endblock js %}
