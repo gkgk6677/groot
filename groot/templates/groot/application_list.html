@@ -402,6 +402,9 @@
                                 if(result.ck_val == 1) {
                                     alert('해당 임치물에 진행중인 계약이 있습니다. \n기술 계약 해지는 관리자에게 문의하세요.')
                                 }
+                                else if(result.ck_val ==2) {
+                                    alert('해당 기술은 사용신청이 들어온 기술입니다. \n회사간 계약 현황을 확인해 주세요.')
+                                }
                                 else {
                                     location.href="expire/" + s ;
                                 }
