@@ -309,6 +309,10 @@ def login3(request):
                 ck_val = 1
                 context = {'ck_val': ck_val}
                 return HttpResponse(json.dumps(context), content_type='application/json')
+            else:
+                ck_val = 2
+                context = {'ck_val': ck_val}
+                return HttpResponse(json.dumps(context), content_type='application/json')
         except Contract.DoesNotExist:
             context = {'ck_val': ck_val}
             return HttpResponse(json.dumps(context), content_type='application/json')
@@ -1130,7 +1134,7 @@ def read(request):
     else:
         user_id = request.session['user_id']
         enroll_infos = Enrollment.objects.all().filter(user_id=user_id, enroll_status=1)
-        contract_infos = Contract.objects.all().filter(user_id=user_id)
+        contract_infos = Contract.objects.all().filter(user_id=user_id, status=1)
 
         if request.method == 'POST' :
             enroll_idx = request.POST.get('enroll_id')
