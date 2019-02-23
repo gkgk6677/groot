@@ -181,7 +181,7 @@ def join(request):
         revised_com_num = com_num[0:3] + '-' + com_num[3:5] + '-' + com_num[5:10]
         revised_phone_num = phone_num[0:3] + '-' + phone_num[3:7] + '-' + phone_num[7:11]
 
-        user = User(user_id=user_id, user_pw=user_pw, com_num=revised_com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
+        user = User(otp=None,user_id=user_id, user_pw=user_pw, com_num=revised_com_num, com_name=com_name, com_head=com_head, email=email, address=address, phone_num=revised_phone_num, homepage=homepage)
         user.status = 0
         user.s_date = timezone.now()
         user.save()
@@ -508,7 +508,6 @@ def extend(request,idx):
         edate = date_format(enrollinfo.end_date,'Y년 m월 d일')
 
         if request.method == 'POST':
-
             form = ExtendForm(request.POST)
 
             if form.is_valid():
