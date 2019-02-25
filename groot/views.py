@@ -1172,23 +1172,23 @@ def validate_show(request, idx):
             hashSHA = hashlib.sha256
 
             try:
-                path = 'validate\\' + user_id + '\\' + str(idx)
+                path = 'validate/' + user_id + '/' + str(idx)
                 os.makedirs(path, exist_ok=True) # 다중파일 경로 생성(기존 파일이 존재해도 애러발생 안시킴)
 
-                with open(path + '\\' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
+                with open(path + '/' + upload_file.name, 'wb') as file:  # 껍데기 파일을 만든 것!!(with로 열어주면 file.close() 안해줘도 됨 / with문 벗어나는 순간 자동 close됨)
                     for chunk in upload_file.chunks():  # chunks가 호출되면 파일의 크기가 얼마든 다 쪼개냄
                         file.write(chunk)  # 그걸 for문으로 청크청크해서 write해줌(장고 공식문서에 나와있는 파일 업로드 하는 코드)
             except FileExistsError:
                 pass
             else :
-                with open(path + '\\' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
+                with open(path + '/' + upload_file.name, 'rb', encoding=None) as file: # 읽기모드로 파일 꺼내옴
                     textdata = file.read()
                 
                 hash = hashSHA(textdata).hexdigest()
                 name = upload_file.name
                 print(hash)
                 template = get_template('groot/validate_show.html')
-                os.remove(path + '\\' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
+                os.remove(path + '/' + upload_file.name) # 검증하고자하는 파일이 쌓일 필요는 없기 때문에 hash값만 뽑은 후 파일 삭제!!
 
                 # Hyperledger-Fabric에서 데이터 받아오기
                 #    0          1        2         3        4        5           6         7          8           9           10
